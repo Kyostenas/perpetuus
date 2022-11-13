@@ -4,7 +4,8 @@
   "description": "API de la aplicacion para controlar registros de la adoracion perpetua",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js"
+    "start": "nodemon src/index.js",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
