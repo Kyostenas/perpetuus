@@ -1,0 +1,19 @@
+{
+  "name": "perpetuus-api",
+  "version": "0.0.0",
+  "description": "API de la aplicacion para controlar registros de la adoración perpetua",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyostenas/perpetuus-api.git"
+  },
+  "author": "Kyostenas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyostenas/perpetuus-api/issues"
+  },
+  "homepage": "https://github.com/Kyostenas/perpetuus-api#readme"
+}
