@@ -266,8 +266,9 @@ function _success_quiet(origen, texto, negritas=false) {
 
 function request(tipo_request, direccion) {
     let fecha = new Date();
-    let dia = fecha.getDay();
-    let nombre_dia = nombres_fecha.dias[dia];
+    let dia_semana = fecha.getDay();
+    let dia_mes = fecha.getDate();
+    let nombre_dia = nombres_fecha.dias[dia_semana];
     let mes = fecha.getMonth();
     let nombre_mes = nombres_fecha.meses[mes];
     let year = fecha.getFullYear();
@@ -275,7 +276,7 @@ function request(tipo_request, direccion) {
     let minutos = formatear_ceros(fecha.getMinutes(), 2);
     let segundos = formatear_ceros(fecha.getSeconds(), 2);
     let hora_formateada = `${hora}:${minutos}:${segundos}`;
-    let fecha_formateada = `${nombre_dia} ${dia} de ${nombre_mes}, ${year}, ${hora_formateada}`;
+    let fecha_formateada = `${nombre_dia} ${dia_mes} de ${nombre_mes}, ${year}, ${hora_formateada}`;
 
     let fecha_con_clor = aplicar_color(
         fecha_formateada, fore.strong_black 
