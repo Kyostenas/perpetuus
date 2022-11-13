@@ -24,7 +24,8 @@ const urlencoded_parser = body_parser.urlencoded({ extended: false });
 
 // LOGS REQUESTS
 app.use((req, res, next) => {
-    syslog.__request(req.method, req.originalUrl)
+    syslog.__request(req.method, req.url);
+    next();
 });
 
 // CONSTANTES ENV
