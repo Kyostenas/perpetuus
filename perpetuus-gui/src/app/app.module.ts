@@ -19,6 +19,8 @@ import { AppComponent } from './app.component';
 // MODULOS
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 registerLocaleData(localePy, 'es-MX');
 
@@ -30,6 +32,12 @@ registerLocaleData(localePy, 'es-MX');
     BrowserModule,
     APP_ROUTES,
     HttpClientModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     // Configuraciones de idioma.
