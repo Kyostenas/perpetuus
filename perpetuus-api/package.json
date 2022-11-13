@@ -1,7 +1,7 @@
 {
   "name": "perpetuus-api",
   "version": "0.0.0",
-  "description": "API de la aplicacion para controlar registros de la adoración perpetua",
+  "description": "API de la aplicacion para controlar registros de la adoracion perpetua",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,5 +15,22 @@
   "bugs": {
     "url": "https://github.com/Kyostenas/perpetuus-api/issues"
   },
-  "homepage": "https://github.com/Kyostenas/perpetuus-api#readme"
+  "homepage": "https://github.com/Kyostenas/perpetuus-api#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^17.2.0",
+    "@commitlint/config-conventional": "^17.2.0",
+    "eslint": "^8.27.0",
+    "nodemon": "^2.0.20",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.7.1",
+    "standard-version": "^9.5.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.8.0",
+    "mongoose": "^6.7.2"
+  }
 }
