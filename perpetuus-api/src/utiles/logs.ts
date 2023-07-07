@@ -71,12 +71,12 @@ function obtener_nombre_archivo_origen(origen: string) {
 
 function aplicar_color_a_archivo_origen(texto: string, color: string) {
     let revised = obtener_nombre_archivo_origen(texto)
-    return `${color}[${revised}]${reset}`;
+    return `[${color}${revised}${reset}]`;
 }
 
 function aplicar_colo_a_prefijo(texto: string, color: string) {
     let revised = obtener_nombre_archivo_origen(texto)
-    return `${color}(${revised})${reset}`;
+    return `(${color}${revised}${reset})`;
 }
 
 function aplicar_color(texto: string, color: string) {
@@ -94,10 +94,10 @@ function formatear_ceros(numero: number, cantidad_ceros: number) {
 }
 
 const INFO =    'INFO';
-const NOTICE =  'NOTI';
-const WARNING = 'WARN';
-const DANGER =  ' ERR';
-const SUCCESS = '  OK';
+const NOTICE =  'NOTICE';
+const WARNING = 'WARNING';
+const DANGER =  'ERROR';
+const SUCCESS = 'OK';
 
 
 /*(o==================================================================o)
@@ -107,161 +107,52 @@ const SUCCESS = '  OK';
 
 function info(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
-        INFO, fore._black + back._cyan
+        INFO, fore._cyan
     );
     let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore._black + back._cyan
+        origen, fore.strong_cyan
     );
-    let texto_con_color = aplicar_color(
-        texto, fore._cyan
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
+    return `${prefijo} ${traza_con_color} ${texto}`;
 }
 
 function notice(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
-        NOTICE, back._purple
+        NOTICE, fore._purple
     );
     let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, back._purple
+        origen, fore.strong_purple
     );
-    let texto_con_color = aplicar_color(
-        texto, fore.strong_purple
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
+    return `${prefijo} ${traza_con_color} ${texto}`;
 }
 
 function warning(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
-        WARNING, fore._black + back._yellow
+        WARNING, fore._yellow
     );
     let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore._black + back._yellow
+        origen, fore.strong_yellow
     );
-    let texto_con_color = aplicar_color(
-        texto, fore.strong_yellow
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
+    return `${prefijo} ${traza_con_color} ${texto}`;
 }
 
 function danger(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
-        DANGER, fore.bold_white + back._red
+        DANGER, fore._red
     );
     let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.bold_white + back._red
+        origen, fore.strong_red
     );
-    let texto_con_color = aplicar_color(
-        texto, fore.strong_red
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
+    return `${prefijo} ${traza_con_color} ${texto}`;
 }
 
 function success(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
-        SUCCESS, fore._black + back._green
+        SUCCESS, fore._green
     );
     let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore._black + back._green
+        origen, fore.strong_green
     );
-    let texto_con_color = aplicar_color(
-        texto, fore._green
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
-}
-
-function _info_quiet(origen: string, texto: string, negritas=false): string {
-    let prefijo = aplicar_colo_a_prefijo(
-        INFO, fore._cyan + back._black
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore._cyan + back._black
-    );
-    let blanco = '';
-    if (negritas) {
-        blanco = fore.bold_white;
-    } else {
-        blanco = fore._white;
-    }
-    let texto_con_color = aplicar_color(
-        texto, blanco
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
-}
-function _notice_quiet(origen: string, texto: string, negritas=false): string {
-    let prefijo = aplicar_colo_a_prefijo(
-        NOTICE, fore.strong_purple + back._black
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_purple + back._black
-    );
-    let blanco = '';
-    if (negritas) {
-        blanco = fore.bold_white;
-    } else {
-        blanco = fore._white;
-    }
-    let texto_con_color = aplicar_color(
-        texto, blanco
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
-}
-
-function _warning_quiet(origen: string, texto: string, negritas=false): string {
-    let prefijo = aplicar_colo_a_prefijo(
-        WARNING, fore.strong_yellow + back._black
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_yellow + back._black
-    );
-    let blanco = '';
-    if (negritas) {
-        blanco = fore.bold_white;
-    } else {
-        blanco = fore._white;
-    }
-    let texto_con_color = aplicar_color(
-        texto, blanco
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
-}
-
-function _danger_quiet(origen: string, texto: string, negritas=false): string {
-    let prefijo = aplicar_colo_a_prefijo(
-        DANGER, fore.strong_red + back._black
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_red + back._black
-    );
-    let blanco = '';
-    if (negritas) {
-        blanco = fore.bold_white;
-    } else {
-        blanco = fore._white;
-    }
-    let texto_con_color = aplicar_color(
-        texto, blanco
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
-}
-
-function _success_quiet(origen: string, texto: string, negritas=false): string {
-    let prefijo = aplicar_colo_a_prefijo(
-        SUCCESS, fore._green + back._black
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore._green + back._black
-    );
-    let blanco = '';
-    if (negritas) {
-        blanco = fore.bold_white;
-    } else {
-        blanco = fore._white;
-    }
-    let texto_con_color = aplicar_color(
-        texto, blanco
-    );
-    return `${prefijo} ${traza_con_color} ${texto_con_color}`;
+    return `${prefijo} ${traza_con_color} ${texto}`;
 }
 
 function _neutral_log(origen: string, texto: string, negritas=false): string {
@@ -274,10 +165,7 @@ function _neutral_log(origen: string, texto: string, negritas=false): string {
     } else {
         blanco = fore._white;
     }
-    let texto_con_color = aplicar_color(
-        texto, blanco
-    );
-    return `${traza_con_color} ${texto_con_color}`;
+    return `${traza_con_color} ${texto}`;
 }
 
 function _http_request(tipo: string, contenido: string) {
@@ -300,7 +188,7 @@ function _timestamp_log(tipo: string, contenido: string) {
     let minutos = formatear_ceros(fecha.getMinutes(), 2);
     let segundos = formatear_ceros(fecha.getSeconds(), 2);
     let hora_formateada = `${hora}:${minutos}:${segundos}`;
-    let fecha_formateada = `${nombre_mes} ${dia_mes}, ${year}, ${hora_formateada}`;
+    let fecha_formateada = `${year}/${mes}/${dia_mes} ${hora_formateada}`;
 
     let fecha_con_clor = aplicar_color(
         fecha_formateada, fore.strong_black 
@@ -313,27 +201,72 @@ function _timestamp_log(tipo: string, contenido: string) {
 
 }
 
-function log(tipo: string, contenido: string) {
-    let nuevo_log = _timestamp_log(tipo, contenido);
-    console.log(nuevo_log);
+function log(
+    tipo: string, 
+    funcion: any,
+    origen: string,
+    texto: string,
+    multilinea: boolean = false, 
+    separador: string = '\n'
+) {
+    if (multilinea) {
+        let lineas = texto.split(separador)
+        for (let iLinea = 0; iLinea < lineas.length; iLinea++) {
+            const linea = lineas[iLinea];
+            let nuevo_log = _timestamp_log(tipo, funcion(origen, linea))
+            console.log(nuevo_log)
+        }
+    } else {
+        let contenido = funcion(origen, texto)
+        let nuevo_log = _timestamp_log(tipo, contenido);
+        console.log(nuevo_log);
+    }
 }
+
 
 
 // (o-----------------------------------------( OBJETO CONTENEDOR ))
 
 export const syslog = {
-    log: function(origen: string, texto: string) {log('LOG', _neutral_log(origen, texto))},
-    info: function(origen: string, texto: string) {log('LOG', info(origen, texto))},
-    notice: function(origen: string, texto: string) {log('LOG', notice(origen, texto))},
-    warning: function(origen: string, texto: string) {log('LOG', warning(origen, texto))},
-    danger: function(origen: string, texto: string) {log('LOG', danger(origen, texto))},
-    success: function(origen: string, texto: string) {log('LOG', success(origen, texto))},
-    _info_quiet: function(origen: string, texto: string) {log('LOG', _info_quiet(origen, texto))},
-    _notice_quiet: function(origen: string, texto: string) {log('LOG', _notice_quiet(origen, texto))},
-    _warning_quiet: function(origen: string, texto: string) {log('LOG', _warning_quiet(origen, texto))},
-    _danger_quiet: function(origen: string, texto: string) {log('LOG', _danger_quiet(origen, texto))},
-    _success_quiet: function(origen: string, texto: string) {log('LOG', _success_quiet(origen, texto))},
-    __request: function(tipo_request: string, direccion: string) {_http_request(tipo_request, direccion)}
+    log: function(
+        origen: string, 
+        texto: string, 
+        multilinea: boolean = false, 
+        separador: string = '\n'
+    ) {log('LOG', _neutral_log, origen, texto, multilinea, separador)},
+    info: function(
+        origen: string, 
+        texto: string, 
+        multilinea: boolean = false, 
+        separador: string = '\n'
+    ) {log('LOG', info, origen, texto, multilinea, separador)},
+    notice: function(
+        origen: string, 
+        texto: string, 
+        multilinea: boolean = false, 
+        separador: string = '\n'
+    ) {log('LOG', notice, origen, texto, multilinea, separador)},
+    warning: function(
+        origen: string, 
+        texto: string, 
+        multilinea: boolean = false, 
+        separador: string = '\n'
+    ) {log('LOG', warning, origen, texto, multilinea, separador)},
+    danger: function(
+        origen: string, 
+        texto: string, 
+        multilinea: boolean = false, 
+        separador: string = '\n'
+    ) {log('LOG', danger, origen, texto, multilinea, separador)},
+    success: function(
+        origen: string, 
+        texto: string, 
+        multilinea: boolean = false, 
+        separador: string = '\n'
+    ) {log('LOG', success, origen, texto, multilinea, separador)},
+    __request: function(
+        tipo_request: string, direccion: string
+    ) {_http_request(tipo_request, direccion)}
 };
 
 

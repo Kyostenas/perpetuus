@@ -4,9 +4,12 @@ dotenv.config()
 // (o-----------------------------------------( IMPORTACIONES ))
 import express, { Application, Request, Response } from 'express';
 import mongoose from 'mongoose';
+mongoose.set('strictQuery', false)
 import { syslog } from './utiles/logs';
 import { Resp } from './utiles/response';
 mongoose.Promise = global.Promise
+
+import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
 
 // (o-----------------------------------------( CONFIGURACIONES ))
 
@@ -24,19 +27,26 @@ app.use(express.urlencoded({ extended: true }))
 
 // CONSTANTES ENV
 const PORT = process.env.PORT || 9000;
-
-// URI DB
-// ...
+const URI_DB = process.env.URI_DB
 
 // (o-----------------------------------------( RUTAS ))
 
 app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return new Resp(res, { mensaje: 'API Funcionando' })._200()
+  return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200()
 });
+
+app.use('/', RUTA_ROL());
 
 // (o-----------------------------------------( CONECCION MONGODB ))
 
-// ...
+mongoose.connect(<string>URI_DB)
+  .then( () => {
+    syslog.success(__filename, `mongo db conectada`)
+
+  })
+  .catch( (error) =>{
+    syslog.danger(__filename, `no se pudo conectar a la bd: ${error}`)
+  });
 
 // (o-----------------------------------------( ESCUCHAR ))
 
