@@ -5,6 +5,7 @@ dotenv.config()
 import express, { Application, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { syslog } from './utiles/logs';
+import { Resp } from './utiles/response';
 mongoose.Promise = global.Promise
 
 // (o-----------------------------------------( CONFIGURACIONES ))
@@ -30,9 +31,7 @@ const PORT = process.env.PORT || 9000;
 // (o-----------------------------------------( RUTAS ))
 
 app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return res.status(200).send({
-    message: 'API funcionando.'
-  });
+  return new Resp(res, { mensaje: 'API Funcionando' })._200()
 });
 
 // (o-----------------------------------------( CONECCION MONGODB ))
