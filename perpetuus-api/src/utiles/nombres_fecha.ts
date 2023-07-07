@@ -1,4 +1,4 @@
-module.exports = {     
+export const NOMBRES_FECHA = {     
     dias: [
         'Domingo',
         'Lunes',

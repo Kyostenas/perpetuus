@@ -60,30 +60,30 @@ const back = {
     strong_white:        '\x1b[0;107m',
 };
 
-const path = require('path');
-const nombres_fecha = require('./nombres_fecha');
+import path from 'path';
+import { NOMBRES_FECHA } from './nombres_fecha';
 
 
 
-function obtener_nombre_archivo_origen(origen) {
+function obtener_nombre_archivo_origen(origen: string) {
     return path.basename(origen, path.extname(origen));
 }
 
-function aplicar_color_a_archivo_origen(texto, color) {
+function aplicar_color_a_archivo_origen(texto: string, color: string) {
     let revised = obtener_nombre_archivo_origen(texto)
     return `${color}[${revised}]${reset}`;
 }
 
-function aplicar_colo_a_prefijo(texto, color) {
+function aplicar_colo_a_prefijo(texto: string, color: string) {
     let revised = obtener_nombre_archivo_origen(texto)
     return `${color}(${revised})${reset}`;
 }
 
-function aplicar_color(texto, color) {
+function aplicar_color(texto: string, color: string) {
     return `${color}${texto}${reset}`;
 }
 
-function formatear_ceros(numero, cantidad_ceros) {
+function formatear_ceros(numero: number, cantidad_ceros: number) {
     let tam = String(numero).length;
     if (tam < cantidad_ceros) {
         let ceros = '0'.repeat(cantidad_ceros - tam);
@@ -105,7 +105,7 @@ const SUCCESS = '  OK';
     para imprimir mensajes en consola
   (o-----------------------------------------------------------\/-----o)*/
 
-function info(origen, texto) {
+function info(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
         INFO, fore._black + back._cyan
     );
@@ -118,7 +118,7 @@ function info(origen, texto) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function notice(origen, texto) {
+function notice(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
         NOTICE, back._purple
     );
@@ -131,7 +131,7 @@ function notice(origen, texto) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function warning(origen, texto) {
+function warning(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
         WARNING, fore._black + back._yellow
     );
@@ -144,7 +144,7 @@ function warning(origen, texto) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function danger(origen, texto) {
+function danger(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
         DANGER, fore.bold_white + back._red
     );
@@ -157,7 +157,7 @@ function danger(origen, texto) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function success(origen, texto) {
+function success(origen: string, texto: string): string {
     let prefijo = aplicar_colo_a_prefijo(
         SUCCESS, fore._black + back._green
     );
@@ -170,7 +170,7 @@ function success(origen, texto) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function _info_quiet(origen, texto, negritas=false) {
+function _info_quiet(origen: string, texto: string, negritas=false): string {
     let prefijo = aplicar_colo_a_prefijo(
         INFO, fore._cyan + back._black
     );
@@ -188,7 +188,7 @@ function _info_quiet(origen, texto, negritas=false) {
     );
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
-function _notice_quiet(origen, texto, negritas=false) {
+function _notice_quiet(origen: string, texto: string, negritas=false): string {
     let prefijo = aplicar_colo_a_prefijo(
         NOTICE, fore.strong_purple + back._black
     );
@@ -207,7 +207,7 @@ function _notice_quiet(origen, texto, negritas=false) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function _warning_quiet(origen, texto, negritas=false) {
+function _warning_quiet(origen: string, texto: string, negritas=false): string {
     let prefijo = aplicar_colo_a_prefijo(
         WARNING, fore.strong_yellow + back._black
     );
@@ -226,7 +226,7 @@ function _warning_quiet(origen, texto, negritas=false) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function _danger_quiet(origen, texto, negritas=false) {
+function _danger_quiet(origen: string, texto: string, negritas=false): string {
     let prefijo = aplicar_colo_a_prefijo(
         DANGER, fore.strong_red + back._black
     );
@@ -245,7 +245,7 @@ function _danger_quiet(origen, texto, negritas=false) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function _success_quiet(origen, texto, negritas=false) {
+function _success_quiet(origen: string, texto: string, negritas=false): string {
     let prefijo = aplicar_colo_a_prefijo(
         SUCCESS, fore._green + back._black
     );
@@ -264,7 +264,7 @@ function _success_quiet(origen, texto, negritas=false) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function _neutral_log(origen, texto, negritas=false) {
+function _neutral_log(origen: string, texto: string, negritas=false): string {
     let traza_con_color = aplicar_color_a_archivo_origen(
         origen, fore._black + back._white
     );
@@ -280,26 +280,26 @@ function _neutral_log(origen, texto, negritas=false) {
     return `${traza_con_color} ${texto_con_color}`;
 }
 
-function _http_request(tipo, contenido) {
+function _http_request(tipo: string, contenido: string) {
     let contenido_con_color = aplicar_color(
         contenido, fore._cyan
-    )
-    let nuevo_log = _timestamp_log(tipo, contenido_con_color)
-    console.log(nuevo_log)
+    );
+    let nuevo_log = _timestamp_log(tipo, contenido_con_color);
+    console.log(nuevo_log);
 }
 
-function _timestamp_log(tipo, contenido) {
+function _timestamp_log(tipo: string, contenido: string) {
     let fecha = new Date();
     let dia_semana = fecha.getDay();
     let dia_mes = fecha.getDate();
-    let nombre_dia = nombres_fecha.dias[dia_semana];
+    let nombre_dia = NOMBRES_FECHA.dias[dia_semana];
     let mes = fecha.getMonth();
-    let nombre_mes = nombres_fecha.meses[mes];
+    let nombre_mes = NOMBRES_FECHA.meses[mes];
     let year = fecha.getFullYear();
     let hora = formatear_ceros(fecha.getHours(), 2);
     let minutos = formatear_ceros(fecha.getMinutes(), 2);
     let segundos = formatear_ceros(fecha.getSeconds(), 2);
-    let hora_formateada = `${hora}:${minutos}`;
+    let hora_formateada = `${hora}:${minutos}:${segundos}`;
     let fecha_formateada = `${nombre_mes} ${dia_mes}, ${year}, ${hora_formateada}`;
 
     let fecha_con_clor = aplicar_color(
@@ -313,27 +313,27 @@ function _timestamp_log(tipo, contenido) {
 
 }
 
-function log(tipo, contenido) {
-    nuevo_log = _timestamp_log(tipo, contenido)
-    console.log(nuevo_log)
+function log(tipo: string, contenido: string) {
+    let nuevo_log = _timestamp_log(tipo, contenido);
+    console.log(nuevo_log);
 }
 
 
 // (o-----------------------------------------( OBJETO CONTENEDOR ))
 
-const syslog = {
-    log: function(origen, texto) {log('LOG', _neutral_log(origen, texto))},
-    info: function(origen, texto) {log('LOG', info(origen, texto))},
-    notice: function(origen, texto) {log('LOG', notice(origen, texto))},
-    warning: function(origen, texto) {log('LOG', warning(origen, texto))},
-    danger: function(origen, texto) {log('LOG', danger(origen, texto))},
-    success: function(origen, texto) {log('LOG', success(origen, texto))},
-    _info_quiet: function(origen, texto) {log('LOG', _info_quiet(origen, texto))},
-    _notice_quiet: function(origen, texto) {log('LOG', _notice_quiet(origen, texto))},
-    _warning_quiet: function(origen, texto) {log('LOG', _warning_quiet(origen, texto))},
-    _danger_quiet: function(origen, texto) {log('LOG', _danger_quiet(origen, texto))},
-    _success_quiet: function(origen, texto) {log('LOG', _success_quiet(origen, texto))},
-    __request: function(tipo_request, direccion) {_http_request(tipo_request, direccion)}
+export const syslog = {
+    log: function(origen: string, texto: string) {log('LOG', _neutral_log(origen, texto))},
+    info: function(origen: string, texto: string) {log('LOG', info(origen, texto))},
+    notice: function(origen: string, texto: string) {log('LOG', notice(origen, texto))},
+    warning: function(origen: string, texto: string) {log('LOG', warning(origen, texto))},
+    danger: function(origen: string, texto: string) {log('LOG', danger(origen, texto))},
+    success: function(origen: string, texto: string) {log('LOG', success(origen, texto))},
+    _info_quiet: function(origen: string, texto: string) {log('LOG', _info_quiet(origen, texto))},
+    _notice_quiet: function(origen: string, texto: string) {log('LOG', _notice_quiet(origen, texto))},
+    _warning_quiet: function(origen: string, texto: string) {log('LOG', _warning_quiet(origen, texto))},
+    _danger_quiet: function(origen: string, texto: string) {log('LOG', _danger_quiet(origen, texto))},
+    _success_quiet: function(origen: string, texto: string) {log('LOG', _success_quiet(origen, texto))},
+    __request: function(tipo_request: string, direccion: string) {_http_request(tipo_request, direccion)}
 };
 
 
@@ -341,5 +341,3 @@ const syslog = {
     SECCION DE COLORES (FIN)
   (o==================================================================o)*/
   
-
-module.exports = { syslog };
