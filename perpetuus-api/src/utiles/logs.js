@@ -133,10 +133,10 @@ function notice(origen, texto) {
 
 function warning(origen, texto) {
     let prefijo = aplicar_colo_a_prefijo(
-        WARNING, fore.strong_yellow + back._yellow
+        WARNING, fore._black + back._yellow
     );
     let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_yellow + back._yellow
+        origen, fore._black + back._yellow
     );
     let texto_con_color = aplicar_color(
         texto, fore.strong_yellow
@@ -264,7 +264,31 @@ function _success_quiet(origen, texto, negritas=false) {
     return `${prefijo} ${traza_con_color} ${texto_con_color}`;
 }
 
-function request(tipo_request, direccion) {
+function _neutral_log(origen, texto, negritas=false) {
+    let traza_con_color = aplicar_color_a_archivo_origen(
+        origen, fore._black + back._white
+    );
+    let blanco = '';
+    if (negritas) {
+        blanco = fore.bold_white;
+    } else {
+        blanco = fore._white;
+    }
+    let texto_con_color = aplicar_color(
+        texto, blanco
+    );
+    return `${traza_con_color} ${texto_con_color}`;
+}
+
+function _http_request(tipo, contenido) {
+    let contenido_con_color = aplicar_color(
+        contenido, fore._cyan
+    )
+    let nuevo_log = _timestamp_log(tipo, contenido_con_color)
+    console.log(nuevo_log)
+}
+
+function _timestamp_log(tipo, contenido) {
     let fecha = new Date();
     let dia_semana = fecha.getDay();
     let dia_mes = fecha.getDate();
@@ -275,38 +299,41 @@ function request(tipo_request, direccion) {
     let hora = formatear_ceros(fecha.getHours(), 2);
     let minutos = formatear_ceros(fecha.getMinutes(), 2);
     let segundos = formatear_ceros(fecha.getSeconds(), 2);
-    let hora_formateada = `${hora}:${minutos}:${segundos}`;
-    let fecha_formateada = `${nombre_dia} ${dia_mes} de ${nombre_mes}, ${year}, ${hora_formateada}`;
+    let hora_formateada = `${hora}:${minutos}`;
+    let fecha_formateada = `${nombre_mes} ${dia_mes}, ${year}, ${hora_formateada}`;
 
     let fecha_con_clor = aplicar_color(
         fecha_formateada, fore.strong_black 
     );
     let tipo_con_color = aplicar_color(
-        `[${tipo_request}]`, fore._black + back._white
+        `[${tipo}]`, fore._black + back._white
     );
-    let direccion_con_color = aplicar_color(
-        direccion, fore._cyan
-    )
 
-    return `${fecha_con_clor} ${tipo_con_color} ${direccion_con_color}`;
+    return `${fecha_con_clor} ${tipo_con_color} ${contenido}`;
 
+}
+
+function log(tipo, contenido) {
+    nuevo_log = _timestamp_log(tipo, contenido)
+    console.log(nuevo_log)
 }
 
 
 // (o-----------------------------------------( OBJETO CONTENEDOR ))
 
 const syslog = {
-    info: function(origen, texto) {console.log(info(origen, texto))},
-    notice: function(origen, texto) {console.log(notice(origen, texto))},
-    warning: function(origen, texto) {console.warn(warning(origen, texto))},
-    danger: function(origen, texto) {console.error(danger(origen, texto))},
-    success: function(origen, texto) {console.log(success(origen, texto))},
-    _info_quiet: function(origen, texto) {console.log(_info_quiet(origen, texto))},
-    _notice_quiet: function(origen, texto) {console.log(_notice_quiet(origen, texto))},
-    _warning_quiet: function(origen, texto) {console.warn(_warning_quiet(origen, texto))},
-    _danger_quiet: function(origen, texto) {console.error(_danger_quiet(origen, texto))},
-    _success_quiet: function(origen, texto) {console.log(_success_quiet(origen, texto))},
-    __request: function(tipo_request, direccion) {console.log(request(tipo_request, direccion))}
+    log: function(origen, texto) {log('LOG', _neutral_log(origen, texto))},
+    info: function(origen, texto) {log('LOG', info(origen, texto))},
+    notice: function(origen, texto) {log('LOG', notice(origen, texto))},
+    warning: function(origen, texto) {log('LOG', warning(origen, texto))},
+    danger: function(origen, texto) {log('LOG', danger(origen, texto))},
+    success: function(origen, texto) {log('LOG', success(origen, texto))},
+    _info_quiet: function(origen, texto) {log('LOG', _info_quiet(origen, texto))},
+    _notice_quiet: function(origen, texto) {log('LOG', _notice_quiet(origen, texto))},
+    _warning_quiet: function(origen, texto) {log('LOG', _warning_quiet(origen, texto))},
+    _danger_quiet: function(origen, texto) {log('LOG', _danger_quiet(origen, texto))},
+    _success_quiet: function(origen, texto) {log('LOG', _success_quiet(origen, texto))},
+    __request: function(tipo_request, direccion) {_http_request(tipo_request, direccion)}
 };
 
 

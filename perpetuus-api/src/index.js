@@ -6,10 +6,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const body_parser = require('body-parser');
 // const fs = require('fs')
-const { graphqlHTTP } = require('express-graphql');
+// const { graphqlHTTP } = require('express-graphql');
 
 const { syslog } = require('./utiles/logs');
-const { schema, root } = require('./graphql.schema');
+// const { schema, root } = require('./graphql.schema');
 
 mongoose.Promise = global.Promise
 
@@ -40,15 +40,15 @@ const PORT = process.env.PORT || 9000;
 app.use(json_parser);
 
 // GRAPHQL
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema,
-    rootValue: root,
-    graphiql: true,
-  })
-);
-syslog.success(__filename, 'ejecutando graphql');
+// app.use(
+//   '/graphql',
+//   graphqlHTTP({
+//     schema,
+//     rootValue: root,
+//     graphiql: true,
+//   })
+// );
+// syslog.success(__filename, 'ejecutando graphql');
 
 // RUTAS INDEX
 app.get('/', (req, res) => {
