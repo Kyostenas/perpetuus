@@ -35,7 +35,7 @@ app.get('/', async (req: Request, res: Response): Promise<Response> => {
   return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200()
 });
 
-app.use('/', RUTA_ROL());
+app.use('/roles', RUTA_ROL());
 
 // (o-----------------------------------------( CONECCION MONGODB ))
 
