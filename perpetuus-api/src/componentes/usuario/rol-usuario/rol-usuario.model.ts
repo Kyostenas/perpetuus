@@ -22,7 +22,7 @@ const rolSchema = new Schema(
         },
     },
     {
-        collecion: 'roles',
+        collection: 'roles',
         timestamps: true,
     }
 );
