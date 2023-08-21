@@ -42,7 +42,7 @@ app.use('/roles', RUTA_ROL());
 
 mongoose.connect(<string>URI_DB)
   .then( () => {
-    syslog.success( `mongo db conectada`)
+    syslog.ok( `mongo db conectada`)
 
   })
   .catch( (error) =>{
@@ -53,7 +53,7 @@ mongoose.connect(<string>URI_DB)
 
 try {
   app.listen(PORT, (): void => {
-    syslog.warning( `escuchando en el puerto ${PORT}`);
+    syslog.info( `escuchando en el puerto ${PORT}`);
   });
 } catch (error: any) {
   syslog.error( `Ocurrió un error antes de escuchar en el puerto: ${error.message}`)

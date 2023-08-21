@@ -1,3 +1,6 @@
+// Kyostenas @ 2023
+
+
 import dotenv from 'dotenv';  // Para archivos .env
 dotenv.config()
 
@@ -82,10 +85,10 @@ const TIPOS_LOG: tipos_log = {
         color_extra: fore.strong_red,
     },
     peligro: {
-        texto: '☠',
-        color_texto: fore.bold_strong_yellow + fore.sub_yellow,
+        texto: '!',
+        color_texto: fore._yellow + fore.sub_yellow,
         color_atras: back._red,
-        color_extra: fore.strong_red,
+        color_extra: fore._red,
     },
     advertencia: {
         texto: '⚠',
@@ -94,7 +97,7 @@ const TIPOS_LOG: tipos_log = {
         color_extra: fore.strong_yellow,
     },
     info: {
-        texto: 'ℹ',
+        texto: 'i',
         color_texto: fore._white,
         color_atras: back._blue,
         color_extra: fore.strong_blue,
@@ -112,7 +115,7 @@ const TIPOS_LOG: tipos_log = {
         color_extra: fore._green,
     },
     ok: {
-        texto: 'K',
+        texto: '✔',
         color_texto: fore._green,
         color_atras: back._black,
         color_extra: fore._green,
