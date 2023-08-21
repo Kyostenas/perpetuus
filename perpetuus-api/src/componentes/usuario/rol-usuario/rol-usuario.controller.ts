@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { Rol, RolInput } from '../rol-usuario/rol-usuario.model';
 import { Resp } from '../../../utiles/response';
-import { syslog } from '../../../utiles/logs';
+import { syslog as _syslog } from '../../../utiles/logs';
+const syslog = _syslog(module)
 
 
 
@@ -63,7 +64,7 @@ const obtener_roles_todo = async (req: Request, res: Response) => {
 const obtener_rol_id = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        syslog.log(__filename, `ID: ${id}`)
+        syslog.log(`ID: ${id}`)
         const rol = await Rol.findById(id);
         if (!rol) {
             return new Resp(
@@ -73,7 +74,7 @@ const obtener_rol_id = async (req: Request, res: Response) => {
                 }
             )._404();
         }
-        syslog.log(__filename, `${rol}`)
+        syslog.log(`${rol}`)
         return new Resp(
             res, __filename,
             {
@@ -96,7 +97,7 @@ const modificar_rol = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const cuerpo = req.body
-        syslog.log(__filename, `ID: ${id}`)
+        syslog.log(`ID: ${id}`)
         const rol = await Rol.findById(id);
         if (!rol) {
             return new Resp(
@@ -114,7 +115,7 @@ const modificar_rol = async (req: Request, res: Response) => {
                 }
             )._422()
         }
-        syslog.log(__filename, `ANTES: ${rol}`)        
+        syslog.log(`ANTES: ${rol}`)        
     } catch (err) {
         return new Resp(
             res, __filename, 

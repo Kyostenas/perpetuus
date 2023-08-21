@@ -5,7 +5,8 @@ dotenv.config()
 import express, { Application, Request, Response } from 'express';
 import mongoose from 'mongoose';
 mongoose.set('strictQuery', false)
-import { syslog } from './utiles/logs';
+import { syslog as _syslog } from './utiles/logs';
+const syslog = _syslog(module)
 import { Resp } from './utiles/response';
 mongoose.Promise = global.Promise
 
@@ -41,19 +42,19 @@ app.use('/roles', RUTA_ROL());
 
 mongoose.connect(<string>URI_DB)
   .then( () => {
-    syslog.success(__filename, `mongo db conectada`)
+    syslog.success( `mongo db conectada`)
 
   })
   .catch( (error) =>{
-    syslog.danger(__filename, `no se pudo conectar a la bd: ${error}`)
+    syslog.error( `no se pudo conectar a la bd: ${error}`)
   });
 
 // (o-----------------------------------------( ESCUCHAR ))
 
 try {
   app.listen(PORT, (): void => {
-    syslog.warning(__filename, `escuchando en el puerto ${PORT}`);
+    syslog.warning( `escuchando en el puerto ${PORT}`);
   });
 } catch (error: any) {
-  syslog.danger(__filename, `Ocurrió un error antes de escuchar en el puerto: ${error.message}`)
+  syslog.error( `Ocurrió un error antes de escuchar en el puerto: ${error.message}`)
 }

@@ -1,4 +1,5 @@
-import { syslog } from './logs';
+import { syslog as _syslog } from './logs';
+const syslog = _syslog(module)
 import { Response, ErrorRequestHandler } from 'express';
 
 export class Resp {
@@ -26,13 +27,13 @@ export class Resp {
             this.datos.errores_interfaz = errores_interfaz;
         }
 
-        syslog.danger(this.filename, `${this.codigo_formateado} ${this.datos.error}`);
+        syslog.error(`${this.codigo_formateado} ${this.datos.error}`, this.filename);
         return this.datos;
     }
 
     private estatus_ok_general() {
         this.datos.ok = true;
-        syslog.success(this.filename, `${this.codigo_formateado} ${this.datos.mensaje}`);
+        syslog.success(`${this.codigo_formateado} ${this.datos.mensaje}`, this.filename);
         return this.datos;
     }
     
@@ -87,7 +88,7 @@ export class Resp {
         if (this.datos.error) {
             return this.res.status(500).json(this.error_general());
         } else {
-            syslog.danger(this.filename, this.datos.toString());
+            syslog.error(this.datos.toString(), this.filename);
             return this.res.status(500).json(this.datos);
         }
     }

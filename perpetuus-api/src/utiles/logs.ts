@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';  // Para archivos .env
+dotenv.config()
+
 const reset = '\x1b[0m';
 const fore = {
     _black: '\x1b[0;30m',
@@ -63,32 +66,116 @@ const back = {
 import path from 'path';
 import { NOMBRES_FECHA } from './nombres_fecha';
 import { limpiar_codigos_ansi, partcion_arbitraria_arreglo } from './utiles_generales';
+import Module from 'module';
 
+const MOSTRAR_LOGS = process.env.MOSTRAR_LOGS ?? true;
+const MOSTRAR_REQS = process.env.MOSTRAR_REQS ?? true;
 
+const TAM_PRED_CONSOLA = 90
+const TAM_CONSOLA: number = (process.stdout.columns ?? TAM_PRED_CONSOLA)
+const TAM_MINIMO_CONTENIDO = 70
+const TIPOS_LOG: tipos_log = {
+    error: {
+        texto: '×',
+        color_texto: fore.bold_white,
+        color_atras: back._red,
+        color_extra: fore.strong_red,
+    },
+    peligro: {
+        texto: '☠',
+        color_texto: fore.bold_strong_yellow + fore.sub_yellow,
+        color_atras: back._red,
+        color_extra: fore.strong_red,
+    },
+    advertencia: {
+        texto: '⚠',
+        color_texto: fore._black,
+        color_atras: back._yellow,
+        color_extra: fore.strong_yellow,
+    },
+    info: {
+        texto: 'ℹ',
+        color_texto: fore._white,
+        color_atras: back._blue,
+        color_extra: fore.strong_blue,
+    },
+    notice: {
+        texto: 'N',
+        color_texto: fore._white + fore.sub_white,
+        color_atras: back._purple,
+        color_extra: fore.strong_purple,
+    },
+    success: {
+        texto: '✔',
+        color_texto: fore._black,
+        color_atras: back._green,
+        color_extra: fore._green,
+    },
+    ok: {
+        texto: 'K',
+        color_texto: fore._green,
+        color_atras: back._black,
+        color_extra: fore._green,
+    },
+    log: {
+        texto: 'L',
+        color_texto: fore._black,
+        color_atras: back._white,
+        color_extra: fore._white,
+    },
+    request: {
+        texto: 'R',
+        color_texto: fore._black,
+        color_atras: back._cyan,
+        color_extra: fore.strong_cyan,
+    },
+};
 
-function obtener_nombre_archivo_origen(origen: string) {
-    return path.basename(origen, path.extname(origen));
+interface tipos_log {
+    error: tipo_log;
+    peligro: tipo_log;
+    advertencia: tipo_log;
+    info: tipo_log;
+    notice: tipo_log;
+    success: tipo_log;
+    ok: tipo_log;
+    log: tipo_log;
+    request: tipo_log;
 }
 
-function aplicar_color_a_archivo_origen(texto: string, color: string): texto_color {
-    let revised = obtener_nombre_archivo_origen(texto)
-    let texto_color = `[${color}${revised}${reset}]`
-    let tam_texto = `[${revised}]`.length
-    return {texto: texto_color, tam_texto};
+
+interface tipo_log {
+    texto: string;
+    color_texto: string;
+    color_atras: string;
+    color_extra: string;
 }
 
-function aplicar_colo_a_prefijo(texto: string, color: string): texto_color {
-    let revised = obtener_nombre_archivo_origen(texto)
-    let texto_color = `(${color}${revised}${reset})`
-    let tam_texto = `(${revised})`.length
-    return {texto: texto_color, tam_texto};
+interface linea_log {
+    fecha: seccion_log;
+    tipo_log: seccion_log;
+    tipo_req?: seccion_log;
+    ubicacion: seccion_log;
+    contenido: seccion_log;
 }
 
-function aplicar_color(texto: string, color: string): texto_color {
-    let texto_color = `${color}${texto}${reset}`
-    let tam_texto = `${texto}`.length
-    return {texto: texto_color, tam_texto};
+interface seccion_log {
+    texto_interior: string,
+    inicio_contenedor?: string,
+    final_contenedor?: string,
+    tam_sin_color?: number,
+    partes_seccion?: string[],
+    color_bordes?: string,
+    color_contenido?: string,
 }
+
+
+
+
+// (o==================================================================o)
+//   UTILES PARA LOGS (INICIO)
+//   solo usados aquí
+// (o-----------------------------------------------------------\/-----o)
 
 function formatear_ceros(numero: number, cantidad_ceros: number) {
     let tam = String(numero).length;
@@ -100,176 +187,52 @@ function formatear_ceros(numero: number, cantidad_ceros: number) {
     }
 }
 
-const INFO = 'INFO';
-const NOTICE = 'NOTICE';
-const WARNING = 'WARNING';
-const DANGER = 'ERROR';
-const SUCCESS = 'OK';
-
-const TAM_PRED_CONSOLA = 90
-const TAM_CONSOLA: number = (process.stdout.columns ?? TAM_PRED_CONSOLA) - 1
-const TAM_MINIMO_CONTENIDO = 70
-
-
-/*(o==================================================================o)
-    SECCION DE COLORES (INICIO)
-    para imprimir mensajes en consola
-  (o-----------------------------------------------------------\/-----o)*/
-
-function info(origen: string, texto: string): texto_color {
-    let prefijo = aplicar_colo_a_prefijo(
-        INFO, fore._cyan
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_cyan
-    );
-    let texto_final = `${prefijo.texto} ${traza_con_color.texto} ${texto}`;
-    let tam_tx_fnl = prefijo.tam_texto + traza_con_color.tam_texto + texto.length + 2
-    return {texto: texto_final, tam_texto: tam_tx_fnl};
-}
-
-function notice(origen: string, texto: string): texto_color {
-    let prefijo = aplicar_colo_a_prefijo(
-        NOTICE, fore._purple
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_purple
-    );
-    let texto_final = `${prefijo.texto} ${traza_con_color.texto} ${texto}`;
-    let tam_tx_fnl = prefijo.tam_texto + traza_con_color.tam_texto + texto.length + 2
-    return {texto: texto_final, tam_texto: tam_tx_fnl};
-}
-
-function warning(origen: string, texto: string): texto_color {
-    let prefijo = aplicar_colo_a_prefijo(
-        WARNING, fore._yellow
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_yellow
-    );
-    let texto_final = `${prefijo.texto} ${traza_con_color.texto} ${texto}`;
-    let tam_tx_fnl = prefijo.tam_texto + traza_con_color.tam_texto + texto.length + 2
-    return {texto: texto_final, tam_texto: tam_tx_fnl};
-}
-
-function danger(origen: string, texto: string): texto_color {
-    let prefijo = aplicar_colo_a_prefijo(
-        DANGER, fore._red
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_red
-    );
-    let texto_final = `${prefijo.texto} ${traza_con_color.texto} ${texto}`;
-    let tam_tx_fnl = prefijo.tam_texto + traza_con_color.tam_texto + texto.length + 2
-    return {texto: texto_final, tam_texto: tam_tx_fnl};
-}
-
-function success(origen: string, texto: string): texto_color {
-    let prefijo = aplicar_colo_a_prefijo(
-        SUCCESS, fore._green
-    );
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore.strong_green
-    );
-    let texto_final = `${prefijo.texto} ${traza_con_color.texto} ${texto}`;
-    let tam_tx_fnl = prefijo.tam_texto + traza_con_color.tam_texto + texto.length + 2
-    return {texto: texto_final, tam_texto: tam_tx_fnl};
-}
-
-function _neutral_log(origen: string, texto: string, negritas = false): texto_color {
-    let traza_con_color = aplicar_color_a_archivo_origen(
-        origen, fore._white
-    );
-    let blanco = '';
-    if (negritas) {
-        blanco = fore.bold_white;
-    } else {
-        blanco = fore._white;
-    }
-    let texto_final = `${traza_con_color.texto} ${texto}`;
-    let tam_tx_fnl = texto_final.length
-    return {texto: texto_final, tam_texto: tam_tx_fnl};
-}
-
-function _http_request(tipo: string, contenido: string) {
-    let contenido_con_color = aplicar_color(
-        contenido, fore._cyan
-    );
-    
-    let nuevo_log = _timestamp_log(
-        tipo, 
-        contenido_con_color.texto,
-        contenido_con_color.tam_texto,
-        fore._black + back._cyan
-    );
-    console.log(nuevo_log.texto);
-}
-
-function _timestamp_log(
-    tipo: string, 
-    contenido: string, 
-    tam_contenido: number = 0,
-    color_personalizado_tipo: string = '-',
-    color_personalizado_fecha: string = '-',
-): texto_color {
+function formatear_fecha_log() {
     let fecha = new Date();
-    let dia_semana = fecha.getDay();
-    let dia_mes = fecha.getDate();
-    let nombre_dia = NOMBRES_FECHA.dias[dia_semana];
-    let mes = fecha.getMonth();
-    let nombre_mes = NOMBRES_FECHA.meses[mes];
+    let dia_mes = formatear_ceros(fecha.getDate(), 2);
+    let mes = formatear_ceros(fecha.getMonth(), 2);
     let year = fecha.getFullYear();
     let hora = formatear_ceros(fecha.getHours(), 2);
     let minutos = formatear_ceros(fecha.getMinutes(), 2);
     let segundos = formatear_ceros(fecha.getSeconds(), 2);
     let hora_formateada = `${hora}:${minutos}:${segundos}`;
     let fecha_formateada = `${year}/${mes}/${dia_mes} ${hora_formateada}`;
-
-    let fecha_con_clor: texto_color;
-    if (color_personalizado_fecha !== '-') {
-        fecha_con_clor = aplicar_color(
-            fecha_formateada, color_personalizado_fecha
-        );
-    } else {
-        fecha_con_clor = aplicar_color(
-            fecha_formateada, fore.strong_black
-        );
-    }
-
-    let tipo_con_color: texto_color;
-    if (color_personalizado_tipo !== '-') {
-        tipo_con_color = aplicar_color(
-            `[${tipo}]`, color_personalizado_tipo
-        );
-    } else {
-        tipo_con_color = aplicar_color(
-            `[${tipo}]`, fore._black + back._white
-        );
-    }
-
-    let texto_a_color = `${fecha_con_clor.texto} ${tipo_con_color.texto} ${contenido}`;
-    let tam_texto = fecha_con_clor.tam_texto + tipo_con_color.tam_texto + tam_contenido + 2;
-    let tam_traza = fecha_con_clor.tam_texto + tipo_con_color.tam_texto + 1;
-
-    return {texto: texto_a_color, tam_texto, tam_traza};
-
+    return fecha_formateada;
 }
 
-function ajustar_a_tam_consola(
-    solo_contenido: string, 
-    contenido_y_traza: string,
-    tam_contenido_y_traza_sin_color: number,
-    tam_traza_sin_color: number = 0,
-) {
-    let log_a_usar = [contenido_y_traza]
+function obtener_nombre_archivo_origen(origen: string) {
+    return path.basename(origen, path.extname(origen));
+}
 
-    let tam_contenido_orig = solo_contenido.length
-    let tam_cont_traz_orig = contenido_y_traza.length
-    let tam_partes = TAM_CONSOLA - tam_traza_sin_color - 1
-    
-    if (tam_contenido_y_traza_sin_color > TAM_CONSOLA && tam_partes > TAM_MINIMO_CONTENIDO) {
+function ajustar_contenido_a_consola(
+    request: string, 
+    tipo: tipo_log, 
+    contenido: string, 
+    ubicacion: string,
+    fecha: string,
+) {
+    let tam_partes = 0
+    let tam_traza_sin_color = 0
+    let tam_linea_total_sin_color = 0
+    let traza = ''
+    let solo_contenido = ''
+    let linea_total = ''
+    if (request !== '') {
+        traza = `${fecha} [${tipo.texto}] (${request}) (${ubicacion})`
+    } else {
+        traza = `${fecha} [${tipo.texto}] (${ubicacion}) `
+    }
+    solo_contenido = contenido
+    tam_traza_sin_color = traza.length
+    linea_total = traza + solo_contenido
+    tam_linea_total_sin_color = linea_total.length
+    let tam_consola = (process.stdout.columns ?? TAM_PRED_CONSOLA)
+    tam_partes = tam_consola - tam_traza_sin_color
+
+    let partes_contenido: string[] = []
+    if (tam_linea_total_sin_color > tam_consola && tam_partes > TAM_MINIMO_CONTENIDO) {
         let partes_particion = [];
-        let a_reducir = tam_contenido_y_traza_sin_color - TAM_CONSOLA;
+        let a_reducir = tam_linea_total_sin_color - tam_consola;
         let contador_tam_restante_contenido = solo_contenido.length
         while (a_reducir > 0 &&
             (contador_tam_restante_contenido > TAM_MINIMO_CONTENIDO)
@@ -283,114 +246,177 @@ function ajustar_a_tam_consola(
             solo_contenido.split(''),
             partes_particion
         )
-        log_a_usar = partes_obtenidas
+        partes_contenido = partes_obtenidas
             .map(una_parte => una_parte.join(''))
-        console.log(log_a_usar)
-    }
-    return log_a_usar
-}
-
-function log(
-    tipo: string,
-    funcion: any,
-    origen: string,
-    texto: string,
-    multilinea: boolean = false,
-    separador: string = '\n'
-) {
-    if (multilinea) {
-        let lineas = texto.split(separador)
-        for (let iLinea = 0; iLinea < lineas.length; iLinea++) {
-            const linea = lineas[iLinea];
-            let texto_color: texto_color = funcion(origen, linea);
-            let contenido = texto_color.texto;
-            let tam_contenido_sin_color = texto_color.tam_texto;
-            let log_completo = _timestamp_log(tipo, contenido, tam_contenido_sin_color);
-            let logs_ajustados = ajustar_a_tam_consola(
-                contenido, 
-                log_completo.texto,
-                log_completo.tam_texto,
-                log_completo.tam_traza
-            );
-            logs_ajustados.map(un_log => {
-                // let log_completo_imprimir = _timestamp_log(tipo, un_log);
-                // console.log(log_completo_imprimir.texto);
-                console.log(un_log)
-            });
-        }
     } else {
-        let texto_color: texto_color = funcion(origen, texto);
-        let contenido = texto_color.texto
-        let tam_contenido_sin_color = texto_color.tam_texto;
-        let log_completo = _timestamp_log(tipo, contenido, tam_contenido_sin_color);
-        let logs_ajustados = ajustar_a_tam_consola(
-            contenido, 
-            log_completo.texto,
-            log_completo.tam_texto,
-            log_completo.tam_traza,
-        )
-        logs_ajustados.map(un_log => {
-            let log_completo_imprimir = _timestamp_log(tipo, un_log)
-            console.log(log_completo_imprimir);
-        })
+        partes_contenido = [solo_contenido]
     }
+    return partes_contenido   
 }
 
 
-interface texto_color {
-    texto: string;
-    tam_texto: number;
-    tam_traza?: number;
+// (o-----------------------------------------------------------/\-----o)
+//   UTILES PARA LOGS (FIN)
+// (o==================================================================o)
+
+
+
+
+
+function estructurar_log(
+    tipo: tipo_log, 
+    ubicacion: string, 
+    contenido: string, 
+    request: string = '',
+) {
+
+    let fecha = formatear_fecha_log()
+    let partes = contenido.split('\n')
+    let partes_contenido: string[] = []
+    partes.map(una_parte_multilinea => {
+        let sub_partes =  ajustar_contenido_a_consola(
+            request,
+            tipo,
+            una_parte_multilinea,
+            ubicacion,
+            fecha,
+        )
+        partes_contenido = [...partes_contenido, ...sub_partes]
+    })
+
+    let log: linea_log = {
+        fecha: {
+            texto_interior: fecha,
+            color_contenido: '',
+        },
+        tipo_log: {
+            texto_interior: tipo.texto,
+            color_contenido: tipo.color_texto + tipo.color_atras,
+            color_bordes: tipo.color_texto + tipo.color_atras,
+            inicio_contenedor: '[',
+            final_contenedor: ']',
+        },
+        ubicacion: {
+            texto_interior: ubicacion,
+            color_contenido: tipo.color_extra,
+            inicio_contenedor: '(',
+            final_contenedor: ')',            
+        },
+        contenido: {
+            texto_interior: contenido,
+            partes_seccion: partes_contenido,
+            color_contenido: tipo.color_extra,
+        },
+    }
+    if (request) {
+        log.tipo_req = {
+            texto_interior: request,
+            color_contenido: tipo.color_extra,
+            inicio_contenedor: '(',
+            final_contenedor: ')',             
+        }
+    }
+    return log
+}
+
+function imprimir(estructura:linea_log) {
+    let partes_posteriores = [];
+    
+    let fecha = `${estructura.fecha.texto_interior} `;
+    partes_posteriores.push(fecha);
+
+    let tipo_log = estructura.tipo_log;
+    let borde_izquierda_tipo = 
+        `${tipo_log.color_bordes}${tipo_log.inicio_contenedor}${reset}`;
+    let borde_derecha_tipo = 
+        `${tipo_log.color_bordes}${tipo_log.final_contenedor}${reset}`;
+    let tipo = `${tipo_log.color_contenido}${tipo_log.texto_interior}${reset}`;
+    let tipo_formado = `${borde_izquierda_tipo}${tipo}${borde_derecha_tipo} `;
+    partes_posteriores.push(tipo_formado);
+
+    if (estructura.tipo_req) {
+        let tipo_req = estructura.tipo_req;
+        let borde_izquierda_tipo_req = tipo_req.inicio_contenedor;
+        let borde_derecha_tipo_req = tipo_req.final_contenedor;
+        let texto_tipo_req = `${tipo_req.color_contenido}${tipo_req.texto_interior}${reset}`;
+        let tipo_req_formado = `${borde_izquierda_tipo_req}${texto_tipo_req}${borde_derecha_tipo_req} `;
+        partes_posteriores.push(tipo_req_formado);
+    }
+
+    let ubicacion = estructura.ubicacion;
+    let borde_izquierda_ubic = ubicacion.inicio_contenedor;
+    let borde_derecha_ubic = ubicacion.final_contenedor;
+    let texto_ubicacion = `${ubicacion.color_contenido}${ubicacion.texto_interior}${reset}`;
+    let ubic_formada = `${borde_izquierda_ubic}${texto_ubicacion}${borde_derecha_ubic} `;
+    partes_posteriores.push(ubic_formada);
+
+    let partes_posteriores_formadas = partes_posteriores.join('');
+    estructura.contenido.partes_seccion?.map(una_parte => {
+        let parte_color = `${estructura.contenido.color_contenido}${una_parte}${reset}`
+        console.log(partes_posteriores_formadas + parte_color)
+    });    
+}
+
+function imprimir_log(estructura: linea_log) {
+    imprimir(estructura)
+}
+
+function imprimir_request(estructura: linea_log) {
+    imprimir(estructura)
 }
 
 
 
-// (o-----------------------------------------( OBJETO CONTENEDOR ))
 
-export const syslog = {
-    log: function (
-        origen: string,
-        texto: string,
-        multilinea: boolean = true,
-        separador: string = '\n'
-    ) { log('LOG', _neutral_log, origen, texto, multilinea, separador) },
-    info: function (
-        origen: string,
-        texto: string,
-        multilinea: boolean = true,
-        separador: string = '\n'
-    ) { log('LOG', info, origen, texto, multilinea, separador) },
-    notice: function (
-        origen: string,
-        texto: string,
-        multilinea: boolean = true,
-        separador: string = '\n'
-    ) { log('LOG', notice, origen, texto, multilinea, separador) },
-    warning: function (
-        origen: string,
-        texto: string,
-        multilinea: boolean = true,
-        separador: string = '\n'
-    ) { log('LOG', warning, origen, texto, multilinea, separador) },
-    danger: function (
-        origen: string,
-        texto: string,
-        multilinea: boolean = true,
-        separador: string = '\n'
-    ) { log('LOG', danger, origen, texto, multilinea, separador) },
-    success: function (
-        origen: string,
-        texto: string,
-        multilinea: boolean = true,
-        separador: string = '\n'
-    ) { log('LOG', success, origen, texto, multilinea, separador) },
-    __request: function (
-        tipo_request: string, direccion: string
-    ) { _http_request(tipo_request, direccion) }
+
+
+
+export const syslog = (modulo: Module) => {
+    let ubicacion = obtener_nombre_archivo_origen(modulo.filename)
+    return {
+        log: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.log, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        info: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.info, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        notice: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.notice, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        warning: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.advertencia, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        danger: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.peligro, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        error: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.error, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        success: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.success, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        ok: (contenido: string, _ubicacion: string = '') => {
+            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
+            let estructura = estructurar_log(TIPOS_LOG.ok, la_ubicacion, contenido);
+            imprimir_log(estructura)
+        },
+        __request: (request: string, contenido: string) => {
+            let estructura = estructurar_log(TIPOS_LOG.request, ubicacion, contenido, request);
+            imprimir_request(estructura)
+        },
+    }
 };
-
-
-/*(o-----------------------------------------------------------/\-----o)
-    SECCION DE COLORES (FIN)
-  (o==================================================================o)*/
-
