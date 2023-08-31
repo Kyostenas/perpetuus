@@ -17,7 +17,7 @@ const crear_rol = async (req: Request, res: Response) => {
         return new Resp(
             res, __filename, 
             { mensaje: 'Se require el nombre del rol' }
-        )._422();
+        )._422_unprocessable();
     }
     try {
         const rol_input: RolInput = { nombre, descripcion };
@@ -28,7 +28,7 @@ const crear_rol = async (req: Request, res: Response) => {
                 mensaje: 'Rol creado', 
                 datos: nuevo_rol 
             }
-        )._201();
+        )._201_created();
     } catch (err) {
         return new Resp(
             res, __filename, 
@@ -36,7 +36,7 @@ const crear_rol = async (req: Request, res: Response) => {
                 mensaje: 'Error al crear', 
                 error: err 
             }
-        )._422();
+        )._422_unprocessable();
     }
 }
 
@@ -49,7 +49,7 @@ const obtener_roles_todo = async (req: Request, res: Response) => {
                 mensaje: 'Se obtuvieron todos los roles',
                 datos: roles,
             },
-        )._200();
+        )._200_ok();
     } catch (err) {
         return new Resp(
             res, __filename, 
@@ -57,7 +57,7 @@ const obtener_roles_todo = async (req: Request, res: Response) => {
                 mensaje: 'Error al obtener todos los roles', 
                 error: err 
             }
-        )._422();
+        )._422_unprocessable();
     }
 }
 
@@ -72,7 +72,7 @@ const obtener_rol_id = async (req: Request, res: Response) => {
                 { 
                     mensaje: 'No existe un rol con ese id', 
                 }
-            )._404();
+            )._404_not_found();
         }
         syslog.log(`${rol}`)
         return new Resp(
@@ -81,7 +81,7 @@ const obtener_rol_id = async (req: Request, res: Response) => {
                 mensaje: 'Rol obtenido usando un id',
                 datos: rol,
             },
-        )._200();
+        )._200_ok();
     } catch (err) {
         return new Resp(
             res, __filename, 
@@ -89,7 +89,7 @@ const obtener_rol_id = async (req: Request, res: Response) => {
                 mensaje: 'Error al obtener un rol por id', 
                 error: err 
             }
-        )._422();        
+        )._422_unprocessable();        
     }
 }
 
@@ -105,7 +105,7 @@ const modificar_rol = async (req: Request, res: Response) => {
                 { 
                     mensaje: 'No existe un rol con ese id', 
                 }
-            )._404();
+            )._404_not_found();
         }
         if (!cuerpo) {
             return new Resp(
@@ -113,7 +113,7 @@ const modificar_rol = async (req: Request, res: Response) => {
                 {
                     mensaje: 'Se requiren datos para modificar el rol'
                 }
-            )._422()
+            )._422_unprocessable()
         }
         syslog.log(`ANTES: ${rol}`)        
     } catch (err) {
@@ -123,7 +123,7 @@ const modificar_rol = async (req: Request, res: Response) => {
                 mensaje: 'Error al obtener un rol por id', 
                 error: err 
             }
-        )._422();          
+        )._422_unprocessable();          
     }
 }
 

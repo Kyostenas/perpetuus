@@ -33,7 +33,7 @@ const URI_DB = process.env.URI_DB
 // (o-----------------------------------------( RUTAS ))
 
 app.get('/', async (req: Request, res: Response): Promise<Response> => {
-  return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200()
+  return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200_ok()
 });
 
 app.use('/roles', RUTA_ROL());
