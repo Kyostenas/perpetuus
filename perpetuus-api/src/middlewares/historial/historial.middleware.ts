@@ -2,60 +2,18 @@
 // import mongoose from "mongoose"
 // const db = mongoose.connection
 // import Mongoose from 'mongoose'
+// import { 
+//     ACCIONES_MONGOOSE, 
+//     TRADUCCIONES_ACCIONES_MONGOOSE 
+// } from '../../utils/constantes.utiles'
 // const ObjectID = Mongoose.Types.ObjectId
 // // import { seleccionarCampoCualquierNivel } from '../../utils/varios'
 // // import RegistroHistorial from '../../models/historial/registroHistorial.model'
 
 // let usuario = ''
 
-// const ACCIONES = {
-//     AGGREGATE: 'aggregate',
-//     COUNT: 'count',
-//     COUNT_DOCUMENTS: 'countDocuments',
-//     DELETE_ONE: 'deleteOne',
-//     DELETE_MANY: 'deleteMany',
-//     ESTIMATED_DOCUMENT_COUNT: 'estimatedDocumentCount',
-//     FIND: 'find',
-//     FIND_ONE: 'findOne',
-//     FIND_ONE_AND_DELETE: 'findOneAndDelete',
-//     FIND_ONE_AND_REMOVE: 'findOneAndRemove',
-//     FIND_ONE_AND_REPLACE: 'findOneAndReplace',
-//     FIND_ONE_AND_UPDATE: 'findOneAndUpdate',
-//     INIT: 'init',
-//     INSERT_MANY: 'insertMany',
-//     REMOVE: 'remove',
-//     REPLACE_ONE: 'replaceOne',
-//     SAVE: 'save',
-//     UPDATE: 'update',
-//     UPDATE_ONE: 'updateOne',
-//     UPDATE_MANY: 'updateMany',
-//     VALIDATE: 'validate',
-// }
-
-// const TRADUCCIONES = {
-//     aggregate: 'consultar de manera agrupada',
-//     count: 'contar',
-//     countDocuments: 'contar elementos',
-//     deleteOne: 'eliminar uno',
-//     deleteMany: 'eliminar varios',
-//     estimatedDocumentCount: 'contar de manera estimada elementos',
-//     find: 'encontrar',
-//     findOne: 'encontrar uno',
-//     findOneAndDelete: 'encontrar uno y eliminar',
-//     findOneAndRemove: 'encontar uno y remover',
-//     findOneAndReplace: 'encontrar uno y reemplazar',
-//     findOneAndUpdate: 'encontrar uno y actualizar',
-//     init: 'inicializar',
-//     insertMany: 'insertar varios',
-//     remove: 'remover',
-//     replaceOne: 'reemplazar uno',
-//     save: 'crear',
-//     update: 'actualizar',
-//     updateOne: 'actualizar uno',
-//     updateMany: 'actualizar varios',
-//     validate: 'validar',
-// }
-
+// const ACCIONES = ACCIONES_MONGOOSE
+// const TRADUCCIONES = TRADUCCIONES_ACCIONES_MONGOOSE
 
 
 

@@ -1,11 +1,18 @@
 import mongoose, { Schema, Model, Document } from "mongoose";
+import { crear_campo_busqueda } from "../../../middlewares/busqueda/campos_busqueda.middleware";
+
+type Capacidad = {
+    metodo: ('post' | 'put' | 'get' | 'delete')[];
+    subcapacidades: string[];
+};
 
 type Permiso = {
     ruta: string;
-    tipo: ('post' | 'put' | 'get' | 'delete')[]
+    capacidades: Capacidad[];
 };
 
 type RolDocument = Document & {
+    busqueda: String;
     nombre: string;
     descripcion: string;
     permisos: Permiso[];
@@ -50,6 +57,14 @@ const rolSchema = new Schema(
         timestamps: true,
     }
 );
+
+rolSchema.post('save', async function (doc: any, next: Function) {
+    await crear_campo_busqueda(
+        doc,
+        ['nombre', 'descripcion']
+    )
+    next();
+});
 
 const Rol: Model<RolDocument> = mongoose.model<RolDocument>('Rol', rolSchema);
 export { Rol, RolInput, RolDocument, Permiso }; 
