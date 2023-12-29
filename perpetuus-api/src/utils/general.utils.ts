@@ -297,6 +297,29 @@ export function seleccionarCampoCualquierNivel(
     return resultado
 }
 
+export function seleccionarCampoCualquierNivelSimple(
+    objeto: any,
+    campo: string,
+    separador: string,
+) {
+    try {
+        let ruta = campo.split(separador)
+        let objetoActual: any | undefined
+        for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
+            const pasoRuta = ruta[iRuta]
+            try {
+            objetoActual = objetoActual[pasoRuta]
+            } catch {
+            objetoActual = objeto[pasoRuta]
+            }
+        }
+        return objetoActual
+    } catch {
+        return undefined
+    }
+}
+
+
 /**
  * Ejecuta un retraso atravez de una promesa.
  *

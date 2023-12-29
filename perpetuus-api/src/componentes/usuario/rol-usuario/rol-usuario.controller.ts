@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { Rol, RolInput } from '../rol-usuario/rol-usuario.model';
-import { Resp } from '../../../utiles/response';
-import { syslog as _syslog } from '../../../utiles/logs';
+import { Rol } from '../rol-usuario/rol-usuario.model';
+import { Resp } from '../../../utils/response.utils';
+import { syslog as _syslog } from '../../../utils/logs.utils';
+import { servicio_rol } from './rol-usuario.service';
 const syslog = _syslog(module)
 
 
@@ -11,8 +12,8 @@ const syslog = _syslog(module)
 //   para los roles
 // (o-----------------------------------------------------------\/-----o)
 
-const crear_rol = async (req: Request, res: Response) => {
-    const { descripcion, nombre } = req.body;
+async function crear_rol(req: Request, res: Response) {
+    const { descripcion, nombre, permisos } = req.body;
     if (!nombre || !descripcion) {
         return new Resp(
             res, __filename, 
@@ -20,8 +21,8 @@ const crear_rol = async (req: Request, res: Response) => {
         )._422_unprocessable();
     }
     try {
-        const rol_input: RolInput = { nombre, descripcion };
-        const nuevo_rol = await  Rol.create(rol_input)
+        const nuevo_rol = await servicio_rol
+            .crear_rol(nombre, descripcion, permisos)
         return new Resp(
             res, __filename, 
             { 
@@ -40,9 +41,10 @@ const crear_rol = async (req: Request, res: Response) => {
     }
 }
 
-const obtener_roles_todo = async (req: Request, res: Response) => {
+async function obtener_roles_todo(req: Request, res: Response) {
     try {
-        const roles = await Rol.find().sort('-creadetedAt')
+        const roles = await servicio_rol
+            .obtener_roles_todo()
         return new Resp(
             res, __filename,
             {
@@ -61,11 +63,10 @@ const obtener_roles_todo = async (req: Request, res: Response) => {
     }
 }
 
-const obtener_rol_id = async (req: Request, res: Response) => {
+async function obtener_rol_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        syslog.log(`ID: ${id}`)
-        const rol = await Rol.findById(id);
+        const rol = await servicio_rol.obtener_rol_id(id)
         if (!rol) {
             return new Resp(
                 res, __filename, 
@@ -74,7 +75,6 @@ const obtener_rol_id = async (req: Request, res: Response) => {
                 }
             )._404_not_found();
         }
-        syslog.log(`${rol}`)
         return new Resp(
             res, __filename,
             {
@@ -93,11 +93,40 @@ const obtener_rol_id = async (req: Request, res: Response) => {
     }
 }
 
-const modificar_rol = async (req: Request, res: Response) => {
+async function obtener_rol_termino(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const rol = await servicio_rol.obtener_rol_termino(id)
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No se encontró un rol relacionado a ese término', 
+                }
+            )._404_not_found();
+        }
+        return new Resp(
+            res, __filename,
+            {
+                mensaje: 'Rol obtenido usando un termino',
+                datos: rol,
+            },
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al obtener un rol por término', 
+                error: err 
+            }
+        )._422_unprocessable();        
+    }
+}
+
+async function modificar_rol(req: Request, res: Response) {
     try {
         const { id } = req.params;
         const cuerpo = req.body
-        syslog.log(`ID: ${id}`)
         const rol = await Rol.findById(id);
         if (!rol) {
             return new Resp(
@@ -127,15 +156,42 @@ const modificar_rol = async (req: Request, res: Response) => {
     }
 }
 
+async function eliminar_rol_id(req: Request, res: Response) {
+    try {
+        const { id } = req.params;
+        const rol = await servicio_rol.eliminar_rol_id(id)
+        return new Resp(
+            res, __filename,
+            {
+                mensaje: 'Rol eliminado usando un id',
+                datos: rol,
+            },
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al eliminar un rol por id', 
+                error: err 
+            }
+        )._422_unprocessable();        
+    }
+}
+
 
 // (o-----------------------------------------------------------/\-----o)
 //   CRUD BASICO (FIN)
 // (o==================================================================o)
 
 
-
-export { 
+const ruta_rol = { 
     crear_rol, 
     obtener_roles_todo,
     obtener_rol_id,
+    obtener_rol_termino,
+    modificar_rol,
+    eliminar_rol_id,
 };
+
+
+export { ruta_rol }
