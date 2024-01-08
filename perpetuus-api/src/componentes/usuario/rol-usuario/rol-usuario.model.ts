@@ -4,21 +4,21 @@ import { ACCIONES_MONGOOSE } from "../../../utils/constantes.utils";
 
 type Capacidad = {
     metodo: ('post' | 'put' | 'get' | 'delete')[];
-    subcapacidades: String[];
+    subcapacidades: string[];
 };
 
 type Permiso = {
-    ruta: String;
+    ruta: string;
     capacidades: Capacidad[];
     
 };
 
 type RolDocument = Document & {
-    busqueda: String;
-    nombre: String;
-    descripcion: String;
+    busqueda: string;
+    nombre: string;
+    descripcion: string;
     permisos?: Permiso[];
-    super_admin?: Boolean;
+    super_admin?: boolean;
 };
 
 type RolInput = {

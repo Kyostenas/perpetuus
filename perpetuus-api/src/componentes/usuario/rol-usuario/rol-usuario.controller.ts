@@ -130,9 +130,16 @@ async function obtener_rol_termino(req: Request, res: Response) {
 
 async function modificar_rol(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const { nombre, descripcion } = req.body
-        const rol = await Rol.findById(id);
+        const { nombre, descripcion, _id } = req.body
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['nombre', 'descripcion', '_id'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }            
+        const rol = await Rol.findById(_id);
         if (!rol) {
             return new Resp(
                 res, __filename, 
@@ -141,15 +148,15 @@ async function modificar_rol(req: Request, res: Response) {
                 }
             )._404_not_found();
         }
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['nombre', 'descripcion'],
-            req.body
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }        
-        servicio_rol.modificar_rol(id, nombre, descripcion);
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No se puede modificar el rol de administrador', 
+                }
+            )._403_forbidden();
+        }  
+        servicio_rol.modificar_rol(_id, nombre, descripcion);
         return new Resp(
             res, __filename,
             {
@@ -170,7 +177,32 @@ async function modificar_rol(req: Request, res: Response) {
 async function eliminar_rol_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        await servicio_rol.eliminar_rol_id(id)
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['id'],
+            req.params
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }            
+        const rol = await Rol.findById(id);
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No existe un rol con ese id', 
+                }
+            )._404_not_found();
+        }
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No se puede eliminar el rol de administrador', 
+                }
+            )._403_forbidden();
+        }          
+        await servicio_rol.eliminar_rol_id(id, rol)
         return new Resp(
             res, __filename,
             {
@@ -194,6 +226,161 @@ async function eliminar_rol_id(req: Request, res: Response) {
 // (o==================================================================o)
 
 
+// (o==================================================================o)
+//   ACCIONES EXTRA (INICIO)
+//   cualquier otra cosa que no caiga en el CRUD convencional
+// (o-----------------------------------------------------------\/-----o)
+
+async function crear_permisos_en_rol_id(req: Request, res: Response) {
+    try {
+        const { permisos, _id } = req.body;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['permisos', '_id'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }
+        let rol = await Rol.findById(_id);
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No existe un rol con ese id', 
+                }
+            )._404_not_found();
+        }
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No se pueden crear permisos en el rol de administrador', 
+                }
+            )._403_forbidden();
+        }            
+        const { 
+            mensaje_res,
+            advertencias
+        } = await servicio_rol
+            .crear_permisos_en_rol_id(permisos, rol);
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: mensaje_res,
+                advertencias: advertencias,
+            }
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al crear ese o esos permisos', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function eliminar_permisos_en_rol_id(req: Request, res: Response) {
+    try {
+        const { permisos, _id } = req.body;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['permisos', '_id'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }
+        let rol = await Rol.findById(_id);
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No existe un rol con ese id', 
+                }
+            )._404_not_found();
+        }
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No se pueden eliminar permisos en el rol de administrador', 
+                }
+            )._403_forbidden();
+        }               
+        const { 
+            mensaje_res,
+            advertencias
+        } = await servicio_rol
+            .eliminar_permisos_en_rol_id(permisos, rol);
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: mensaje_res,
+                advertencias: advertencias,
+            }
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al eleminar ese o esos permisos', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function crear_rol_super_admin(req: Request, res: Response) {
+    try {
+        await servicio_rol
+            .crear_rol_super_admin();
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Rol de "SUPER ADMIN" creado', 
+            }
+        )._201_created();        
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al crear el rol de super admin', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function obtener_permisos_disponibles(req: Request, res: Response) {
+    try {
+        const permisos = await servicio_rol
+            .obtener_permisos_disponibles();
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Permisos obtenidos',
+                datos: permisos,
+            }
+        )._200_ok();        
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al obtener los permisos disponibles', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+// (o-----------------------------------------------------------/\-----o)
+//   ACCIONES EXTRA (FIN)
+// (o==================================================================o)
+
+
 const ruta_rol = { 
     crear_rol, 
     obtener_roles_todo,
@@ -201,6 +388,11 @@ const ruta_rol = {
     obtener_rol_termino,
     modificar_rol,
     eliminar_rol_id,
+
+    crear_permisos_en_rol_id,
+    obtener_permisos_disponibles,
+    eliminar_permisos_en_rol_id,    
+    crear_rol_super_admin,
 };
 
 

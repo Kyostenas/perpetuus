@@ -22,7 +22,7 @@ export function validar_existencia_de_campos(campos: string[], objeto: any): {
         mensaje: 'correcto',
     };
     let campos_error = campos_no_encontrados.join(', ');
-    let mensaje_error = `Error. Se requiere ${campos_error}`;
+    let mensaje_error = `Se requiere ${campos_error}`;
     return {
         valido: false,
         mensaje: mensaje_error,

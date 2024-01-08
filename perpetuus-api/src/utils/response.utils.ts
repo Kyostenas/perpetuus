@@ -46,14 +46,18 @@ export class Resp {
 
     private error_general() {
         this.datos.ok = false
-        if (this.datos.error.hasOwnProperty('err')) {
-            let errores_interfaz: string[] = [];
-            this.datos.error.err.errors.map((campo: string) => {
-                errores_interfaz.push(
-                    this.datos.error.err.errors[campo].message
-                );
-            });
-            this.datos.errores_interfaz = errores_interfaz;
+        if (this.datos.error) {
+            if (this.datos.error.hasOwnProperty('err')) {
+                let errores_interfaz: string[] = [];
+                this.datos.error.err.errors.map((campo: string) => {
+                    errores_interfaz.push(
+                        this.datos.error.err.errors[campo].message
+                    );
+                });
+                this.datos.errores_interfaz = errores_interfaz;
+            }
+        } else {
+            this.datos.error = new Error(this.datos.mensaje? this.datos.mensaje : '')
         }
 
         syslog.definir_ubicacion(this.filename)
@@ -228,6 +232,21 @@ export interface DatosResponse {
      * motivo, contexto, etc. De la respuesta.
      */
     mensaje: string;
+    /**
+     * ## advertencia
+     * Texto describiendo una advertencia.
+     */
+    advertencias?: string[];
+    /**
+     * ## info
+     * Texto describiendo una info. extra.
+     */
+    infos?: string[];
+    /**
+     * ## noticia
+     * Texto describiendo una noticia.
+     */
+    noticias?: string[];
     /**
      * ## estatus
      * El código de estatus de la respuesta. 
