@@ -29,9 +29,9 @@ async function obtener_rol_id(id: string) {
     return rol;
 }
 
-async function obtener_rol_termino(id_busqueda_entera: string) {
-    syslog.debug(`ID BUSQUEDA ENTERA: ${id_busqueda_entera}`);
-    const rol = await Rol.find({ busqueda: id_busqueda_entera });
+async function obtener_rol_termino(termino: string) {
+    syslog.debug(`ID BUSQUEDA ENTERA: ${termino}`);
+    const rol = await Rol.find({ $text: { $search: termino }});
     syslog.debug(`ROL OBTENIDO POR TÉRMINO ${rol}`);
     return rol;
 }

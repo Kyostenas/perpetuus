@@ -28,7 +28,7 @@ type RolInput = {
     super_admin?: RolDocument['super_admin'];
 };
 
-const rol_schema = new Schema(
+const ROL_SCHEMA = new Schema(
     {
         busqueda: String,
         super_admin: {
@@ -66,6 +66,8 @@ const rol_schema = new Schema(
     }
 );
 
+ROL_SCHEMA.index({ 'busqueda': 'text' });
+
 
 // (o==================================================================o)
 //   POST MIDDLEWARE (INICIO)
@@ -79,7 +81,7 @@ const CAMPOS_BUSQUEDA = [
     'permisos.capacidades.subcapacidades',
 ];
 
-rol_schema.post(
+ROL_SCHEMA.post(
     <RegExp><unknown>ACCIONES_MONGOOSE.SAVE, 
     async function (doc: any, next: Function) {
         await crear_campo_busqueda(
@@ -91,7 +93,7 @@ rol_schema.post(
     }
 );
 
-rol_schema.post(
+ROL_SCHEMA.post(
     <RegExp><unknown>ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE,
     async function (doc: any, next: Function) {
         await crear_campo_busqueda(
@@ -107,5 +109,5 @@ rol_schema.post(
 //   POST MIDDLEWARE (FIN)
 // (o==================================================================o)
 
-const MODELO_ROL: Model<RolDocument> = mongoose.model<RolDocument>('Rol', rol_schema);
+const MODELO_ROL: Model<RolDocument> = mongoose.model<RolDocument>('Rol', ROL_SCHEMA);
 export { MODELO_ROL as Rol, RolInput, RolDocument, Permiso }; 

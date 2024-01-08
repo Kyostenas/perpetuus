@@ -71,6 +71,14 @@ async function obtener_roles_todo(req: Request, res: Response) {
 async function obtener_rol_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['nombre', 'descripcion'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }        
         const rol = await servicio_rol.obtener_rol_id(id)
         if (!rol) {
             return new Resp(
@@ -101,6 +109,14 @@ async function obtener_rol_id(req: Request, res: Response) {
 async function obtener_rol_termino(req: Request, res: Response) {
     try {
         const { termino } = req.params;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['termino'],
+            req.params
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }              
         const rol = await servicio_rol.obtener_rol_termino(termino)
         if (!rol) {
             return new Resp(
