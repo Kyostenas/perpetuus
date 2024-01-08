@@ -77,8 +77,6 @@ const CAMPOS_BUSQUEDA = [
     'nombre', 
     'descripcion',
     'permisos.ruta',
-    'permisos.capacidades.metodo',
-    'permisos.capacidades.subcapacidades',
 ];
 
 ROL_SCHEMA.post(
