@@ -1,6 +1,4 @@
 import mongoose, { Schema, Model, Document, mongo } from "mongoose";
-import { crear_campo_busqueda } from "../../../middlewares/busqueda/campos_busqueda.middleware";
-import { ACCIONES_MONGOOSE } from "../../../utils/constantes.utils";
 
 type Capacidad = {
     metodo: ('post' | 'put' | 'get' | 'delete')[];
