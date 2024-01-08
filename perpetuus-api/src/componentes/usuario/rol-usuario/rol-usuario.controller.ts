@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
-import { Rol } from '../rol-usuario/rol-usuario.model';
-import { Resp } from '../../../utils/response.utils';
 import { syslog as _syslog } from '../../../utils/logs.utils';
-import { servicio_rol } from './rol-usuario.service';
 const syslog = _syslog(module)
+
+import { Rol } from '../rol-usuario/rol-usuario.model';
+import { servicio_rol } from './rol-usuario.service';
+
+import { Resp } from '../../../utils/response.utils';
+import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
 
 
 
@@ -13,16 +16,18 @@ const syslog = _syslog(module)
 // (o-----------------------------------------------------------\/-----o)
 
 async function crear_rol(req: Request, res: Response) {
-    const { descripcion, nombre, permisos } = req.body;
-    if (!nombre || !descripcion) {
-        return new Resp(
-            res, __filename, 
-            { mensaje: 'Se require el nombre del rol' }
-        )._422_unprocessable();
-    }
     try {
+        const { descripcion, nombre } = req.body;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['nombre', 'descripcion'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }
         const nuevo_rol = await servicio_rol
-            .crear_rol(nombre, descripcion, permisos)
+            .crear_rol(nombre, descripcion);
         return new Resp(
             res, __filename, 
             { 
@@ -95,8 +100,8 @@ async function obtener_rol_id(req: Request, res: Response) {
 
 async function obtener_rol_termino(req: Request, res: Response) {
     try {
-        const { id } = req.params;
-        const rol = await servicio_rol.obtener_rol_termino(id)
+        const { termino } = req.params;
+        const rol = await servicio_rol.obtener_rol_termino(termino)
         if (!rol) {
             return new Resp(
                 res, __filename, 
@@ -108,7 +113,7 @@ async function obtener_rol_termino(req: Request, res: Response) {
         return new Resp(
             res, __filename,
             {
-                mensaje: 'Rol obtenido usando un termino',
+                mensaje: 'Rol obtenido usando un término',
                 datos: rol,
             },
         )._200_ok();
@@ -126,7 +131,7 @@ async function obtener_rol_termino(req: Request, res: Response) {
 async function modificar_rol(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const cuerpo = req.body
+        const { nombre, descripcion } = req.body
         const rol = await Rol.findById(id);
         if (!rol) {
             return new Resp(
@@ -136,20 +141,26 @@ async function modificar_rol(req: Request, res: Response) {
                 }
             )._404_not_found();
         }
-        if (!cuerpo) {
-            return new Resp(
-                res, __filename,
-                {
-                    mensaje: 'Se requiren datos para modificar el rol'
-                }
-            )._422_unprocessable()
-        }
-        syslog.log(`ANTES: ${rol}`)        
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['nombre', 'descripcion'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }        
+        servicio_rol.modificar_rol(id, nombre, descripcion);
+        return new Resp(
+            res, __filename,
+            {
+                mensaje: 'Rol modificado',
+            },
+        )._200_ok();        
     } catch (err) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Error al obtener un rol por id', 
+                mensaje: 'Error al modificar un rol por id', 
                 error: err 
             }
         )._422_unprocessable();          
@@ -159,12 +170,11 @@ async function modificar_rol(req: Request, res: Response) {
 async function eliminar_rol_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
-        const rol = await servicio_rol.eliminar_rol_id(id)
+        await servicio_rol.eliminar_rol_id(id)
         return new Resp(
             res, __filename,
             {
                 mensaje: 'Rol eliminado usando un id',
-                datos: rol,
             },
         )._200_ok();
     } catch (err) {

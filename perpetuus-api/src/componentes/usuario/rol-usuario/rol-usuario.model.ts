@@ -1,32 +1,40 @@
-import mongoose, { Schema, Model, Document } from "mongoose";
+import mongoose, { Schema, Model, Document, mongo } from "mongoose";
 import { crear_campo_busqueda } from "../../../middlewares/busqueda/campos_busqueda.middleware";
+import { ACCIONES_MONGOOSE } from "../../../utils/constantes.utils";
 
 type Capacidad = {
     metodo: ('post' | 'put' | 'get' | 'delete')[];
-    subcapacidades: string[];
+    subcapacidades: String[];
 };
 
 type Permiso = {
-    ruta: string;
+    ruta: String;
     capacidades: Capacidad[];
+    
 };
 
 type RolDocument = Document & {
     busqueda: String;
-    nombre: string;
-    descripcion: string;
-    permisos: Permiso[];
+    nombre: String;
+    descripcion: String;
+    permisos?: Permiso[];
+    super_admin?: Boolean;
 };
 
 type RolInput = {
     nombre: RolDocument['nombre'];
     descripcion: RolDocument['descripcion'];
-    permisos: RolDocument['permisos'];
+    permisos?: RolDocument['permisos'];
+    super_admin?: RolDocument['super_admin'];
 };
 
-const rolSchema = new Schema(
+const rol_schema = new Schema(
     {
         busqueda: String,
+        super_admin: {
+            type: Boolean,
+            default: false,
+        },
         nombre: {
             type: Schema.Types.String,
             required: [true, 'Nombre de rol requerido'],
@@ -38,7 +46,7 @@ const rolSchema = new Schema(
         permisos: [{
             ruta: {
                 type: Schema.Types.String,
-                required: [true, 'Nombre de permiso requerido'],             
+                required: [true, 'Nombre de ruta de permiso requerida'],             
             },
             capacidades: [{
                 metodo: {
@@ -58,13 +66,46 @@ const rolSchema = new Schema(
     }
 );
 
-rolSchema.post('save', async function (doc: any, next: Function) {
-    await crear_campo_busqueda(
-        doc,
-        ['nombre', 'descripcion']
-    )
-    next();
-});
 
-const Rol: Model<RolDocument> = mongoose.model<RolDocument>('Rol', rolSchema);
-export { Rol, RolInput, RolDocument, Permiso }; 
+// (o==================================================================o)
+//   POST MIDDLEWARE (INICIO)
+// (o-----------------------------------------------------------\/-----o)
+
+const CAMPOS_BUSQUEDA = [
+    'nombre', 
+    'descripcion',
+    'permisos.ruta',
+    'permisos.capacidades.metodo',
+    'permisos.capacidades.subcapacidades',
+];
+
+rol_schema.post(
+    <RegExp><unknown>ACCIONES_MONGOOSE.SAVE, 
+    async function (doc: any, next: Function) {
+        await crear_campo_busqueda(
+            doc,
+            CAMPOS_BUSQUEDA,
+            MODELO_ROL,
+        )
+        next();
+    }
+);
+
+rol_schema.post(
+    <RegExp><unknown>ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE,
+    async function (doc: any, next: Function) {
+        await crear_campo_busqueda(
+            doc,
+            CAMPOS_BUSQUEDA,
+            MODELO_ROL,
+        )
+        next();
+    }
+);
+
+// (o-----------------------------------------------------------/\-----o)
+//   POST MIDDLEWARE (FIN)
+// (o==================================================================o)
+
+const MODELO_ROL: Model<RolDocument> = mongoose.model<RolDocument>('Rol', rol_schema);
+export { MODELO_ROL as Rol, RolInput, RolDocument, Permiso }; 

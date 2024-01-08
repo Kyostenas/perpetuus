@@ -7,20 +7,21 @@ const syslog = _syslog(module)
 //   para los roles
 // (o-----------------------------------------------------------\/-----o)
 
-async function crear_rol(nombre: string, descripcion: string, permisos: Permiso[]) {
-    const rol_input: RolInput = { nombre, descripcion, permisos };
-    const rol_creado =  await Rol.create(rol_input);
-    syslog.debug(`ROL CREADO: ${rol_creado}`);
-    return rol_creado;
+async function crear_rol(nombre: string, descripcion: string) {
+    const rol_input: RolInput = { nombre, descripcion };
+    syslog.debug(`ROL INPUT: ${JSON.stringify(rol_input, undefined, 2)}`);
+    let nuevo_rol = new Rol(rol_input);
+    syslog.debug(`ROL CREADO: ${nuevo_rol}`);
+    await Rol.create(nuevo_rol);
 }
 
 async function obtener_roles_todo() {
-    return await Rol.find().sort('-creadetedAt');
+    return await Rol.find().sort('-creadetedAt').select('-busqueda');
 }
 
 async function obtener_rol_id(id: string) {
     syslog.debug(`ID ROL: ${id}`);
-    const rol = await Rol.findById(id);
+    const rol = await Rol.findById(id).select('-busqueda');
     syslog.debug(`ROL OBTENIDO POR ID ${rol}`);
     return rol;
 }
@@ -32,18 +33,21 @@ async function obtener_rol_termino(id_busqueda_entera: string) {
     return rol;
 }
 
-async function modificar_rol(id: string, cuerpo: RolDocument) {
+async function modificar_rol(id: string, nombre: string, descripcion: string) {
     syslog.debug(`ID ROL: ${id}`);
-    const rol = await Rol.findByIdAndUpdate(id, cuerpo);
-    syslog.log(`ROL MODIFICADO: ${rol}`);
-    // return rol;
+    const rol = await Rol.findOneAndUpdate({ _id: id }, { nombre, descripcion });
+    syslog.debug(`ROL MODIFICADO: `, JSON.stringify(rol));
 }
 
 async function eliminar_rol_id(id: string) {
     syslog.debug(`ID ROL: ${id}`);
-    const rol = await Rol.findOneAndDelete({ _id: id })
-    syslog.log(`ROL ELIMINADO: ${rol}`);
-    // return rol;    
+
+    const rol_comprobar = await Rol.findById(id)
+    if (!rol_comprobar) throw 'No se puede eliminar este rol porque no existe'
+    if (rol_comprobar.super_admin) throw 'No se puede eliminar este rol porque es un administrador'
+
+    await Rol.findOneAndDelete({ _id: id })
+    syslog.warning(`ROL ELIMINADO: `, rol_comprobar?.nombre);
 }
 
 // (o-----------------------------------------------------------/\-----o)
