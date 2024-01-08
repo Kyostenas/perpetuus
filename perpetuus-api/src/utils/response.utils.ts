@@ -153,6 +153,20 @@ export class Resp {
     }
 
     /**
+     * ## `403 Forbidden`
+     * 
+     * Detalles [aquí](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403).
+     * 
+     * El servidor entiende la solicitud pero se rehusa a autorizarla. Es similar
+     * a `401` pero aquí reautenticar no hace difeerencia, porque el acceso esta 
+     * ligado a la lógica en la aplicación, por ejemplo: No hay suficientes
+     * permisos para acceder a un recurso.
+     */        
+    _403_forbidden() {
+        return this.respuesta_general(403, `FORBIDDEN`, true)
+    }
+
+    /**
      * ## `404 Not Found`
      * 
      * Detalles [aquí](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404).
