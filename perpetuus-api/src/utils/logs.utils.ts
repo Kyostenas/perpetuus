@@ -70,7 +70,7 @@ import { DEBUG_LOGS, SHOW_LOGS, SHOW_REQ_LOGS, SHOW_SYS_REGS } from '../config';
 
 const TAM_PRED_CONSOLA = 90
 // const TAM_CONSOLA: number = (process.stdout.columns ?? TAM_PRED_CONSOLA)
-const TAM_MINIMO_CONTENIDO = 70
+const TAM_MINIMO_CONTENIDO = 40
 const TIPOS_LOG: tipos_log = {
     error: {
         texto: 'E',
@@ -384,59 +384,66 @@ async function save_log_on_file() {
 
 
 
+function formatear_contenido(...contenido: any) {
+    return contenido.map(function (un_objeto: any) {
+        return String(un_objeto)
+    }).join(' ')
+}
+
 
 
 export const syslog = (modulo: Module) => {
-    let ubicacion = obtener_nombre_archivo_origen(modulo.filename)
-    return {
-        debug: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.debug, la_ubicacion, contenido);
-            print_debug_log(estructura)
+
+    let ubicacion!: string;
+    let ubicacion_manual: boolean = false
+    function crear_log(
+        funcion: Function, 
+        tipo: tipo_log, 
+        request: string | undefined, 
+        ...contenido: any
+    ) {
+        contenido = formatear_contenido(...contenido);
+        if (!ubicacion_manual) ubicacion = obtener_nombre_archivo_origen(modulo.filename);
+        else ubicacion = obtener_nombre_archivo_origen(ubicacion);
+        let estructura = estructurar_log(tipo, ubicacion, contenido, request);
+        funcion(estructura)
+        ubicacion_manual = false
+    }
+    let funciones = {
+        definir_ubicacion: function (ubicacion_nueva: string) { 
+            ubicacion = ubicacion_nueva
+            ubicacion_manual = true
         },
-        log: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.log, la_ubicacion, contenido);
-            print_log(estructura)
+        debug: async (...contenido: any) => {
+            crear_log(print_debug_log, TIPOS_LOG.debug, undefined, ...contenido);
         },
-        info: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.info, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        log: async (...contenido: any) => {
+            crear_log(print_log, TIPOS_LOG.log, undefined, ...contenido);
         },
-        notice: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.notice, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        info: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.info, undefined, ...contenido);
         },
-        warning: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.advertencia, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        notice: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.notice, undefined, ...contenido);
         },
-        danger: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.peligro, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        warning: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.advertencia, undefined, ...contenido);
         },
-        error: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.error, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        danger: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.peligro, undefined, ...contenido);
         },
-        success: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.success, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        error: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.error, undefined, ...contenido);
         },
-        ok: async (contenido: string, _ubicacion: string = '') => {
-            let la_ubicacion = ubicacion !== ''? ubicacion : _ubicacion;
-            let estructura = estructurar_log(TIPOS_LOG.ok, la_ubicacion, contenido);
-            print_sys_reg(estructura)
+        success: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.success, undefined, ...contenido);
         },
-        __request: async (request: string, contenido: string) => {
-            let estructura = estructurar_log(TIPOS_LOG.request, ubicacion, contenido, request);
-            print_req_log(estructura)
+        ok: async (...contenido: any) => {
+            crear_log(print_sys_reg, TIPOS_LOG.ok, undefined, ...contenido);
+        },
+        __request: async (request: string, ...contenido: any) => {
+            crear_log(print_req_log, TIPOS_LOG.request, request, ...contenido);            
         },
     }
+    return funciones
 };
