@@ -14,7 +14,6 @@ type Permiso = {
 };
 
 type RolDocument = Document & {
-    busqueda: string;
     nombre: string;
     descripcion: string;
     permisos?: Permiso[];
@@ -30,7 +29,6 @@ type RolInput = {
 
 const ROL_SCHEMA = new Schema(
     {
-        busqueda: String,
         super_admin: {
             type: Boolean,
             default: false,
@@ -66,42 +64,13 @@ const ROL_SCHEMA = new Schema(
     }
 );
 
-ROL_SCHEMA.index({ 'busqueda': 'text' });
+ROL_SCHEMA.index({ '$**': 'text' });
 
 
 // (o==================================================================o)
 //   POST MIDDLEWARE (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-const CAMPOS_BUSQUEDA = [
-    'nombre', 
-    'descripcion',
-    'permisos.ruta',
-];
-
-ROL_SCHEMA.post(
-    <RegExp><unknown>ACCIONES_MONGOOSE.SAVE, 
-    async function (doc: any, next: Function) {
-        await crear_campo_busqueda(
-            doc,
-            CAMPOS_BUSQUEDA,
-            MODELO_ROL,
-        )
-        next();
-    }
-);
-
-ROL_SCHEMA.post(
-    <RegExp><unknown>ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE,
-    async function (doc: any, next: Function) {
-        await crear_campo_busqueda(
-            doc,
-            CAMPOS_BUSQUEDA,
-            MODELO_ROL,
-        )
-        next();
-    }
-);
 
 // (o-----------------------------------------------------------/\-----o)
 //   POST MIDDLEWARE (FIN)

@@ -22,18 +22,18 @@ async function crear_rol(nombre: string, descripcion: string) {
 }
 
 async function obtener_roles_todo() {
-    return await Rol.find().sort('-creadetedAt').select('-busqueda');
+    return await Rol.find().sort('-creadetedAt');
 }
 
 async function obtener_rol_id(id: string) {
     syslog.debug(`ID ROL: ${id}`);
-    const rol = await Rol.findById(id).select('-busqueda');
+    const rol = await Rol.findById(id);
     syslog.debug(`ROL OBTENIDO POR ID ${rol}`);
     return rol;
 }
 
 async function obtener_rol_termino(termino: string) {
-    syslog.debug(`ID BUSQUEDA ENTERA: ${termino}`);
+    syslog.debug(`TERMINO DE BÚSQUEDA: ${termino}`);
     const rol = await Rol.find({ $text: { $search: termino }});
     syslog.debug(`ROL OBTENIDO POR TÉRMINO ${rol}`);
     return rol;
