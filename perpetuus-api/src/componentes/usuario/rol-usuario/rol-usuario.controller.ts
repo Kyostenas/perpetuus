@@ -7,6 +7,7 @@ import { servicio_rol } from './rol-usuario.service';
 
 import { Resp } from '../../../utils/response.utils';
 import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
+import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
 
 
 
@@ -168,7 +169,7 @@ async function modificar_rol(req: Request, res: Response) {
             return new Resp(
                 res, __filename, 
                 { 
-                    mensaje: 'No se puede modificar el rol de administrador', 
+                    mensaje: `No se puede modificar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
                 }
             )._403_forbidden();
         }  
@@ -214,7 +215,7 @@ async function eliminar_rol_id(req: Request, res: Response) {
             return new Resp(
                 res, __filename, 
                 { 
-                    mensaje: 'No se puede eliminar el rol de administrador', 
+                    mensaje: `No se puede eliminar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
                 }
             )._403_forbidden();
         }          
@@ -271,7 +272,7 @@ async function crear_permisos_en_rol_id(req: Request, res: Response) {
             return new Resp(
                 res, __filename, 
                 { 
-                    mensaje: 'No se pueden crear permisos en el rol de administrador', 
+                    mensaje: `No se pueden crear permisos en el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
                 }
             )._403_forbidden();
         }            
@@ -322,7 +323,7 @@ async function eliminar_permisos_en_rol_id(req: Request, res: Response) {
             return new Resp(
                 res, __filename, 
                 { 
-                    mensaje: 'No se pueden eliminar permisos en el rol de administrador', 
+                    mensaje: `No se pueden eliminar permisos en el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
                 }
             )._403_forbidden();
         }               
@@ -356,14 +357,14 @@ async function crear_rol_super_admin(req: Request, res: Response) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Rol de "SUPER ADMIN" creado', 
+                mensaje: `Rol de ${NOMBRE_ROL_SUPER_ADMIN} creado`, 
             }
         )._201_created();        
     } catch (err) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Error al crear el rol de super admin', 
+                mensaje: `Error al crear el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
                 error: err 
             }
         )._422_unprocessable();          

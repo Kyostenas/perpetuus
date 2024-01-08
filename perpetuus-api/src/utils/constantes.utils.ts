@@ -45,3 +45,6 @@ export const TRADUCCIONES_ACCIONES_MONGOOSE = {
     updateMany: 'actualizar varios',
     validate: 'validar',
 }
+
+export const NOMBRE_ROL_SUPER_ADMIN = 'SUPER ADMINISTRADOR'
+export const NOMBRE_USUARIO_SUPER_ADMIN = 'Super Usuario'

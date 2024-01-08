@@ -1,9 +1,12 @@
+import { syslog as _syslog } from '../../../utils/logs.utils';
+const syslog = _syslog(module)
+
 import { Rol, RolInput, Permiso, RolDocument } from '../rol-usuario/rol-usuario.model';
 import { convertirArregloObjetosAObjeto } from '../../../utils/general.utils'
 
-import { syslog as _syslog } from '../../../utils/logs.utils';
 import { PERMISOS_DISPONIBLES } from '../../../config/roles/permisos.config';
-const syslog = _syslog(module)
+import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
+
 
 // (o==================================================================o)
 //   CRUD BASICO (INICIO)
@@ -159,10 +162,10 @@ async function eliminar_permisos_en_rol_id(permisos_a_eliminar: Permiso[], rol: 
 async function crear_rol_super_admin() {
     let rol_super_admin = await Rol.find({ super_admin: true });
     let ya_existe = rol_super_admin.length > 0;
-    if (ya_existe) throw 'Ya existe el rol de SUPER ADMIN';
+    if (ya_existe) throw `Ya existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
 
     let rol_input: RolInput = {
-        nombre: 'SUPER ADMINISTRADOR',
+        nombre: NOMBRE_ROL_SUPER_ADMIN,
         super_admin: true,
         descripcion: 'Este rol tiene acceso a todas las rutas'
             .concat(' con sus capacidades y sub-capacidades.'),
