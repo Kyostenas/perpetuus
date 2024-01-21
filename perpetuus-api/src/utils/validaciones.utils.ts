@@ -1,3 +1,5 @@
+import { REGEX_VALIDACION_CORREO } from "./constantes.utils";
+
 export function validar_existencia_de_campos(campos: string[], objeto: any): {
     valido: boolean;
     mensaje: string;
@@ -27,4 +29,9 @@ export function validar_existencia_de_campos(campos: string[], objeto: any): {
         valido: false,
         mensaje: mensaje_error,
     }
+}
+
+export function validar_correo(correo: string) {
+    let resultado_regex = new RegExp(REGEX_VALIDACION_CORREO).exec(correo);
+    return resultado_regex?.join('').length === correo.length;
 }

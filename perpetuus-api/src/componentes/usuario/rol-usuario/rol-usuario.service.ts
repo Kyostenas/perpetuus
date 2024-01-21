@@ -22,21 +22,30 @@ async function crear_rol(nombre: string, descripcion: string) {
 }
 
 async function obtener_roles_todo() {
-    return await Rol.find().sort('-creadetedAt');
+    const roles = await Rol
+        .find()
+        .sort('-creadetedAt')
+        .select('-__v');
+    return roles.filter(rol => !rol.super_admin);
 }
 
 async function obtener_rol_id(id: string) {
     syslog.debug(`ID ROL: ${id}`);
-    const rol = await Rol.findById(id);
+    const rol = await Rol
+        .findById(id)
+        .select('-__v');
+    if (rol?.super_admin) return undefined;
     syslog.debug(`ROL OBTENIDO POR ID ${rol}`);
     return rol;
 }
 
 async function obtener_rol_termino(termino: string) {
     syslog.debug(`TERMINO DE BÚSQUEDA: ${termino}`);
-    const rol = await Rol.find({ $text: { $search: termino }});
-    syslog.debug(`ROL OBTENIDO POR TÉRMINO ${rol}`);
-    return rol;
+    const roles = await Rol
+        .find({ $text: { $search: termino }})
+        .select('-__v');
+    syslog.debug(`ROLES OBTENIDO POR TÉRMINO ${roles}`);
+    return roles.filter(rol => !rol.super_admin);
 }
 
 async function modificar_rol(id: string, nombre: string, descripcion: string) {

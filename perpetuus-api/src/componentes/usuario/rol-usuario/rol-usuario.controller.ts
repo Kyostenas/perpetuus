@@ -73,8 +73,8 @@ async function obtener_rol_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
-            ['nombre', 'descripcion'],
-            req.body
+            ['id'],
+            req.params
         );
         if (!valido) {
             return new Resp(res, __filename, { mensaje })

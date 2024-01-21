@@ -37,6 +37,34 @@ export const PERMISOS_DISPONIBLES: PERMISO_DISPONIBLE[] = [
                 ],
             },
         ]
+    },
+    {
+        ruta: 'usuarios',
+        capacidades: [
+            {
+                metodo: 'post',
+            },
+            {
+                metodo: 'get',
+                sub_capacidades: [
+                    'id',
+                    'termino',
+                ],
+            },
+            {
+                metodo: 'put',
+                sub_capacidades: [
+                    'rol',
+                ],                
+            },
+            {
+                metodo: 'delete',
+                sub_capacidades: [
+                    'id',
+                    'rol',
+                ],
+            },
+        ]
     }
 ]
 

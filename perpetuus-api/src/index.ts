@@ -9,7 +9,9 @@ mongoose.Promise = global.Promise;
 // import cors from 'cors';
 
 import { URI_DB, PORT } from './config';
+
 import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
+import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
 
 // (o-----------------------------------------( CONFIGURACIONES ))
 
@@ -40,6 +42,7 @@ app.get('/api', async (req: Request, res: Response): Promise<Response> => {
 });
 
 app.use('/roles', RUTA_ROL());
+app.use('/usuarios', RUTA_USUARIO());
 // app.use('/api/multi-consulta', RUTA_MULTI_CONSULTA())
 
 // (o-----------------------------------------( CONECCION MONGODB ))
