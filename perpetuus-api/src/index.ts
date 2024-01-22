@@ -1,23 +1,28 @@
 // (o-----------------------------------------( IMPORTACIONES ))
-import express, { Application, Request, Response } from 'express';
 import mongoose from 'mongoose';
 mongoose.set('strictQuery', false);
+mongoose.Promise = global.Promise;
+
 import { syslog as _syslog } from './utils/logs.utils';
 const syslog = _syslog(module);
-import { Resp } from './utils/response.utils';
-mongoose.Promise = global.Promise;
-// import cors from 'cors';
 
-import { URI_DB, PORT } from './config';
+import express, { Application, Request, Response } from 'express';
+import cors from 'cors';
+import cookie_session from 'cookie-session';
+
+import { Resp } from './utils/response.utils';
+
+import { URI_DB, PORT, COOKIE_SECRET } from './config/env/env.config';
 
 import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
 import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
+import { RUTA_AUTH } from './componentes/auth-login/auth.routes';
 
 // (o-----------------------------------------( CONFIGURACIONES ))
 
 const app: Application = express();
 
-// app.use(cors());
+app.use(cors());
 
 // LOGS REQUESTS
 app.use((req, res, next) => {
@@ -27,7 +32,22 @@ app.use((req, res, next) => {
 
 // BODY PARSING
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cookie_session({
+    name: 'perpetuus-session',
+    keys: [<string>COOKIE_SECRET],
+    httpOnly: true,
+  })
+);
+
+app.use(function(req: Request, res: Response, next: any) {
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, Content-Type, Accept',
+  );
+  next();
+});
 
 // (o-----------------------------------------( RUTAS ))
 
@@ -37,13 +57,12 @@ app.all('*', (req, res, next)=>{
   next()
 });
 
-app.get('/api', async (req: Request, res: Response): Promise<Response> => {
+app.get('/api/v1', async (req: Request, res: Response): Promise<Response> => {
   return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200_ok()
 });
-
-app.use('/roles', RUTA_ROL());
-app.use('/usuarios', RUTA_USUARIO());
-// app.use('/api/multi-consulta', RUTA_MULTI_CONSULTA())
+app.use('/api/v1/auth', RUTA_AUTH());
+app.use('/api/v1/roles', RUTA_ROL());
+app.use('/api/v1/usuarios', RUTA_USUARIO());
 
 // (o-----------------------------------------( CONECCION MONGODB ))
 

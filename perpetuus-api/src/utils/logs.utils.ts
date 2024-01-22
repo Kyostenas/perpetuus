@@ -65,7 +65,7 @@ const back = {
 import path from 'path';
 import { limpiar_codigos_ansi, partcion_arbitraria_arreglo } from './general.utils';
 import Module from 'module';
-import { DEBUG_LOGS, SHOW_LOGS, SHOW_REQ_LOGS, SHOW_SYS_REGS } from '../config';
+import { DEBUG_LOGS, SHOW_LOGS, SHOW_REQ_LOGS, SHOW_SYS_REGS } from '../config/env/env.config';
 
 
 const TAM_PRED_CONSOLA = 90

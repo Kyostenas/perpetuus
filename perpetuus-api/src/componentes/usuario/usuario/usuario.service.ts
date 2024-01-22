@@ -1,9 +1,18 @@
+import { hashSync as bcrypt_hashsync } from 'bcryptjs';
+
 import { syslog as _syslog } from '../../../utils/logs.utils';
 const syslog = _syslog(module)
 
+import { 
+    CONTRASENA_SUPER_ADMIN_TEMPORAL, 
+    CORREO_SUPER_ADMIN_TEMPORAL, 
+    NOMBRE_ROL_SUPER_ADMIN, 
+    NOMBRE_USUARIO_SUPER_ADMIN 
+} from '../../../utils/constantes.utils';
+
 import { Usuario, UsuarioInput, UsuarioDocument } from '../usuario/usuario.model';
 import { Rol } from '../rol-usuario/rol-usuario.model';
-import { NOMBRE_ROL_SUPER_ADMIN, NOMBRE_USUARIO_SUPER_ADMIN } from '../../../utils/constantes.utils';
+import { AUTH_SECRET } from '../../../config/env/env.config';
 
 
 // (o==================================================================o)
@@ -14,17 +23,22 @@ import { NOMBRE_ROL_SUPER_ADMIN, NOMBRE_USUARIO_SUPER_ADMIN } from '../../../uti
 async function crear_usuario(
     nombres: string,
     apellidos: string,
-    correo?: string,
+    nombre_usuario: string,
+    contrasena: string,
+    correo: string,
     numero_celular?: string,
 ) {
-    if (nombres === NOMBRE_USUARIO_SUPER_ADMIN) {
-        throw 'Esta prohibido usar ese nombre'
+    if (nombre_usuario === NOMBRE_USUARIO_SUPER_ADMIN) {
+        throw 'Esta prohibido usar ese nombre de usuario'
     }
-    if (apellidos === NOMBRE_USUARIO_SUPER_ADMIN) {
-        throw 'Esta prohibido usar ese nombre'
-    }
+    const contrasena_encriptada = bcrypt_hashsync(contrasena, 12);
     const usuario_input: UsuarioInput = { 
-        nombres, apellidos, correo, numero_celular
+        nombres, 
+        apellidos, 
+        nombre_usuario,
+        contrasena: contrasena_encriptada,
+        correo, 
+        numero_celular
     };
     syslog.debug(`USUARIO INPUT: ${JSON.stringify(
         usuario_input, undefined, 2
@@ -38,14 +52,14 @@ async function obtener_usuarios_todo() {
     return await Usuario
         .find()
         .sort('-creadetedAt')
-        .select('-__v');
+        .select('-__v -contrasena');
 }
 
 async function obtener_usuario_id(id: string) {
     syslog.debug(`ID USUARIO: ${id}`);
     const usuario = await Usuario
         .findById(id)
-        .select('-__v');
+        .select('-__v -contrasena');
     syslog.debug(`USUARIO OBTENIDO POR ID ${usuario}`);
     return usuario;
 }
@@ -54,7 +68,7 @@ async function obtener_usuario_termino(termino: string) {
     syslog.debug(`TERMINO DE BÚSQUEDA: ${termino}`);
     const usuario = await Usuario
         .find({ $text: { $search: termino }})
-        .select('-__v');
+        .select('-__v -contrasena');
     syslog.debug(`USUARIO OBTENIDO POR TÉRMINO ${usuario}`);
     return usuario;
 }
@@ -76,7 +90,7 @@ async function modificar_usuario(
 async function eliminar_usuario_id(id: string, usuario_comprobar: UsuarioDocument) {
     syslog.debug(`ID ROL: ${id}`);
     await Usuario.findOneAndDelete({ _id: id });
-    syslog.warning(`ROL ELIMINADO: `, usuario_comprobar?.nombres);
+    syslog.warning(`ROL ELIMINADO: `, usuario_comprobar?.nombre_usuario);
 }
 
 // (o-----------------------------------------------------------/\-----o)
@@ -98,17 +112,25 @@ async function crear_usuario_super_admin() {
     if (no_existe_rol_super_admin) {
         throw `No existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
     }
-    const usuario_super_admin = await Usuario.find({ nombres: NOMBRE_USUARIO_SUPER_ADMIN });
+    const usuario_super_admin = await Usuario.find({ nombre_usuario: NOMBRE_USUARIO_SUPER_ADMIN });
     let ya_existe_usuario_super_admin = usuario_super_admin.length > 0;
     if (ya_existe_usuario_super_admin) {
         throw `Ya existe el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`;
     }
 
     const rol_a_usar = rol_super_admin[0];
+    const nombre = NOMBRE_USUARIO_SUPER_ADMIN.split(' ')[0];
+    const apellido = NOMBRE_USUARIO_SUPER_ADMIN.split(' ')[1];
+    const contrasena_encriptada = bcrypt_hashsync(
+        CONTRASENA_SUPER_ADMIN_TEMPORAL, 
+        12
+    );
     const usuario_input: UsuarioInput = {
-        nombres: NOMBRE_USUARIO_SUPER_ADMIN,
-        apellidos: NOMBRE_USUARIO_SUPER_ADMIN,
-        correo: 'admin@perpetuus.mx',
+        nombres: nombre,
+        apellidos: apellido,
+        nombre_usuario: NOMBRE_USUARIO_SUPER_ADMIN,
+        contrasena: contrasena_encriptada,
+        correo: CORREO_SUPER_ADMIN_TEMPORAL,
         rol: rol_a_usar._id,
     };
     await Usuario.create(usuario_input);

@@ -1,6 +1,4 @@
 import { Request, Response } from 'express';
-import { syslog as _syslog } from '../../../utils/logs.utils';
-const syslog = _syslog(module)
 
 import { Usuario } from './usuario.model';
 
@@ -19,9 +17,22 @@ import { Rol } from '../rol-usuario/rol-usuario.model';
 
 async function crear_usuario(req: Request, res: Response) {
     try {
-        const { nombres, apellidos, correo, numero_celular } = req.body;
+        const { 
+            nombres, 
+            apellidos, 
+            nombre_usuario,
+            contrasena,
+            correo, 
+            numero_celular 
+        } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
-            ['nombres', 'apellidos', 'correo'],
+            [
+                'nombres', 
+                'apellidos', 
+                'nombre_usuario',
+                'contrasena', 
+                'correo',
+            ],
             req.body
         );
         if (!valido) {
@@ -29,7 +40,14 @@ async function crear_usuario(req: Request, res: Response) {
                 ._422_unprocessable();
         }
         const nuevo_usuario = await servicio_usuario
-            .crear_usuario(nombres, apellidos, correo, numero_celular);
+            .crear_usuario(
+                nombres, 
+                apellidos, 
+                nombre_usuario,
+                contrasena, 
+                correo, 
+                numero_celular
+            );
         return new Resp(
             res, __filename, 
             { 
@@ -41,7 +59,7 @@ async function crear_usuario(req: Request, res: Response) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Error al crear', 
+                mensaje: 'Error al crear usuario', 
                 error: err 
             }
         )._422_unprocessable();

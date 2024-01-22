@@ -7,7 +7,9 @@ import { ACCIONES_MONGOOSE } from '../../../utils/constantes.utils';
 type UsuarioDocument = Document & {
     nombres: string;
     apellidos: string;
-    correo?: string;
+    nombre_usuario: string;
+    correo: string;
+    contrasena: string;
     numero_celular?: string;
     rol?: RolDocument;
 };
@@ -15,7 +17,9 @@ type UsuarioDocument = Document & {
 type UsuarioInput = {
     nombres: UsuarioDocument['nombres'];
     apellidos: UsuarioDocument['apellidos'];
+    nombre_usuario: UsuarioDocument['nombre_usuario'];
     correo: UsuarioDocument['correo'];
+    contrasena: UsuarioDocument['contrasena'];
     numero_celular?: UsuarioDocument['numero_celular'];
     rol?: string;
 };
@@ -31,6 +35,18 @@ const USUARIO_SCHEMA = new Schema(
             type: Schema.Types.String,
             required: [true, 'Se requiren los apellidos del usuario'],
         },
+        nombre_usuario: {
+            type: Schema.Types.String,
+            required: [true, 'Se requiere nombre de usuario'],
+            maxLength: [50, 'El tamaño máximo del usuario es de 50 caracteres'],
+            minLength: [3, 'El tamaño mínimo del usuario es de 3 caracteres'],
+            unique: true,
+            uniqueCaseInsensitive: true,            
+        },
+        contrasena: {
+            type: Schema.Types.String,
+            required: [true, 'Se requiere una contraseña'],
+        },
         correo: {
             type: Schema.Types.String,
             validate: [validar_correo, 'Correo no válido'],
@@ -40,7 +56,6 @@ const USUARIO_SCHEMA = new Schema(
         },
         numero_celular: {
             type: Schema.Types.String,
-            unique: [true, 'Ya existe ese número de celular'],
         },
         rol: {
             type: Schema.Types.ObjectId,
