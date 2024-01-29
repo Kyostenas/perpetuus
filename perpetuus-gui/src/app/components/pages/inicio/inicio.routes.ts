@@ -11,11 +11,6 @@ export const INICIO_ROUTES: Routes = [{
     children: [
         {
             path: '',
-            pathMatch: 'full',
-            redirectTo: 'landing',
-        },
-        {
-            path: 'landing',
             component: LandingComponent, 
         },
         {
