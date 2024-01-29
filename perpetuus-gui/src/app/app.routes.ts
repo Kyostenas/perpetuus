@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { LandingComponent } from './components/pages/landing/landing.component';
 
 
 // const appRoutes: Routes = [
@@ -20,7 +19,26 @@ import { LandingComponent } from './components/pages/landing/landing.component';
 
 
 export const APP_ROUTES: Routes = [
-    { path: '', component: LandingComponent },
+    { 
+        path: '', 
+        pathMatch: 'full',
+        redirectTo: 'inicio'
+    },
+    {
+        path: 'inicio',
+        loadChildren: () => import('./components/pages/inicio/inicio.routes')
+            .then(rutas => rutas.INICIO_ROUTES),
+    },
+    {
+        path: 'adorador',
+        loadChildren: () => import('./components/pages/usuario/usuario.routes')
+            .then(rutas => rutas.USARIO_ROUTES),
+    },
+    {
+        path: 'coordinacion',
+        loadChildren: () => import('./components/pages/admin/admin.routes')
+            .then(rutas => rutas.ADMIN_ROUTES),
+    },
     { path: '**', redirectTo: '/' },
-    { path: '**', redirectTo: '' },
+    { path: '*', redirectTo: '' },
 ];
