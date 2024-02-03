@@ -1,1 +1,10 @@
-<p>formulario-dinamico works!</p>
+<form [formGroup]="formulario" class="row g-2">
+    @for (campo of campos; track campo; let indice = $index) {
+        <div [class]="class_columna(indice)">
+            <app-formulario-dinamico-campo
+                [campo]="campo"
+                [formulario_contenedor]="formulario"
+            ></app-formulario-dinamico-campo>
+        </div>
+    }
+</form>
