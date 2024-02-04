@@ -17,6 +17,7 @@ import { Rol } from '../rol-usuario/rol-usuario.model';
 
 async function crear_usuario(req: Request, res: Response) {
     try {
+        console.log(JSON.stringify(req.body, undefined, 2))
         const { 
             nombres, 
             apellidos, 
@@ -30,8 +31,7 @@ async function crear_usuario(req: Request, res: Response) {
                 'nombres', 
                 'apellidos', 
                 'nombre_usuario',
-                'contrasena', 
-                'correo',
+                'contrasena',
             ],
             req.body
         );

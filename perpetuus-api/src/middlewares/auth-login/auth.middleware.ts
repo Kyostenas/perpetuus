@@ -27,22 +27,26 @@ async function usuario_correo_duplicado (req: Request, res: Response, next: any)
         }
 
         // Correo
-        let usuario_correo = await Usuario.find({
-            correo: req.body.correo
-        });
-        if (usuario_correo.length > 0) {
-            problemas.push('correo ocupado');
+        if (req.body.correo) {
+            let usuario_correo = await Usuario.find({
+                correo: req.body.correo
+            });
+            if (usuario_correo.length > 0) {
+                problemas.push('correo ocupado');
+            }
         }
 
         // Numero celular
-        let usuario_numero_celular = await Usuario.find({
-            $and: [
-                { numero_celular: req.body.numero_celular },
-                { numero_celular: { $exists: true }}
-            ]
-        });
-        if (usuario_numero_celular.length > 0) {
-            problemas.push('número de celular ocupado');
+        if (req.body.numero_celular) {
+            let usuario_numero_celular = await Usuario.find({
+                $and: [
+                    { numero_celular: req.body.numero_celular },
+                    { numero_celular: { $exists: true }}
+                ]
+            });
+            if (usuario_numero_celular.length > 0) {
+                problemas.push('número de celular ocupado');
+            }
         }
 
         if (problemas.length > 0) return problemas_usuario(res, problemas);

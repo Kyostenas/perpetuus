@@ -28,10 +28,11 @@ export function validar_existencia_de_campos(campos: string[], objeto: any): {
     return {
         valido: false,
         mensaje: mensaje_error,
-    }
+    };
 }
 
-export function validar_correo(correo: string) {
+export function validar_correo(correo?: string) {
+    if (!correo) return true;
     let resultado_regex = new RegExp(REGEX_VALIDACION_CORREO).exec(correo);
     return resultado_regex?.join('').length === correo.length;
 }

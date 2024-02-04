@@ -50,8 +50,8 @@ const USUARIO_SCHEMA = new Schema(
         correo: {
             type: Schema.Types.String,
             validate: [validar_correo, 'Correo no válido'],
-            required: [true, 'Se requiere un correo'],
-            unique: true,
+            // required: [true, 'Se requiere un correo'],
+            // unique: true,
             uniqueCaseInsensitive: true,
         },
         numero_celular: {
@@ -67,7 +67,7 @@ const USUARIO_SCHEMA = new Schema(
         timestamps: true,
     }
 );
-
+    
 USUARIO_SCHEMA.index({ '$**': 'text' });
 
 
