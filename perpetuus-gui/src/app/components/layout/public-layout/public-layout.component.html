@@ -1,128 +1,140 @@
-<header class="navbar navbar-expand-lg bd-navbar sticky-top bg-body-tertiary">
-    <nav 
-        class="container-xxl bd-gutter flex-wrap flex-lg-nowrap"
-        aria-label="Main navigation"
-    >
-        <!-- <div class="bd-navbar-toggle">
-            <button 
-                class="navbar-toggler" 
-                type="button" 
-                data-bs-toggle="collapse"
-                data-bs-target="#contenido-barra-navegacion"
-                aria-controls="contenido-barra-navegacion"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
+<div class="min-vh-100 d-flex flex-column justify-content-between">
+    <div>
+        <header class="navbar navbar-expand-lg bd-navbar sticky-top bg-body-tertiary">
+            <nav 
+                class="container-xxl bd-gutter flex-wrap flex-lg-nowrap"
+                aria-label="Main navigation"
             >
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        </div> -->
-        <a class="navbar-brand p-0 me-0 me-lg-2" href="#">Perpetuus</a>
-        <div class="d-flex">
-            <button 
-                class="navbar-toggler d-flex d-lg-none order-3 p-2" 
-                type="button" 
-                data-bs-toggle="offcanvas" 
-                data-bs-target="#offcanvas-barra-navegacion" 
-                aria-controls="offcanvas-barra-navegacion" 
-                aria-label="Toggle navigation"
-            >
-                <i class="bi-three-dots-vertical"></i>
-            </button>
-        </div>
-        <div 
-            class="offcanvas-lg offcanvas-end flex-grow-1 bg-body-tertiary"
-            tabindex="-1"
-            id="offcanvas-barra-navegacion"
-            aria-labelledby="offcanvas-opciones-barra-navegacion"
-            data-bs-scroll="true"
-            aria-modal="true"
-            role="dialog"
-        >
-            <div class="offcanvas-header px-4 pb-0">
-                <h5 
-                    class="offcanvas-title"
-                    id="offcanvas-opciones-barra-navegacion"
-                >
-                    Perpetuus
-                </h5>
-                <button 
-                    type="button" 
-                    class="btn-close btn-close-dark" 
-                    data-bs-dismiss="offcanvas" 
-                    aria-label="Close" 
-                    data-bs-target="#offcanvas-barra-navegacion"
-                ></button>                
-            </div>
-            <div class="offcanvas-body p-4 pt-0 p-lg-0">
-                <hr class="d-lg-none">
-                <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
-                    <li class="nav-item col-6 col-lg-auto">
-                        <a 
-                            class="nav-link py-2 px-0 px-lg-2 active" 
-                            href="inicio/signin" 
-                        >
-                            Ingresar
-                        </a>
-                    </li>
-                </ul>
-                <hr class="d-lg-none">
-                <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
-                    <li class="nav-item col-6 col-lg-auto">
-                    <a 
-                        class="nav-link py-2 px-0 px-lg-2" 
-                        href="https://www.facebook.com/CAPILLAADORACIONPERPETUA" 
-                        target="_blank" 
-                        rel="noopener"
+                <!-- <div class="bd-navbar-toggle">
+                    <button 
+                        class="navbar-toggler" 
+                        type="button" 
+                        data-bs-toggle="collapse"
+                        data-bs-target="#contenido-barra-navegacion"
+                        aria-controls="contenido-barra-navegacion"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
                     >
-                        <i class="bi-facebook"></i>
-                        <small class="d-lg-none ms-2">Facebook</small>
-                    </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-<div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout">
-    <router-outlet></router-outlet>
-</div>
-<footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary bottom">
-    <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
-        <div class="row">
-            <div class="col-lg-3 mb-3">
-                <a 
-                    class="
-                        d-inline-flex 
-                        align-items-center 
-                        mb-2 
-                        text-body-emphasis 
-                        text-decoration-none
-                    " 
-                    href="/" 
-                    aria-label="Perpetuus"
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div> -->
+                <a class="navbar-brand p-0 me-0 me-lg-2" href="#">Perpetuus</a>
+                <div class="d-flex">
+                    <button 
+                        class="navbar-toggler d-flex d-lg-none order-3 p-2" 
+                        type="button" 
+                        data-bs-toggle="offcanvas" 
+                        data-bs-target="#offcanvas-barra-navegacion" 
+                        aria-controls="offcanvas-barra-navegacion" 
+                        aria-label="Toggle navigation"
+                    >
+                        <i class="bi-three-dots-vertical"></i>
+                    </button>
+                </div>
+                <div 
+                    class="offcanvas-lg offcanvas-end flex-grow-1 bg-body-tertiary"
+                    tabindex="-1"
+                    id="offcanvas-barra-navegacion"
+                    aria-labelledby="offcanvas-opciones-barra-navegacion"
+                    data-bs-scroll="true"
+                    aria-modal="true"
+                    role="dialog"
                 >
-                    <span class="fs-5">Perpetuus</span>
-                </a>
-                <ul class="list-unstyled small">
-                <li class="mb-2">
-                    Pequeña aplicación con el objetivo de ayudar 
-                    a los adoradores a coordinar y registrar 
-                    sus asistencias a la capilla de adoración 
-                    perpetua.
-                </li>
-                <li class="mb-2">
-                    <b>
-                        En desarrollo
-                    </b>
-                </li>
-                </ul>
-            </div>
-            <div class="col-6 col-lg-2 offset-lg-1 mb-3">
-                <h5>Links</h5>
-                <ul class="list-unstyled">
-                <li class="mb-2"><a href="/">Home</a></li>
-                </ul>
-            </div>
+                    <div class="offcanvas-header px-4 pb-0">
+                        <h5 
+                            class="offcanvas-title"
+                            id="offcanvas-opciones-barra-navegacion"
+                        >
+                            Perpetuus
+                        </h5>
+                        <button 
+                            type="button" 
+                            class="btn-close btn-close-dark" 
+                            data-bs-dismiss="offcanvas" 
+                            aria-label="Close" 
+                            data-bs-target="#offcanvas-barra-navegacion"
+                        ></button>                
+                    </div>
+                    <div class="offcanvas-body p-4 pt-0 p-lg-0">
+                        <hr class="d-lg-none">
+                        <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
+                            <li class="nav-item col-6 col-lg-auto">
+                                <a 
+                                    class="nav-link py-2 px-0 px-lg-2" 
+                                    href="inicio/signin" 
+                                >
+                                    Ingresar
+                                </a>
+                            </li>
+                            <li class="nav-item col-6 col-lg-auto">
+                                <a 
+                                    class="nav-link py-2 px-0 px-lg-2" 
+                                    href="inicio/signup" 
+                                >
+                                    Registrarse
+                                </a>
+                            </li>
+                        </ul>
+                        <hr class="d-lg-none">
+                        <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+                            <li class="nav-item col-6 col-lg-auto">
+                            <a 
+                                class="nav-link py-2 px-0 px-lg-2" 
+                                href="https://www.facebook.com/CAPILLAADORACIONPERPETUA" 
+                                target="_blank" 
+                                rel="noopener"
+                            >
+                                <i class="bi-facebook"></i>
+                                <small class="d-lg-none ms-2">Facebook</small>
+                            </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout">
+            <router-outlet></router-outlet>
         </div>
     </div>
-</footer>
+    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary bottom">
+        <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
+            <div class="row">
+                <div class="col-lg-3 mb-3">
+                    <a 
+                        class="
+                            d-inline-flex 
+                            align-items-center 
+                            mb-2 
+                            text-body-emphasis 
+                            text-decoration-none
+                        " 
+                        href="/" 
+                        aria-label="Perpetuus"
+                    >
+                        <span class="fs-5">Perpetuus</span>
+                    </a>
+                    <ul class="list-unstyled small">
+                    <li class="mb-2">
+                        Pequeña aplicación con el objetivo de ayudar 
+                        a los adoradores a coordinar y registrar 
+                        sus asistencias a la capilla de adoración 
+                        perpetua.
+                    </li>
+                    <li class="mb-2">
+                        <b>
+                            En desarrollo
+                        </b>
+                    </li>
+                    </ul>
+                </div>
+                <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+                    <h5>Links</h5>
+                    <ul class="list-unstyled">
+                    <li class="mb-2"><a href="/">Home</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

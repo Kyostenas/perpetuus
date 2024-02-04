@@ -1,1 +1,17 @@
-<p>signin works!</p>
+<div class="row d-flex justify-content-center">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4 col-xl-4 col-xxl-4">
+        <app-card
+            [mostrar_encabezado]="true"
+        >
+            <div encabezado>
+                Iniciar sesión
+            </div>
+            <div cuerpo>
+                <app-formulario-dinamico
+                    [validar]="false"
+                    [campos]="datos_formulario"
+                ></app-formulario-dinamico>
+            </div>
+        </app-card>
+    </div>
+</div>
