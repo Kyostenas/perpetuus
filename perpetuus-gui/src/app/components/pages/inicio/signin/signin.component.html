@@ -8,8 +8,13 @@
             </div>
             <div cuerpo>
                 <app-formulario-dinamico
+                    #app_formulario_dinamico
                     [validar]="false"
                     [campos]="datos_formulario"
+                    [icono_boton_submit]="'bi bi-box-arrow-in-right'"
+                    [mensaje_boton_submit]="'Ingresar'"
+                    (valores)="guardar_valores_formulario($event)"
+                    (on_submit)="on_submit()"                    
                 ></app-formulario-dinamico>
             </div>
         </app-card>
