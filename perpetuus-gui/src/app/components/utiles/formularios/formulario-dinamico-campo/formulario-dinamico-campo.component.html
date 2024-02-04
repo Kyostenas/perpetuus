@@ -20,6 +20,7 @@
 				<input
 					autocorrect="off"
 					autocapitalize="off"
+					(change)="emitir_cambio()"
 					(keyup)="evaluar_higiene()"
 					[class]="clase_campo"
 					[id]="id_campo"

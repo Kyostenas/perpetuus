@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import ObjectID from 'bson-objectid';
 
@@ -53,6 +53,8 @@ export class FormularioDinamicoCampoComponent implements OnInit {
      */
     @Input() validar: boolean = true;
 
+    @Output('nuevo_cambio') emisor_cambios: EventEmitter<null> = new EventEmitter();
+
     get es_valido(): boolean {
         return this.formulario_contenedor
             .controls[this.campo.llave]
@@ -105,7 +107,7 @@ export class FormularioDinamicoCampoComponent implements OnInit {
     get campo_es_obligatorio(): boolean {
         return this.campo.validaciones_campo.includes(
             Validators.required
-        )
+        );
     }
 
     get class_columna(): string {
@@ -147,29 +149,33 @@ export class FormularioDinamicoCampoComponent implements OnInit {
         return this.campo_valido ? 'is-valid' : '';
     }
 
-    feedback_completamente_oculto: boolean = true
+    feedback_completamente_oculto: boolean = true;
     marcar_feedback_oculto() {
-        this.feedback_completamente_oculto = true
+        this.feedback_completamente_oculto = true;
     }
 
     marcar_feedback_mostrado() {
-        this.feedback_completamente_oculto = false
+        this.feedback_completamente_oculto = false;
     }
 
     evaluar_higiene() {
         if (!this.campo_de_formulario.touched) {
-            this.marcar_campo_tocado()
+            this.marcar_campo_tocado();
         }
     }
 
     marcar_campo_tocado() {
         this.campo_de_formulario
-            .markAsTouched({ onlySelf: true })
+            .markAsTouched({ onlySelf: true });
     }
 
     marcar_campo_como_limpio() {
         this.campo_de_formulario
-            .markAsPristine({ onlySelf: true })
+            .markAsPristine({ onlySelf: true });
+    }
+
+    emitir_cambio() {
+        this.emisor_cambios.emit();
     }
 
 }
