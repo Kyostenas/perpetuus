@@ -46,7 +46,7 @@ async function iniciar_sesion(req: Request, res: Response) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Bienvenido', 
+                mensaje: '¡Hola!', 
                 datos: usuario_enviar,
             }
         )._200_ok();
@@ -67,7 +67,7 @@ async function cerrar_sesion(req: Request, res: Response) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Hasta pronto', 
+                mensaje: 'Hasta pronto...', 
             }
         )._200_ok();        
     } catch (error) {
