@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { URL_API } from 'src/app/config/config';
 
 // (o==================================================================o)
 //   FECHA Y TIEMPO (INICIO)
@@ -66,4 +67,15 @@ export const REGEX_VALIDACION_CORREO = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z
 export class UtilidadesService {
 
   constructor() { }
+
+  preparar_url_conexion_api(
+    ruta: string[],
+    parametros?: any,
+  ) {
+    const RUTA_FORMADA = ['', ...ruta].join('/');
+    const URL_FORMADA = URL_API.concat(RUTA_FORMADA);
+    console.warn(URL_FORMADA);
+    return URL_FORMADA;
+  }
+
 }
