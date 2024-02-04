@@ -14,7 +14,7 @@ export class FormularioDinamicoService {
     for (let i_campo = 0; i_campo < campos.length; i_campo++) {
       const datos_un_campo = campos[i_campo];
       const nuevo_campof_formulario = new FormControl(
-        datos_un_campo.valor ?? '',
+        datos_un_campo.valor,
         datos_un_campo.validaciones_campo
       )
       grupo[datos_un_campo.llave] = nuevo_campof_formulario
