@@ -22,6 +22,7 @@ import { CampoBaseFormularioDinamico } from 'src/app/models/utiles/formularios/f
 export class FormularioDinamicoComponent implements OnInit{
   
   @Input() campos: CampoBaseFormularioDinamico<string>[] | null = [];
+  @Input() validar: boolean = true;
 
   constructor(
     private formulario_dinamico_service: FormularioDinamicoService,

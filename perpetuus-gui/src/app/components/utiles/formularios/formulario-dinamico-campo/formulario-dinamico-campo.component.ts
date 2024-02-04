@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import ObjectID from 'bson-objectid';
 
 import { CampoBaseFormularioDinamico, TipoCampoBase } from 'src/app/models/utiles/formularios/formulario-dinamico-campo-base.model';
@@ -94,6 +94,18 @@ export class FormularioDinamicoCampoComponent implements OnInit {
 
     get etiqueta_campo(): string {
         return this.campo.etiqueta;
+    }
+
+    get placeholder_campo(): string {
+        let asterisco = '';
+        if (this.campo_es_obligatorio) asterisco = '*'
+        return this.campo.etiqueta.concat(asterisco);
+    }
+
+    get campo_es_obligatorio(): boolean {
+        return this.campo.validaciones_campo.includes(
+            Validators.required
+        )
     }
 
     get class_columna(): string {
