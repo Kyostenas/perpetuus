@@ -1,80 +1,163 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import ObjectID from 'bson-objectid';
 
 import { CampoBaseFormularioDinamico, TipoCampoBase } from 'src/app/models/utiles/formularios/formulario-dinamico-campo-base.model';
+import { ValidacionFormularioService } from 'src/app/services/utiles/formularios/validacion-formulario/validacion-formulario.service';
+import { ElementoDesplegableComponent } from '../../varios/elemento-desplegable/elemento-desplegable.component';
+import { ElementoOcultableDirective } from 'src/app/directives/utiles/varios/elemento-ocultable/elemento-ocultable.directive';
+import { MensajesErrorValidacionFormulariosComponent } from '../mensajes-error-validacion-formularios/mensajes-error-validacion-formularios.component';
 
 @Component({
-  selector: 'app-formulario-dinamico-campo',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-  ],
-  templateUrl: './formulario-dinamico-campo.component.html',
-  styleUrl: './formulario-dinamico-campo.component.scss'
+    selector: 'app-formulario-dinamico-campo',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ElementoDesplegableComponent,
+        ElementoOcultableDirective,
+        MensajesErrorValidacionFormulariosComponent,
+    ],
+    templateUrl: './formulario-dinamico-campo.component.html',
+    styleUrl: './formulario-dinamico-campo.component.scss'
 })
 export class FormularioDinamicoCampoComponent implements OnInit {
 
-  ngOnInit(): void {
-    this._id_campo = new ObjectID().toHexString();
-  }
+    constructor(
+        private servicio_validacion: ValidacionFormularioService
+    ) { }
 
-  private _id_campo!: string;
+    ngOnInit(): void {
+        this._id_campo = new ObjectID().toHexString();
+    }
 
-  /**
-   * La descripcion del campo (usando `CampoBase`)
-   */
-  @Input() campo!: CampoBaseFormularioDinamico<string>;
+    private _id_campo!: string;
 
-  /**
-   * En este campo se debe pasar el `FormGroup`
-   * que va a contener este mismo. Es para
-   * que el campo pueda tener referencia a el.
-   */
-  @Input() formulario_contenedor!: FormGroup;
+    /**
+     * La descripcion del campo (usando `CampoBase`)
+     */
+    @Input() campo!: CampoBaseFormularioDinamico<string>;
 
-  get es_valido(): boolean {
-    return this.formulario_contenedor
-      .controls[this.campo.llave]
-      .valid;
-  }
+    /**
+     * En este campo se debe pasar el `FormGroup`
+     * que va a contener este mismo. Es para
+     * que el campo pueda tener referencia a el.
+     */
+    @Input() formulario_contenedor!: FormGroup;
 
-  get tipo_campo(): TipoCampoBase | 'CHECK' {
-    let tipo = this.campo.tipo;
-    if (['checkbox', 'radio'].includes(tipo)) {
-      return 'CHECK';
-    } 
-    else return tipo;
-  }
+    /**
+     * Por defecto `true`.
+     * 
+     * Indica si se revisará la validéz del campo
+     */
+    @Input() validar: boolean = true;
 
-  get clase_campo(): string {
-    return this.campo.clase_bootstrap;
-  }
+    get es_valido(): boolean {
+        return this.formulario_contenedor
+            .controls[this.campo.llave]
+            .valid;
+    }
 
-  get llave_campo(): string {
-    return this.campo.llave;
-  }
+    get tipo_campo(): TipoCampoBase | 'CHECK' {
+        let tipo = this.campo.tipo;
+        if (['checkbox', 'radio'].includes(tipo)) {
+            return 'CHECK';
+        }
+        else return tipo;
+    }
 
-  get es_dropdown(): boolean {
-    return this.campo.tipo === 'BS_DROPDOWN';
-  }
+    get clase_campo(): string {
+        let clases_agregar = [
+            this.campo.clase_bootstrap,
+            this.clase_campo_invalido,
+            this.clase_campo_valido
+        ];
+        return clases_agregar.join(' ');
+    }
 
-  get es_listgroup(): boolean {
-    return this.campo.tipo === 'BS_LISTGROUP';
-  }
+    get llave_campo(): string {
+        return this.campo.llave;
+    }
 
-  get id_campo(): string {
-    return this._id_campo;
-  }
+    get es_dropdown(): boolean {
+        return this.campo.tipo === 'BS_DROPDOWN';
+    }
 
-  get etiqueta_campo(): string {
-    return this.campo.etiqueta;
-  }
+    get es_listgroup(): boolean {
+        return this.campo.tipo === 'BS_LISTGROUP';
+    }
 
-  get class_columna(): string {
-    return this.campo.clase_columna
-  }
+    get id_campo(): string {
+        return this._id_campo;
+    }
+
+    get etiqueta_campo(): string {
+        return this.campo.etiqueta;
+    }
+
+    get class_columna(): string {
+        return this.campo.clase_columna;
+    }
+
+    get campo_de_formulario(): AbstractControl<any, any> {
+        return this.formulario_contenedor
+            .controls[this.llave_campo];
+    }
+
+    get campo_invalido(): boolean {
+        if (!this.validar) return false;
+        let invalido = this.servicio_validacion.invalid(
+            this.campo_de_formulario
+        );
+        if (invalido) this.marcar_feedback_mostrado();
+        return invalido;
+    }
+
+    get campo_valido(): boolean {
+        if (!this.validar) return false;
+        let valido = this.servicio_validacion.valid(
+            this.campo_de_formulario
+        );
+        return valido;
+    }
+
+    // get clase_mostrar_feedback_invalido(): string {
+    //   let usar_clase_mostrar = !this.feedback_completamente_oculto
+    //   return usar_clase_mostrar? 'mostrar' : '';
+    // }
+
+    get clase_campo_invalido(): string {
+        return this.campo_invalido ? 'is-invalid' : '';
+    }
+
+    get clase_campo_valido(): string {
+        return this.campo_valido ? 'is-valid' : '';
+    }
+
+    feedback_completamente_oculto: boolean = true
+    marcar_feedback_oculto() {
+        this.feedback_completamente_oculto = true
+    }
+
+    marcar_feedback_mostrado() {
+        this.feedback_completamente_oculto = false
+    }
+
+    evaluar_higiene() {
+        if (!this.campo_de_formulario.touched) {
+            this.marcar_campo_tocado()
+        }
+    }
+
+    marcar_campo_tocado() {
+        this.campo_de_formulario
+            .markAsTouched({ onlySelf: true })
+    }
+
+    marcar_campo_como_limpio() {
+        this.campo_de_formulario
+            .markAsPristine({ onlySelf: true })
+    }
 
 }

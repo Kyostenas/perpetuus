@@ -1,33 +1,49 @@
-<div [formGroup]="formulario_contenedor">
-    <ng-container [ngSwitch]="tipo_campo">
-        <ng-container *ngSwitchCase="'BS_DROPDOWN'">
-            <p>BS_DROPDOWN</p>
-        </ng-container>
-        <ng-container *ngSwitchCase="'BS_LISTGROUP'">
-            <p>BS_LISTGROUP</p>
-        </ng-container>
-        <ng-container *ngSwitchCase="'TEXTAREA'">
-            <p>TEXTAREA</p>
-        </ng-container>
-        <ng-container *ngSwitchCase="'DATALIST'">
-            <p>DATALIST</p>
-        </ng-container>
-        <ng-container *ngSwitchCase="'CHECK'">
-            <p>CHECK</p>
-        </ng-container>
-        <ng-container *ngSwitchDefault>
-            <div class="form-floating">
-                <input
-                    [class]="clase_campo"
-                    [id]="id_campo"
-                    [type]="tipo_campo"
-                    [formControlName]="llave_campo"
-                    [placeholder]="etiqueta_campo"
-                >
-                <label [for]="id_campo">
-                    {{ etiqueta_campo }}
-                </label>
-            </div>
-        </ng-container>
-    </ng-container>
+<div [formGroup]="formulario_contenedor" class="form-group">
+		@switch (tipo_campo) {
+			@case ('BS_DROPDOWN') {
+				<p>BS_DROPDOWN</p>
+			}
+			@case ('BS_LISTGROUP') {
+				<p>BS_LISTGROUP</p>
+			}
+			@case ('TEXTAREA') {
+				<p>TEXTAREA</p>
+			}
+			@case ('DATALIST') {
+				<p>DATALIST</p>
+			}
+			@case ('CHECK') {
+				<p>CHECK</p>
+			}
+			@default {
+				<div class="form-floating" required>
+						<input
+								(keyup)="evaluar_higiene()"
+								[class]="clase_campo"
+								[id]="id_campo"
+								[type]="tipo_campo"
+								[formControlName]="llave_campo"
+								[placeholder]="etiqueta_campo"
+								[attr.invalid]="campo_invalido"
+						>
+						<label [for]="id_campo">
+								{{ etiqueta_campo }}
+						</label>
+				</div>
+			}
+		}
+		<app-elemento-desplegable
+			[expandir]="campo_invalido"
+			(ocultado)="marcar_feedback_oculto()"
+			(mostrado)="marcar_feedback_mostrado()"
+		>
+			<div
+					class="invalid-feedback" 
+					[ocultar]="feedback_completamente_oculto"
+			>
+					<app-mensajes-error-validacion-formularios
+						[campo]="campo_de_formulario"
+					></app-mensajes-error-validacion-formularios>
+			</div>
+		</app-elemento-desplegable>
 </div>
