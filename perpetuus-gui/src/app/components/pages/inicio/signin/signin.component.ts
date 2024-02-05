@@ -3,6 +3,7 @@ import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormularioDinamicoComponent } from 'src/app/components/utiles/formularios/formulario-dinamico/formulario-dinamico.component';
 import { CardComponent } from 'src/app/components/utiles/varios/card/card.component';
+import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { CampoBaseFormularioDinamico, CampoFormulario } from 'src/app/models/utiles/formularios/formulario-dinamico-campo-base.model';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 
@@ -52,9 +53,11 @@ export class SigninComponent {
 
   iniciar_sesion() {
     this.auth_service.iniciar_sesion(this.valores_formulario)
-      .subscribe((datos: any) => {
-        console.log(datos)
+      .subscribe((usuario: UsuarioRecibir) => {
         this.limpiar_formulario();
+        if (usuario.rol?.super_admin) {
+          this.router.navigate(['administracion']);
+        }
       });
   }
 
