@@ -17,6 +17,7 @@ export const URI_DB = process.env.URI_DB;
 
 /* ------------------------------- aplicacion ------------------------------- */
 export const PORT = process.env.PORT || 9000;
+export const URL_GUI_LOCAL = process.env.URL_GUI_LOCAL;
 
 /* ---------------------------------- auth ---------------------------------- */
 export const COOKIE_SECRET = process.env.COOKIE_SECRET;

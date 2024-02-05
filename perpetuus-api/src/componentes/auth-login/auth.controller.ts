@@ -40,13 +40,16 @@ async function iniciar_sesion(req: Request, res: Response) {
         if (!req.session) throw 'No hay sesión'
         req.session.token = token_generado;
 
-        const usuario_enviar = await Usuario
+        let usuario_enviar = await Usuario
             .findById(usuario._id)
-            .select('-__v -contrasena');
+            .select('-__v -contrasena')
+            .lean();
+        delete usuario.rol?.permisos
+        delete usuario.rol?.__v
         return new Resp(
             res, __filename, 
             { 
-                mensaje: '¡Hola!', 
+                mensaje: '¡Hola', 
                 datos: usuario_enviar,
             }
         )._200_ok();

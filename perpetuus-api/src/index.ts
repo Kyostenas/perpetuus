@@ -12,7 +12,7 @@ import cookie_session from 'cookie-session';
 
 import { Resp } from './utils/response.utils';
 
-import { URI_DB, PORT, COOKIE_SECRET } from './config/env/env.config';
+import { URI_DB, PORT, COOKIE_SECRET, URL_GUI_LOCAL } from './config/env/env.config';
 
 import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
 import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
@@ -22,7 +22,16 @@ import { RUTA_AUTH } from './componentes/auth-login/auth.routes';
 
 const app: Application = express();
 
-app.use(cors());
+const opciones_cors = {
+  origin: URL_GUI_LOCAL,
+  methods: 'GET,HEAD,PUT,POST,DELETE,OPTIONS',
+  preflightContinue: true,
+  credentials: true,
+  allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+}
+
+app.disable('x-powered-by');
+app.use(cors(opciones_cors));
 
 // LOGS REQUESTS
 app.use((req, res, next) => {
