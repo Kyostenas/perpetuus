@@ -30,12 +30,12 @@ export const APP_ROUTES: Routes = [
             .then(rutas => rutas.INICIO_ROUTES),
     },
     {
-        path: 'adorador',
+        path: 'usuario',
         loadChildren: () => import('./components/pages/usuario/usuario.routes')
             .then(rutas => rutas.USARIO_ROUTES),
     },
     {
-        path: 'coordinacion',
+        path: 'administracion',
         loadChildren: () => import('./components/pages/admin/admin.routes')
             .then(rutas => rutas.ADMIN_ROUTES),
     },
