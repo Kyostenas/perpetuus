@@ -93,7 +93,6 @@ export class SignupComponent {
 
   valores_formulario!: UsuarioEnviar;
   guardar_valores_formulario(evento: any) {
-    console.log(evento)
     this.valores_formulario = evento as UsuarioEnviar;
   }
 
@@ -102,10 +101,8 @@ export class SignupComponent {
   }
 
   crear_usuario() {
-    console.log('REGISTRANDO')
     this.auth_service.registrarse(this.valores_formulario)
       .subscribe(datos => {
-        console.log('DATOS:', datos)
         this.limpiar_formulario();
         this.router.navigate(['inicio', 'signin']);
       });
