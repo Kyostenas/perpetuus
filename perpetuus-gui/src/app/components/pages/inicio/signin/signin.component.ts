@@ -43,7 +43,6 @@ export class SigninComponent {
 
   valores_formulario!: any;
   guardar_valores_formulario(evento: any) {
-    console.log(evento)
     this.valores_formulario = evento as any;
   }
 
@@ -52,10 +51,9 @@ export class SigninComponent {
   }
 
   iniciar_sesion() {
-    console.log('REGISTRANDO')
     this.auth_service.iniciar_sesion(this.valores_formulario)
       .subscribe((datos: any) => {
-        console.log('DATOS:', datos)
+        console.log(datos)
         this.limpiar_formulario();
       });
   }
