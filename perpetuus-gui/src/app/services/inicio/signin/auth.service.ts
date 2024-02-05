@@ -4,6 +4,9 @@ import { UsuarioEnviar, UsuarioRecivir } from 'src/app/models/usuario/usuario.mo
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, throwError } from 'rxjs';
 
+
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -11,10 +14,12 @@ export class AuthService {
 
   constructor(
     private utilidades: UtilidadesService,
-    private http: HttpClient,
+    private http: HttpClient
   ) { }
 
   private ruta_base = 'auth';
+  private opciones = {withCredentials: true};
+  
 
   private obtener_url(ruta: string[]) {
     const url = this.utilidades
@@ -39,7 +44,7 @@ export class AuthService {
 
   iniciar_sesion(datos: any) {
     const url = this.obtener_url(['signin']);
-    return this.http.post(url, datos).pipe(
+    return this.http.post(url, datos, this.opciones).pipe(
       map((resp: any) => {
         alert(resp.mensaje);
         return resp.datos as UsuarioRecivir
@@ -53,13 +58,13 @@ export class AuthService {
 
   cerrar_sesion() {
     const url = this.obtener_url(['signout']);
-    return this.http.post(url, {}).pipe(
+    return this.http.post(url, {}, this.opciones).pipe(
       map((resp: any) => {
         alert(resp.mensaje);
       }),
       catchError(err => {
         alert('¡Error al cerrar sesión! ' + err.error.mensaje);
-        return throwError(() => new Error(err))
+        return throwError(() => new Error(err));
       })
     );
   }
