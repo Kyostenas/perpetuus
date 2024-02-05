@@ -100,7 +100,6 @@ export class FormularioDinamicoComponent implements OnInit{
       if (this.validar) {
         if (this.formulario_valido) {
           if (viene_desde_boton) {
-            console.log('DEBE EMITIR')
             this.emisor_valores_formulario.emit(
               this.formulario.value
             );
@@ -139,7 +138,6 @@ export class FormularioDinamicoComponent implements OnInit{
   }
 
   acciones_de_emision_boton() {
-    console.log('EMITIR')
     this.emitir_validez_formulario();
     this.emitir_valores_formulario(true);
     this.click_boton_submit.emit();
