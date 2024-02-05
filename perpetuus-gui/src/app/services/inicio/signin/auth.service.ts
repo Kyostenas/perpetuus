@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
-import { UsuarioEnviar, UsuarioRecivir } from 'src/app/models/usuario/usuario.model';
+import { UsuarioEnviar, UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, throwError } from 'rxjs';
 
@@ -47,7 +47,7 @@ export class AuthService {
     return this.http.post(url, datos, this.opciones).pipe(
       map((resp: any) => {
         alert(resp.mensaje);
-        return resp.datos as UsuarioRecivir
+        return resp.datos as UsuarioRecibir
       }),
       catchError(err => {
         alert('¡Error al iniciar sesión! ' + err.error.mensaje);

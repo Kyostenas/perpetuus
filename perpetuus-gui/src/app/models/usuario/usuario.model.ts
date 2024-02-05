@@ -1,3 +1,4 @@
+import { RolUsuario } from "./rol-usuario.model";
 
 export class UsuarioEnviar {
     constructor(
@@ -10,7 +11,7 @@ export class UsuarioEnviar {
     ) {}
 }
 
-export class UsuarioRecivir {
+export class UsuarioRecibir {
     constructor(
         public _id: string,
         public nombres?: string,
@@ -18,7 +19,7 @@ export class UsuarioRecivir {
         public nombre_usuario?: string,
         public correo?: string,
         public numero_celular?: string,
-        public rol?: string,
+        public rol?: RolUsuario,
         public createdAt?: Date,
         public updatedAt?: Date,
     ) {}
