@@ -1,0 +1,84 @@
+<header
+    [class]="clase_sticky"
+    class="navbar navbar-expand-lg bd-navbar bg-body-tertiary"
+>
+    <nav 
+        class="container-xxl bd-gutter flex-wrap flex-lg-nowrap d-flex"
+        aria-label="Main navigation"
+    >
+        <button 
+            class="navbar-toggler d-flex p-2 ms-4 order-3 d-md-block d-lg-none" 
+            type="button" 
+            data-bs-toggle="offcanvas" 
+            [attr.data-bs-target]="'#'+id_offcanvas"
+            [attr.aria-controls]="id_offcanvas"
+            aria-label="Toggle navigation"
+        >
+            <i 
+                class="bi-three-dots-vertical"
+            ></i>
+        </button>
+        <div class="flex-lg-grow-0">
+            <a class="navbar-brand ml-3" href="#">Perpetuus</a>
+        </div>
+        <div
+            [class]="clase_mostrar_offcanvas"
+            class="flex-grow-1 bg-body-tertiary offcanvas"
+            tabindex="-1"
+            [id]="id_offcanvas"
+            aria-labelledby="offcanvas-opciones-barra-navegacion"
+            data-bs-scroll="false"
+            aria-modal="true"
+            role="dialog"
+        >
+            <div class="offcanvas-header px-4 pb-0">
+                <h5 
+                    class="offcanvas-title"
+                    id="offcanvas-opciones-barra-navegacion"
+                >
+                    Perpetuus
+                </h5>
+                <button 
+                    type="button" 
+                    class="btn-close btn-close-dark" 
+                    data-bs-dismiss="offcanvas" 
+                    aria-label="Close"
+                    
+                ></button>                
+            </div>
+            <div class="offcanvas-body p-4 pt-0 p-lg-0">
+                <hr class="d-lg-none">
+                <ul class="navbar-nav flex-row flex-wrap bd-navbar-nav">
+                    @for (link_texto of links_texto; track link_texto) {
+                        <li class="nav-item col-6 col-lg-auto">
+                            <a 
+                                class="nav-link py-2 px-0 px-lg-2" 
+                                [href]="link_texto.href" 
+                            >
+                                {{ link_texto.texto }}
+                            </a>
+                        </li>
+                    }
+                </ul>
+                <hr class="d-lg-none">
+                <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
+                    @for (link_simbolo of links_simbolo; track link_simbolo) {
+                        <li class="nav-item col-6 col-lg-auto">
+                            <a 
+                                class="nav-link py-2 px-0 px-lg-2" 
+                                [href]="link_simbolo.href" 
+                                [target]="link_simbolo.target ?? '_blank'" 
+                                rel="noopener"
+                            >
+                                <i [class]="link_simbolo.simbolo"></i>
+                                <small class="d-lg-none ms-2">
+                                    {{ link_simbolo.texto }}
+                                </small>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>     
+    </nav>
+</header>
