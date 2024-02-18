@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { URL_API } from 'src/app/config/config';
 
+import ObjectID from 'bson-objectid';
+
 // (o==================================================================o)
 //   FECHA Y TIEMPO (INICIO)
 // (o-----------------------------------------------------------\/-----o)
@@ -76,6 +78,10 @@ export class UtilidadesService {
     const URL_FORMADA = URL_API.concat(RUTA_FORMADA);
     console.warn(URL_FORMADA);
     return URL_FORMADA;
+  }
+
+  crear_bsonobj_id_para_variable() {
+    return '_' + new ObjectID().toHexString();
   }
 
 }

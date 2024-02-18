@@ -10,9 +10,10 @@ export type LinkTextoBarraSuperior = {
 
 export type LinkSimboloBarraSuperior = {
   texto: string;
-  href: string;
+  href?: string;
   simbolo: string;
-  target?: string;
+  data_bs_toggle?: string;
+  data_bs_target?: string;
 }
 
 @Component({

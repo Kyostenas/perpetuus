@@ -64,17 +64,35 @@
                 <ul class="navbar-nav flex-row flex-wrap ms-md-auto">
                     @for (link_simbolo of links_simbolo; track link_simbolo) {
                         <li class="nav-item col-6 col-lg-auto">
-                            <a 
-                                class="nav-link py-2 px-0 px-lg-2" 
-                                [href]="link_simbolo.href" 
-                                [target]="link_simbolo.target ?? '_blank'" 
-                                rel="noopener"
-                            >
-                                <i [class]="link_simbolo.simbolo"></i>
-                                <small class="d-lg-none ms-2">
-                                    {{ link_simbolo.texto }}
-                                </small>
-                            </a>
+
+                            @switch (!!link_simbolo.href) {
+                              @case (true) {
+                                  <a 
+                                      class="nav-link py-2 px-0 px-lg-2" 
+                                      [href]="link_simbolo.href" 
+                                      rel="noopener"
+                                  >
+                                      <i [class]="link_simbolo.simbolo"></i>
+                                      <small class="d-lg-none ms-2">
+                                          {{ link_simbolo.texto }}
+                                      </small>
+                                  </a>
+                                }
+                                @case (false) {
+                                    <a 
+                                        class="nav-link py-2 px-0 px-lg-2" 
+                                        [attr.data-bs-target]="link_simbolo.data_bs_target" 
+                                        [attr.data-bs-toggle]="link_simbolo.data_bs_toggle" 
+                                        rel="noopener"
+                                    >
+                                        <i [class]="link_simbolo.simbolo"></i>
+                                        <small class="d-lg-none ms-2">
+                                            {{ link_simbolo.texto }}
+                                        </small>
+                                    </a>
+                              }
+                            }
+
                         </li>
                     }
                 </ul>

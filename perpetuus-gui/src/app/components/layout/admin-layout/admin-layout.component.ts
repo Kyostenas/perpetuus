@@ -27,25 +27,41 @@ export class AdminLayoutComponent {
 
   @ViewChild('modal_perfil', { static: false }) modal_perfil!: ModalNormalComponent;
 
-  links_texto: LinkTextoBarraSuperior[] = [
-    {
-      texto: 'Ingresar',
-      href: 'inicio/signin'
-    },
-    {
-      texto: 'Registrarse',
-      href: 'inicio/signup'
-    }
-  ];
+  private _id_modal!: string;
 
-  links_simbolo: LinkSimboloBarraSuperior[] = [
-    {
-      texto: 'Perfil',
-      href: '#',
-      target: '',
-      simbolo: 'bi-person-fill'
-    },
-  ];
+  get id_modal(): string {
+    return this._id_modal;
+  }
+
+  set id_modal(value: string) {
+    this._id_modal = value;
+    this.crear_links();
+  }
+
+  links_texto!: LinkTextoBarraSuperior[];
+  links_simbolo!: LinkSimboloBarraSuperior[];
+
+  crear_links() {
+    this.links_texto = [
+      {
+        texto: 'Ingresar',
+        href: 'inicio/signin'
+      },
+      {
+        texto: 'Registrarse',
+        href: 'inicio/signup'
+      }
+    ];
+    this.links_simbolo = [
+      {
+        texto: 'Perfil',
+        data_bs_target: '#'.concat(this.id_modal),
+        data_bs_toggle: 'modal',
+        simbolo: 'bi-person-fill'
+      },
+    ];
+  }
+
 
   abrir_modal() {
     this.modal_perfil.mostrar_modal()

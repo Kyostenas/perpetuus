@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { Modal } from 'bootstrap';
-import ObjectID from 'bson-objectid';
+
 import { ElementoOcultableDirective } from 'src/app/directives/utiles/varios/elemento-ocultable/elemento-ocultable.directive';
 import { SwitchBootstrapShowDirective } from 'src/app/directives/utiles/varios/switch-bootstrap-show/switch-bootstrap-show.directive';
+import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
 
 /**
  * Para usar este componente es necesario realizar dos pasos.
@@ -52,6 +54,17 @@ import { SwitchBootstrapShowDirective } from 'src/app/directives/utiles/varios/s
 })
 export class ModalNormalComponent {
   
+  constructor(
+    private utiles: UtilidadesService,
+  ) { 
+  }
+  
+  ngOnInit() {
+    this.__id_modal = this.utiles.crear_bsonobj_id_para_variable();
+    this.emisor_id_modal.emit(this.__id_modal);
+  }
+
+
   private MEDIDAS = {
     chico: 'modal-sm',
     mediano: '',
@@ -61,14 +74,6 @@ export class ModalNormalComponent {
 
   private __id_modal!: string;
   private __mostrar_modal: boolean = false;
-  
-  ngOnInit() {
-    this.__id_modal = 'a' + new ObjectID().toHexString();
-  }
-
-  
-  constructor() { 
-  }
   
   /**
    * El id del modal. Puede que este sirva cuando haya 
@@ -135,6 +140,7 @@ export class ModalNormalComponent {
    * @memberof ModalNormalComponent 
    */    
   @Output('click_dialogo') emisor_click_cuadro_dialogo: EventEmitter<null> = new EventEmitter();
+  @Output('id_modal') emisor_id_modal: EventEmitter<string> = new EventEmitter()
 
   get dataBackdrop() {
     return this.permitirCerrarFueraDeModal? 'initial' : 'static'
