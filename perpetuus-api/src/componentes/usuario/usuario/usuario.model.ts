@@ -12,8 +12,8 @@ type UsuarioDocument = Document & {
     contrasena: string;
     numero_celular?: string;
     rol?: RolDocument;
-    rfrsh_tkn?: string;
-    rfrsh_tkn_validity?: Schema.Types.ObjectId;
+    rfrsh_tkn?: Schema.Types.ObjectId;
+    rfrsh_tkn_validity?: Date;
 };
 
 type UsuarioInput = {

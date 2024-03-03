@@ -7,7 +7,7 @@ import { Usuario, UsuarioDocument } from '../usuario/usuario/usuario.model';
 import { AUTH_SECRET } from '../../config/env/env.config';
 import { SEGUNDOS_HORA } from '../../utils/constantes.utils';
 
-function iniciar_sesion(usuario: UsuarioDocument, constrasena: string): {
+function generar_token_inicio_sesion(usuario: UsuarioDocument, constrasena: string): {
     contrasena_valida: boolean;
     token_generado?: string;
 } {
@@ -38,7 +38,6 @@ function iniciar_sesion(usuario: UsuarioDocument, constrasena: string): {
 async function crear_refresh_token(usuario: UsuarioDocument) {
     const refresh_token_generado = new Types.ObjectId();
     let hoy = new Date();
-
     // 10 dias de validez para el refresh token
     let validez = new Date().setDate(hoy.getDate() + 10);
     await Usuario.findByIdAndUpdate(
@@ -48,12 +47,49 @@ async function crear_refresh_token(usuario: UsuarioDocument) {
             rfrsh_tkn_validity: validez,
         },
         { useFindAndModify: false }
-    );    
+    );
+}
+
+async function refrescar_token_inicio_sesion(usuario: UsuarioDocument, refresh_token: string) {
+    let debe_iniciar_de_nuevo = false;
+    const REFRESH_TOKEN_ACTUAL = await Usuario
+        .findById(usuario._id)
+        .select('rfrsh_tkn rfrsh_tkn_validity');
+    if (!(refresh_token === String(REFRESH_TOKEN_ACTUAL?.rfrsh_tkn))) {
+        debe_iniciar_de_nuevo = true;
+        return { debe_iniciar_de_nuevo }
+    }
+    let es_valido = false;
+    if (!!REFRESH_TOKEN_ACTUAL?.rfrsh_tkn_validity) {
+        es_valido = new Date(REFRESH_TOKEN_ACTUAL?.rfrsh_tkn_validity) >= new Date();
+    }
+    if (!es_valido) {
+        debe_iniciar_de_nuevo = true;
+        return { debe_iniciar_de_nuevo }
+    } else {
+        const token_generado = jwt_sign(
+            { usuario: {
+                _id: usuario._id,
+                nombre: `${usuario.nombres} ${usuario.apellidos}`,
+                nombre_usuario: usuario.nombre_usuario,
+                correo: usuario.correo,
+                rol: usuario.rol,
+            }},
+            <string>AUTH_SECRET,
+            {
+                algorithm: 'HS256',
+                allowInsecureKeySizes: false,
+                expiresIn: SEGUNDOS_HORA,
+            }
+        );
+        return { debe_iniciar_de_nuevo, token_generado }
+    }
 }
 
 const servicio_auth = {
-    iniciar_sesion,
-    crear_refresh_token,    
+    generar_token_inicio_sesion,
+    crear_refresh_token,
+    refrescar_token_inicio_sesion,
 };
 
 export { servicio_auth };

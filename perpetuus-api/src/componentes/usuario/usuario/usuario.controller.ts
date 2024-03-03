@@ -7,6 +7,7 @@ import { Resp } from '../../../utils/response.utils';
 import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
 import { NOMBRE_ROL_SUPER_ADMIN, NOMBRE_USUARIO_SUPER_ADMIN } from '../../../utils/constantes.utils';
 import { Rol } from '../rol-usuario/rol-usuario.model';
+import { _Request } from '../../../tipos-personalizados';
 
 
 
@@ -15,7 +16,7 @@ import { Rol } from '../rol-usuario/rol-usuario.model';
 //   para los usuarios
 // (o-----------------------------------------------------------\/-----o)
 
-async function crear_usuario(req: Request, res: Response) {
+async function crear_usuario(req: _Request, res: Response) {
     try {
         const { 
             nombres, 
@@ -65,7 +66,7 @@ async function crear_usuario(req: Request, res: Response) {
     }
 }
 
-async function obtener_usuarios_todo(req: Request, res: Response) {
+async function obtener_usuarios_todo(req: _Request, res: Response) {
     try {
         const usuarios = await servicio_usuario
             .obtener_usuarios_todo()
@@ -87,7 +88,7 @@ async function obtener_usuarios_todo(req: Request, res: Response) {
     }
 }
 
-async function obtener_usuario_id(req: Request, res: Response) {
+async function obtener_usuario_id(req: _Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -125,7 +126,7 @@ async function obtener_usuario_id(req: Request, res: Response) {
     }
 }
 
-async function obtener_usuario_termino(req: Request, res: Response) {
+async function obtener_usuario_termino(req: _Request, res: Response) {
     try {
         const { termino } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -163,7 +164,7 @@ async function obtener_usuario_termino(req: Request, res: Response) {
     }
 }
 
-async function modificar_usuario(req: Request, res: Response) {
+async function modificar_usuario(req: _Request, res: Response) {
     try {
         const { nombres, apellidos, correo, numero_celular, _id } = req.body
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -215,7 +216,7 @@ async function modificar_usuario(req: Request, res: Response) {
     }
 }
 
-async function eliminar_usuario_id(req: Request, res: Response) {
+async function eliminar_usuario_id(req: _Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -272,7 +273,7 @@ async function eliminar_usuario_id(req: Request, res: Response) {
 //   cualquier otra cosa que no caiga en el CRUD convencional
 // (o-----------------------------------------------------------\/-----o)
 
-async function cambiar_rol_a_usuario(req: Request, res: Response) {
+async function cambiar_rol_a_usuario(req: _Request, res: Response) {
     try {
         const { rol, _id } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -328,7 +329,7 @@ async function cambiar_rol_a_usuario(req: Request, res: Response) {
     }
 }
 
-async function quitar_rol_a_usuario(req: Request, res: Response) {
+async function quitar_rol_a_usuario(req: _Request, res: Response) {
     try {
         const { _id } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -375,7 +376,7 @@ async function quitar_rol_a_usuario(req: Request, res: Response) {
     }
 }
 
-async function crear_usuario_super_admin(req: Request, res: Response) {
+async function crear_usuario_super_admin(req: _Request, res: Response) {
     try {
         await servicio_usuario
             .crear_usuario_super_admin();

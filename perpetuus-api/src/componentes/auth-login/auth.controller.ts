@@ -6,14 +6,15 @@ import { controlador_usuario } from '../usuario/usuario/usuario.controller';
 import { servicio_auth } from './auth.service';
 
 import { Usuario } from '../usuario/usuario/usuario.model';
+import { _Request } from '../../tipos-personalizados';
 
 
 
-async function registrar_usuario(req: Request, res: Response) {
+async function registrar_usuario(req: _Request, res: Response) {
     controlador_usuario.crear_usuario(req, res);
 }
 
-async function iniciar_sesion(req: Request, res: Response) {
+async function iniciar_sesion(req: _Request, res: Response) {
     try {
         const usuario = await Usuario.findOne({
             nombre_usuario: req.body.nombre_usuario
@@ -28,7 +29,7 @@ async function iniciar_sesion(req: Request, res: Response) {
         const {
             contrasena_valida,
             token_generado,
-        } = servicio_auth.iniciar_sesion(usuario, req.body.contrasena);
+        } = servicio_auth.generar_token_inicio_sesion(usuario, req.body.contrasena);
         if (!contrasena_valida) {
             return new Resp(
                 res, __filename, 
@@ -68,7 +69,55 @@ async function iniciar_sesion(req: Request, res: Response) {
     }
 }
 
-async function cerrar_sesion(req: Request, res: Response, mensaje = 'Hasta pronto...') {
+async function refrescar_inicio_sesion(req: _Request, res: Response) {
+    try {
+        const usuario = await Usuario.findOne({
+            nombre_usuario: req.usuario?._id
+        });
+        const refresh_token = String(req.params.rfrsh_tkn)
+        if (!usuario) {
+            return new Resp(
+                res, __filename, 
+                { mensaje: 'Usuario inexistente' }
+            )._401_unauthorized();              
+        }
+        const {
+            debe_iniciar_de_nuevo,
+            token_generado,
+        } = await servicio_auth.refrescar_token_inicio_sesion(usuario, refresh_token);
+
+        if (!debe_iniciar_de_nuevo) {
+            return new Resp(
+                res, __filename, 
+                { mensaje: 'Es necesario que inicies sesión de nuevo' }
+            )._401_unauthorized();
+        } else {
+
+            // Agregar token a la sesion
+            if (!req.session) throw 'No hay sesión'
+            req.session.token = token_generado;
+            let nombre_completo = `${usuario.nombres} ${usuario.apellidos}`
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: `¡Hola de nuevo! ${nombre_completo}`, 
+                }
+            )._200_ok();
+
+        }
+
+    } catch (error) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al iniciar sesión', 
+                error
+            }
+        )._422_unprocessable();        
+    }
+}
+
+async function cerrar_sesion(req: _Request, res: Response, mensaje = 'Hasta pronto...') {
     try {
         req.session = null;
         return new Resp(
@@ -94,6 +143,7 @@ async function cerrar_sesion(req: Request, res: Response, mensaje = 'Hasta pront
 const controlador_auth = {
     registrar_usuario,
     iniciar_sesion,
+    refrescar_inicio_sesion,
     cerrar_sesion,
 };
 

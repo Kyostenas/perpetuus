@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import { Resp } from '../../utils/response.utils';
 
 import { Usuario } from '../../componentes/usuario/usuario/usuario.model';
+import { _Request } from '../../tipos-personalizados';
 
 
 function problemas_usuario(res: Response, problemas: string[]) {
@@ -14,7 +15,7 @@ function problemas_usuario(res: Response, problemas: string[]) {
     )._400_bad_request();
 }
 
-async function usuario_correo_duplicado (req: Request, res: Response, next: any) {
+async function usuario_correo_duplicado (req: _Request, res: Response, next: any) {
     try {
         let problemas: string[] = [];
 

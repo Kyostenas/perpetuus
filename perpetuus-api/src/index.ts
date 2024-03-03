@@ -18,6 +18,7 @@ import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
 import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
 import { RUTA_AUTH } from './componentes/auth-login/auth.routes';
 import { verificar_jwt } from './middlewares/auth-login/jwt.middleware';
+import { _Request } from './tipos-personalizados';
 
 
 
@@ -40,7 +41,7 @@ const opciones_cors = {
 
 // (o-----------------------------------------( VERFICACION TOKEN ))
 
-app.use((req: Request, res: Response, next: any) => {
+app.use((req: _Request, res: Response, next: any) => {
   verificar_jwt(req, res, next);
 });
 
@@ -54,7 +55,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // LOGS REQUESTS
-app.use((req: Request, res: Response, next: any) => {
+app.use((req: _Request, res: Response, next: any) => {
     let req_any = <any>req;
     let usuario = req_any?.usuario?.nombre_usuario;
 
@@ -77,7 +78,7 @@ app.use(cookie_session({
   })
 );
 
-app.use((req: Request, res: Response, next: any) => {
+app.use((req: _Request, res: Response, next: any) => {
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, Content-Type, Accept',
@@ -87,13 +88,13 @@ app.use((req: Request, res: Response, next: any) => {
 
 // (o-----------------------------------------( RUTAS ))
 
-app.all('*', (req: Request, res: Response, next: any)=>{
+app.all('*', (req: _Request, res: Response, next: any)=>{
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   syslog.debug('FULL URL: ' + fullUrl)
   next()
 });
 
-app.get('/api/v1', async (req: Request, res: Response): Promise<Response> => {
+app.get('/api/v1', async (req: _Request, res: Response): Promise<Response> => {
   return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200_ok()
 });
 app.use('/api/v1/auth', RUTA_AUTH());

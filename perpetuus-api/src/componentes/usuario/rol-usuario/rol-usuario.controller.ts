@@ -8,6 +8,7 @@ import { servicio_rol } from './rol-usuario.service';
 import { Resp } from '../../../utils/response.utils';
 import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
 import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
+import { _Request } from '../../../tipos-personalizados';
 
 
 
@@ -16,7 +17,7 @@ import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
 //   para los roles
 // (o-----------------------------------------------------------\/-----o)
 
-async function crear_rol(req: Request, res: Response) {
+async function crear_rol(req: _Request, res: Response) {
     try {
         const { descripcion, nombre } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -47,7 +48,7 @@ async function crear_rol(req: Request, res: Response) {
     }
 }
 
-async function obtener_roles_todo(req: Request, res: Response) {
+async function obtener_roles_todo(req: _Request, res: Response) {
     try {
         const roles = await servicio_rol
             .obtener_roles_todo()
@@ -69,7 +70,7 @@ async function obtener_roles_todo(req: Request, res: Response) {
     }
 }
 
-async function obtener_rol_id(req: Request, res: Response) {
+async function obtener_rol_id(req: _Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -107,7 +108,7 @@ async function obtener_rol_id(req: Request, res: Response) {
     }
 }
 
-async function obtener_rol_termino(req: Request, res: Response) {
+async function obtener_rol_termino(req: _Request, res: Response) {
     try {
         const { termino } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -145,7 +146,7 @@ async function obtener_rol_termino(req: Request, res: Response) {
     }
 }
 
-async function modificar_rol(req: Request, res: Response) {
+async function modificar_rol(req: _Request, res: Response) {
     try {
         const { nombre, descripcion, _id } = req.body
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -191,7 +192,7 @@ async function modificar_rol(req: Request, res: Response) {
     }
 }
 
-async function eliminar_rol_id(req: Request, res: Response) {
+async function eliminar_rol_id(req: _Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -248,7 +249,7 @@ async function eliminar_rol_id(req: Request, res: Response) {
 //   cualquier otra cosa que no caiga en el CRUD convencional
 // (o-----------------------------------------------------------\/-----o)
 
-async function crear_permisos_en_rol_id(req: Request, res: Response) {
+async function crear_permisos_en_rol_id(req: _Request, res: Response) {
     try {
         const { permisos, _id } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -299,7 +300,7 @@ async function crear_permisos_en_rol_id(req: Request, res: Response) {
     }
 }
 
-async function eliminar_permisos_en_rol_id(req: Request, res: Response) {
+async function eliminar_permisos_en_rol_id(req: _Request, res: Response) {
     try {
         const { permisos, _id } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -350,7 +351,7 @@ async function eliminar_permisos_en_rol_id(req: Request, res: Response) {
     }
 }
 
-async function crear_rol_super_admin(req: Request, res: Response) {
+async function crear_rol_super_admin(req: _Request, res: Response) {
     try {
         await servicio_rol
             .crear_rol_super_admin();
@@ -371,7 +372,7 @@ async function crear_rol_super_admin(req: Request, res: Response) {
     }
 }
 
-async function obtener_permisos_disponibles(req: Request, res: Response) {
+async function obtener_permisos_disponibles(req: _Request, res: Response) {
     try {
         const permisos = await servicio_rol
             .obtener_permisos_disponibles();
