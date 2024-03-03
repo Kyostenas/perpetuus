@@ -57,7 +57,13 @@ export class SigninComponent {
         this.limpiar_formulario();
         if (usuario.rol?.super_admin) {
           this.router.navigate(['administracion']);
+        } else {
+          this.router.navigate(['usuario'])
         }
+        let rol_usuario = usuario.rol
+        delete usuario.rol        
+        localStorage.setItem('usuario', JSON.stringify(usuario))
+        localStorage.setItem('rol_usuario', JSON.stringify(rol_usuario))
       });
   }
 

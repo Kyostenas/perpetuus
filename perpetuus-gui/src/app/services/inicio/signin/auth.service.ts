@@ -69,4 +69,39 @@ export class AuthService {
     );
   }
 
+  refrescar_token(refrsh_tkn: string) {
+    const url = this.obtener_url(['refresh-session', refrsh_tkn]);
+    return this.http.post(url, {}, this.opciones).pipe(
+      map((resp: any) => {
+        alert(resp.mensaje);
+      }),
+      catchError(err => {
+        alert('¡Error refrescar la sesión! ' + err.error.mensaje);
+        return throwError(() => new Error(err));
+      })
+    );
+  }
+
+  /**
+   * Comprueba que la sesión exista, es decir, que no se
+   * halla cerrado desde el API.
+   * 
+   * @returns {Boolean} Booleano que dicta si hay una sesión
+   */
+  validar_sesion() {
+    const url = this.obtener_url(['validate-session']);
+    return this.http.get(url, this.opciones).pipe(
+      map((resp: any) => {
+        alert(resp.mensaje);
+        return resp.datos as Boolean
+      }),
+      catchError(err => {
+        alert('¡Error validar la sesión! ' + err.error.mensaje);
+        return throwError(() => new Error(err));
+      })
+    );
+  }
+
+
+
 }
