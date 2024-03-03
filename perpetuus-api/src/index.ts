@@ -17,8 +17,16 @@ import { URI_DB, PORT, COOKIE_SECRET, URL_GUI_LOCAL } from './config/env/env.con
 import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
 import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
 import { RUTA_AUTH } from './componentes/auth-login/auth.routes';
+import { verificar_jwt } from './middlewares/auth-login/jwt.middleware';
 
-// (o-----------------------------------------( CONFIGURACIONES ))
+
+
+
+
+
+// (o==================================================================o)
+//   SERVIDOR EXPRESS (INICIO)
+// (o-----------------------------------------------------------\/-----o)
 
 const app: Application = express();
 
@@ -30,18 +38,37 @@ const opciones_cors = {
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
 }
 
+// (o-----------------------------------------( VERFICACION TOKEN ))
+
+app.use((req: Request, res: Response, next: any) => {
+  verificar_jwt(req, res, next);
+});
+
+// (o-----------------------------------------( CONFIGURACIONES ))
+
 app.disable('x-powered-by');
 app.use(cors(opciones_cors));
-
-// LOGS REQUESTS
-app.use((req, res, next) => {
-    syslog.__request(req.method, req.url);
-    next();
-});
 
 // BODY PARSING
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// LOGS REQUESTS
+app.use((req: Request, res: Response, next: any) => {
+    let req_any = <any>req;
+    let usuario = req_any?.usuario?.nombre_usuario;
+
+    // Cuando es login, aun no hay objeto usuario en el req
+    if (!usuario) {
+      usuario = req.body.nombre_usuario;
+    }
+    if (!usuario) {
+      syslog.__request(req.method, req.url);
+    } else {
+      syslog.__request(req.method, `{${usuario}} ${req.url}`);
+    }
+    next();
+});
 
 app.use(cookie_session({
     name: 'perpetuus-session',
@@ -50,7 +77,7 @@ app.use(cookie_session({
   })
 );
 
-app.use(function(req: Request, res: Response, next: any) {
+app.use((req: Request, res: Response, next: any) => {
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, Content-Type, Accept',
@@ -60,7 +87,7 @@ app.use(function(req: Request, res: Response, next: any) {
 
 // (o-----------------------------------------( RUTAS ))
 
-app.all('*', (req, res, next)=>{
+app.all('*', (req: Request, res: Response, next: any)=>{
   var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   syslog.debug('FULL URL: ' + fullUrl)
   next()
@@ -93,3 +120,9 @@ try {
 } catch (error: any) {
   syslog.error( `Ocurrió un error antes de escuchar en el puerto: ${error.message}`)
 }
+
+// (o-----------------------------------------------------------/\-----o)
+//   SERVIDOR EXPRESS (FIN)
+// (o==================================================================o)
+
+

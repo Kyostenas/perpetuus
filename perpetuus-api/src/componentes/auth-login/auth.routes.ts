@@ -13,6 +13,9 @@ const RUTA_AUTH = () => {
         return await controlador_auth.iniciar_sesion(req, res) });
     router.post('/signout', async (req: Request, res: Response) => {
         return await controlador_auth.cerrar_sesion(req, res) });
+        
+    router.post('/signout', async (req: Request, res: Response) => {
+        return await controlador_auth.cerrar_sesion(req, res) });
 
     return router;
 };

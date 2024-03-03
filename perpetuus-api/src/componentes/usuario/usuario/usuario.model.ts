@@ -60,6 +60,12 @@ const USUARIO_SCHEMA = new Schema(
         rol: {
             type: Schema.Types.ObjectId,
             ref: 'Rol',
+        },
+        rfrsh_tkn: {
+            type: Schema.Types.String,
+        },
+        rfrsh_tkn_validity: {
+            type: Schema.Types.Date
         }
     },
     {

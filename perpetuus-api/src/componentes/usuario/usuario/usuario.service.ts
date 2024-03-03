@@ -52,14 +52,14 @@ async function obtener_usuarios_todo() {
     return await Usuario
         .find()
         .sort('-creadetedAt')
-        .select('-__v -contrasena');
+        .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn');
 }
 
 async function obtener_usuario_id(id: string) {
     syslog.debug(`ID USUARIO: ${id}`);
     const usuario = await Usuario
         .findById(id)
-        .select('-__v -contrasena');
+        .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn');
     syslog.debug(`USUARIO OBTENIDO POR ID ${usuario}`);
     return usuario;
 }
@@ -68,7 +68,7 @@ async function obtener_usuario_termino(termino: string) {
     syslog.debug(`TERMINO DE BÚSQUEDA: ${termino}`);
     const usuario = await Usuario
         .find({ $text: { $search: termino }})
-        .select('-__v -contrasena');
+        .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn');
     syslog.debug(`USUARIO OBTENIDO POR TÉRMINO ${usuario}`);
     return usuario;
 }

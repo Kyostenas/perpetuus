@@ -42,14 +42,15 @@ async function iniciar_sesion(req: Request, res: Response) {
 
         let usuario_enviar = await Usuario
             .findById(usuario._id)
-            .select('-__v -contrasena')
+            .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn')
             .lean();
         delete usuario.rol?.permisos
         delete usuario.rol?.__v
+        let nombre_completo = `${usuario.nombres} ${usuario.apellidos}`
         return new Resp(
             res, __filename, 
             { 
-                mensaje: '¡Hola', 
+                mensaje: `¡Hola de nuevo! ${nombre_completo}`, 
                 datos: usuario_enviar,
             }
         )._200_ok();
@@ -64,14 +65,12 @@ async function iniciar_sesion(req: Request, res: Response) {
     }
 }
 
-async function cerrar_sesion(req: Request, res: Response) {
+async function cerrar_sesion(req: Request, res: Response, mensaje = 'Hasta pronto...') {
     try {
         req.session = null;
         return new Resp(
             res, __filename, 
-            { 
-                mensaje: 'Hasta pronto...', 
-            }
+            { mensaje }
         )._200_ok();        
     } catch (error) {
 

@@ -3,7 +3,7 @@ import { sign as jwt_sign } from 'jsonwebtoken';
 
 import { UsuarioDocument } from '../usuario/usuario/usuario.model';
 import { AUTH_SECRET } from '../../config/env/env.config';
-import { SEGUNDOS_DIA } from '../../utils/constantes.utils';
+import { SEGUNDOS_HORA } from '../../utils/constantes.utils';
 
 function iniciar_sesion(usuario: UsuarioDocument, constrasena: string): {
     contrasena_valida: boolean;
@@ -15,12 +15,18 @@ function iniciar_sesion(usuario: UsuarioDocument, constrasena: string): {
     );
     if (!contrasena_valida) return { contrasena_valida };
     const token_generado = jwt_sign(
-        { usuario: usuario._id },
+        { usuario: {
+            _id: usuario._id,
+            nombre: `${usuario.nombres} ${usuario.apellidos}`,
+            nombre_usuario: usuario.nombre_usuario,
+            correo: usuario.correo,
+            rol: usuario.rol,
+        }},
         <string>AUTH_SECRET,
         {
             algorithm: 'HS256',
             allowInsecureKeySizes: false,
-            expiresIn: SEGUNDOS_DIA
+            expiresIn: SEGUNDOS_HORA,
         }
     );
 
