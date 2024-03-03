@@ -6,6 +6,7 @@ import { Usuario, UsuarioDocument } from '../usuario/usuario/usuario.model';
 
 import { AUTH_SECRET } from '../../config/env/env.config';
 import { SEGUNDOS_HORA } from '../../utils/constantes.utils';
+import { _Request } from '../../tipos-personalizados';
 
 function generar_token_inicio_sesion(usuario: UsuarioDocument, constrasena: string): {
     contrasena_valida: boolean;
@@ -22,7 +23,7 @@ function generar_token_inicio_sesion(usuario: UsuarioDocument, constrasena: stri
             nombre: `${usuario.nombres} ${usuario.apellidos}`,
             nombre_usuario: usuario.nombre_usuario,
             correo: usuario.correo,
-            rol: usuario.rol,
+            rol: usuario.rol?._id,
         }},
         <string>AUTH_SECRET,
         {
@@ -86,10 +87,18 @@ async function refrescar_token_inicio_sesion(usuario: UsuarioDocument, refresh_t
     }
 }
 
+function validar_sesion(req: _Request) {
+    let sesion_valida = true
+    if (!req.session) sesion_valida = false
+    return { sesion_valida }
+}
+
+
 const servicio_auth = {
     generar_token_inicio_sesion,
     crear_refresh_token,
     refrescar_token_inicio_sesion,
+    validar_sesion,
 };
 
 export { servicio_auth };

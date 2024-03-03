@@ -100,7 +100,7 @@ async function refrescar_inicio_sesion(req: _Request, res: Response) {
             return new Resp(
                 res, __filename, 
                 { 
-                    mensaje: `¡Hola de nuevo! ${nombre_completo}`, 
+                    mensaje: `Sesión renovada`, 
                 }
             )._200_ok();
 
@@ -110,7 +110,7 @@ async function refrescar_inicio_sesion(req: _Request, res: Response) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Error al iniciar sesión', 
+                mensaje: 'Error al renovar sesión', 
                 error
             }
         )._422_unprocessable();        
@@ -119,7 +119,8 @@ async function refrescar_inicio_sesion(req: _Request, res: Response) {
 
 async function cerrar_sesion(req: _Request, res: Response, mensaje = 'Hasta pronto...') {
     try {
-        req.session = null;
+        res.clearCookie('perpetuus-session')
+        res.clearCookie('perpetuus-session.sig')
         return new Resp(
             res, __filename, 
             { mensaje }
@@ -138,6 +139,38 @@ async function cerrar_sesion(req: _Request, res: Response, mensaje = 'Hasta pron
     }
 }
 
+async function validar_sesion(req: _Request, res: Response) {
+    try {
+        const { 
+            sesion_valida
+        } = servicio_auth.validar_sesion(req);
+
+        if (!sesion_valida) {
+            return new Resp(
+                res, __filename, 
+                { mensaje: 'Es necesario que inicies sesión de nuevo' }
+            )._401_unauthorized();
+        } else {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: `Sesión existente`,
+                    datos: sesion_valida
+                }
+            )._200_ok();
+
+        }
+    } catch (error) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al validar la sesión', 
+                error
+            }
+        )._422_unprocessable();        
+    }
+}
+
 
 
 const controlador_auth = {
@@ -145,6 +178,7 @@ const controlador_auth = {
     iniciar_sesion,
     refrescar_inicio_sesion,
     cerrar_sesion,
+    validar_sesion,
 };
 
 export { controlador_auth };

@@ -18,6 +18,9 @@ const RUTA_AUTH = () => {
     router.post('/refresh-session/:rfrsh_tkn', async (req: _Request, res: Response) => {
         return await controlador_auth.refrescar_inicio_sesion(req, res) });
 
+    router.get('/validate-session', async (req: _Request, res: Response) => {
+        return await controlador_auth.validar_sesion(req, res) });
+
     return router;
 };
 

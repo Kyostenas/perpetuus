@@ -9,6 +9,7 @@ const syslog = _syslog(module);
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import cookie_session from 'cookie-session';
+import cookieParser from 'cookie-parser';
 
 import { Resp } from './utils/response.utils';
 
@@ -40,6 +41,8 @@ const opciones_cors = {
 }
 
 // (o-----------------------------------------( VERFICACION TOKEN ))
+
+app.use(cookieParser());
 
 app.use((req: _Request, res: Response, next: any) => {
   verificar_jwt(req, res, next);
