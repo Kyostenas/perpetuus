@@ -12,6 +12,8 @@ type UsuarioDocument = Document & {
     contrasena: string;
     numero_celular?: string;
     rol?: RolDocument;
+    rfrsh_tkn?: string;
+    rfrsh_tkn_validity?: Schema.Types.ObjectId;
 };
 
 type UsuarioInput = {
@@ -62,7 +64,7 @@ const USUARIO_SCHEMA = new Schema(
             ref: 'Rol',
         },
         rfrsh_tkn: {
-            type: Schema.Types.String,
+            type: Schema.Types.ObjectId,
         },
         rfrsh_tkn_validity: {
             type: Schema.Types.Date

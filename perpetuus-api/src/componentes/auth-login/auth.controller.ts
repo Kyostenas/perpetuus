@@ -34,6 +34,9 @@ async function iniciar_sesion(req: Request, res: Response) {
                 res, __filename, 
                 { mensaje: 'Usuario o contraseña incorrectos' }
             )._401_unauthorized();             
+        } else {
+            // Crear refresh token
+            await servicio_auth.crear_refresh_token(usuario);
         }
 
         // Agregar token a la sesion
