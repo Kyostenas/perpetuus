@@ -46,24 +46,45 @@ export class Resp {
 
     private error_general() {
         this.datos.ok = false
-        if (this.datos.error.hasOwnProperty('err')) {
-            let errores_interfaz: string[] = [];
-            this.datos.error.err.errors.map((campo: string) => {
-                errores_interfaz.push(
-                    this.datos.error.err.errors[campo].message
-                );
-            });
-            this.datos.errores_interfaz = errores_interfaz;
+        if (this.datos.error) {
+            if (this.datos.error.hasOwnProperty('err')) {
+                let errores_interfaz: string[] = [];
+                this.datos.error.err.errors.map((campo: string) => {
+                    errores_interfaz.push(
+                        this.datos.error.err.errors[campo].message
+                    );
+                });
+                this.datos.errores_interfaz = errores_interfaz;
+            }
+        } else {
+            this.datos.error = new Error(this.datos.mensaje? this.datos.mensaje : '')
         }
 
-        syslog.error(`${this.codigo_formateado} ${this.datos.error}`, this.filename);
+        syslog.definir_ubicacion(this.filename)
+        syslog.error(`${this.codigo_formateado} ${this.datos.error}`);
         return this.datos;
     }
 
     private estatus_ok_general() {
         this.datos.ok = true;
-        syslog.success(`${this.codigo_formateado} ${this.datos.mensaje}`, this.filename);
+        syslog.definir_ubicacion(this.filename)
+        syslog.success(`${this.codigo_formateado} ${this.datos.mensaje}`);
         return this.datos;
+    }
+
+    private respuesta_general(estatus: number, mensaje: string, error: boolean) {
+        this.datos.estatus = estatus
+        this.codigo_actual = `${estatus} ${mensaje}`
+        if (!this.datos) {
+            syslog.definir_ubicacion(this.filename)
+            syslog.error(`Respuesta vacía: `);
+            return this.res.status(estatus).json(this.datos);
+        }
+        if (error) {
+            return this.res.status(estatus).json(this.error_general());
+        } else {
+            return this.res.status(estatus).json(this.estatus_ok_general());
+        }
     }
     
     // (o-----------------------------------------------------------/\-----o)
@@ -92,11 +113,7 @@ export class Resp {
      *      el cuerpo del mensaje.
      */
     _200_ok() {
-        this.codigo_actual = '200 OK'
-        if (!this.res) {
-            throw 'Respuesta vacía';
-        }
-        return this.res.status(200).json(this.estatus_ok_general());
+        return this.respuesta_general(200, `OK`, false)
     }
 
     /**
@@ -108,11 +125,7 @@ export class Resp {
      * para solicitudes `POST` o algunas `PUT`.
      */    
     _201_created() {
-        this.codigo_actual = '201 CREATED'
-        if (!this.res) {
-            throw 'Respuesta vacía';
-        }
-        return this.res.status(201).json(this.estatus_ok_general());
+        return this.respuesta_general(201, `CREATED`, false)
     }
 
 
@@ -127,11 +140,7 @@ export class Resp {
      * como un **error de cliente**.
      */        
     _400_bad_request() {
-        this.codigo_actual = '400 BAD REQUEST'
-        if (!this.datos.error) {
-            throw 'Respuesta de error vacía';
-        }
-        return this.res.status(400).json(this.error_general());
+        return this.respuesta_general(400, `BAD REQUEST`, true)
     }
     
     /**
@@ -144,10 +153,21 @@ export class Resp {
      * solicitada.
      */        
     _401_unauthorized() {
-        this.codigo_actual = '401 UNAUTHORIZED'
-        if (this.datos.error) {
-            return this.res.status(401).json(this.error_general());
-        }
+        return this.respuesta_general(401, `UNAUTHORIZED`, true)
+    }
+
+    /**
+     * ## `403 Forbidden`
+     * 
+     * Detalles [aquí](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403).
+     * 
+     * El servidor entiende la solicitud pero se rehusa a autorizarla. Es similar
+     * a `401` pero aquí reautenticar no hace difeerencia, porque el acceso esta 
+     * ligado a la lógica en la aplicación, por ejemplo: No hay suficientes
+     * permisos para acceder a un recurso.
+     */        
+    _403_forbidden() {
+        return this.respuesta_general(403, `FORBIDDEN`, true)
     }
 
     /**
@@ -161,10 +181,7 @@ export class Resp {
      * puede ser que la ruta sea válida pero no existe el recurso.
      */     
     _404_not_found() {
-        this.codigo_actual = '404 NOT FOUND'
-        if (this.datos.error) {
-            return this.res.status(404).json(this.error_general());
-        }
+        return this.respuesta_general(404, `NOT FOUND`, true)
     }
     
     /**
@@ -176,11 +193,7 @@ export class Resp {
      * errores semanticos.
      */     
     _422_unprocessable() {
-        this.codigo_actual = '422 UNPROCESSABLE'
-        if (!this.datos.error) {
-            throw 'Respuesta de error vacía'
-        }
-        return this.res.status(422).json(this.error_general());
+        return this.respuesta_general(422, `UNPROCESSABLE`, true)
     }
     
     
@@ -195,12 +208,7 @@ export class Resp {
      * responder (error interno).
      */     
     _500_internal_server_error() {
-        this.codigo_actual = '500 INTERNAL ERROR'
-        if (!this.datos.error) {
-            syslog.error(this.datos.toString(), this.filename);
-            return this.res.status(500).json(this.datos);
-        }
-        return this.res.status(500).json(this.error_general());
+        return this.respuesta_general(500, `INTERNAL ERROR`, true)
     }
     
     // (o-----------------------------------------------------------/\-----o)
@@ -224,6 +232,26 @@ export interface DatosResponse {
      * motivo, contexto, etc. De la respuesta.
      */
     mensaje: string;
+    /**
+     * ## advertencia
+     * Texto describiendo una advertencia.
+     */
+    advertencias?: string[];
+    /**
+     * ## info
+     * Texto describiendo una info. extra.
+     */
+    infos?: string[];
+    /**
+     * ## noticia
+     * Texto describiendo una noticia.
+     */
+    noticias?: string[];
+    /**
+     * ## estatus
+     * El código de estatus de la respuesta. 
+     */
+    estatus?: number;    
     /**
      * ## ok
      * Booleano que indica si está todo bien (no hay error).

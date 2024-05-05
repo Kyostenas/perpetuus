@@ -1,19 +1,40 @@
-import { Router } from 'express';
-import { 
-    crear_rol, 
-    obtener_rol_id, 
-    obtener_roles_todo 
-} from './rol-usuario.controller';
+import { Router, Request, Response } from 'express';
+import { ruta_rol } from './rol-usuario.controller';
+import { _Request } from '../../../tipos-personalizados';
 
 const RUTA_ROL = () => {
     const router = Router();
 
-    router.post('/', crear_rol);
-    router.get('/', obtener_roles_todo);
-    router.get('/id/:id', obtener_rol_id);
-    router.get('/termino/:termino', (req, res) => {});
-    router.put('/id/:id', (req, res) => {});
-    router.delete('/id/:id', (req, res) => {});
+    // (o-----------------------------------------( CRUD ))
+    
+    router.post('/', async (req: _Request, res: Response) => { 
+        return await ruta_rol.crear_rol(req, res) });
+    router.get('/', async (req: _Request, res: Response) => { 
+        return await ruta_rol.obtener_roles_todo(req, res) });
+    router.get('/id/:id', async (req: _Request, res: Response) => { 
+        return await ruta_rol.obtener_rol_id(req, res) });
+    router.get('/termino/:termino', async (req: _Request, res: Response) => { 
+        return await ruta_rol.obtener_rol_termino(req, res) });
+    router.put('/', async (req: _Request, res: Response) => { 
+        return await ruta_rol.modificar_rol(req, res) });
+    router.delete('/id/:id', async (req: _Request, res: Response) => { 
+        return await ruta_rol.eliminar_rol_id(req, res) });
+
+
+    // (o-----------------------------------------( ACCIONES EXTRA ))
+        
+    // PERMISOS
+    router.post('/permisos', async (req: _Request, res: Response) => { 
+        return await ruta_rol.crear_permisos_en_rol_id(req, res) });
+    router.get('/permisos', async (req: _Request, res: Response) => { 
+        return await ruta_rol.obtener_permisos_disponibles(req, res) });
+    router.delete('/permisos', async (req: _Request, res: Response) => { 
+        return await ruta_rol.eliminar_permisos_en_rol_id(req, res) });
+    
+    // SUPER ADMIN
+    router.post('/super-admin', async (req: _Request, res: Response) => { 
+        return await ruta_rol.crear_rol_super_admin(req, res) }); 
+
 
     return router
 };
