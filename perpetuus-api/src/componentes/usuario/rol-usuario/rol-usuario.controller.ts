@@ -1,8 +1,14 @@
 import { Request, Response } from 'express';
-import { Rol, RolInput } from '../rol-usuario/rol-usuario.model';
-import { Resp } from '../../../utiles/response';
-import { syslog as _syslog } from '../../../utiles/logs';
+import { syslog as _syslog } from '../../../utils/logs.utils';
 const syslog = _syslog(module)
+
+import { Rol } from '../rol-usuario/rol-usuario.model';
+import { servicio_rol } from './rol-usuario.service';
+
+import { Resp } from '../../../utils/response.utils';
+import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
+import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
+import { _Request } from '../../../tipos-personalizados';
 
 
 
@@ -11,17 +17,19 @@ const syslog = _syslog(module)
 //   para los roles
 // (o-----------------------------------------------------------\/-----o)
 
-const crear_rol = async (req: Request, res: Response) => {
-    const { descripcion, nombre } = req.body;
-    if (!nombre || !descripcion) {
-        return new Resp(
-            res, __filename, 
-            { mensaje: 'Se require el nombre del rol' }
-        )._422_unprocessable();
-    }
+async function crear_rol(req: _Request, res: Response) {
     try {
-        const rol_input: RolInput = { nombre, descripcion };
-        const nuevo_rol = await  Rol.create(rol_input)
+        const { descripcion, nombre } = req.body;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['nombre', 'descripcion'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }
+        const nuevo_rol = await servicio_rol
+            .crear_rol(nombre, descripcion);
         return new Resp(
             res, __filename, 
             { 
@@ -40,9 +48,10 @@ const crear_rol = async (req: Request, res: Response) => {
     }
 }
 
-const obtener_roles_todo = async (req: Request, res: Response) => {
+async function obtener_roles_todo(req: _Request, res: Response) {
     try {
-        const roles = await Rol.find().sort('-creadetedAt')
+        const roles = await servicio_rol
+            .obtener_roles_todo()
         return new Resp(
             res, __filename,
             {
@@ -61,11 +70,18 @@ const obtener_roles_todo = async (req: Request, res: Response) => {
     }
 }
 
-const obtener_rol_id = async (req: Request, res: Response) => {
+async function obtener_rol_id(req: _Request, res: Response) {
     try {
         const { id } = req.params;
-        syslog.log(`ID: ${id}`)
-        const rol = await Rol.findById(id);
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['id'],
+            req.params
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }        
+        const rol = await servicio_rol.obtener_rol_id(id)
         if (!rol) {
             return new Resp(
                 res, __filename, 
@@ -74,7 +90,6 @@ const obtener_rol_id = async (req: Request, res: Response) => {
                 }
             )._404_not_found();
         }
-        syslog.log(`${rol}`)
         return new Resp(
             res, __filename,
             {
@@ -93,11 +108,101 @@ const obtener_rol_id = async (req: Request, res: Response) => {
     }
 }
 
-const modificar_rol = async (req: Request, res: Response) => {
+async function obtener_rol_termino(req: _Request, res: Response) {
+    try {
+        const { termino } = req.params;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['termino'],
+            req.params
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }              
+        const rol = await servicio_rol.obtener_rol_termino(termino)
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No se encontró un rol relacionado a ese término', 
+                }
+            )._404_not_found();
+        }
+        return new Resp(
+            res, __filename,
+            {
+                mensaje: 'Rol obtenido usando un término',
+                datos: rol,
+            },
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al obtener un rol por término', 
+                error: err 
+            }
+        )._422_unprocessable();        
+    }
+}
+
+async function modificar_rol(req: _Request, res: Response) {
+    try {
+        const { nombre, descripcion, _id } = req.body
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['nombre', 'descripcion', '_id'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }            
+        const rol = await Rol.findById(_id);
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No existe un rol con ese id', 
+                }
+            )._404_not_found();
+        }
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: `No se puede modificar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
+                }
+            )._403_forbidden();
+        }  
+        servicio_rol.modificar_rol(_id, nombre, descripcion);
+        return new Resp(
+            res, __filename,
+            {
+                mensaje: 'Rol modificado',
+            },
+        )._200_ok();        
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al modificar un rol por id', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function eliminar_rol_id(req: _Request, res: Response) {
     try {
         const { id } = req.params;
-        const cuerpo = req.body
-        syslog.log(`ID: ${id}`)
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['id'],
+            req.params
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }            
         const rol = await Rol.findById(id);
         if (!rol) {
             return new Resp(
@@ -107,23 +212,29 @@ const modificar_rol = async (req: Request, res: Response) => {
                 }
             )._404_not_found();
         }
-        if (!cuerpo) {
+        if (rol.super_admin) {
             return new Resp(
-                res, __filename,
-                {
-                    mensaje: 'Se requiren datos para modificar el rol'
+                res, __filename, 
+                { 
+                    mensaje: `No se puede eliminar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
                 }
-            )._422_unprocessable()
-        }
-        syslog.log(`ANTES: ${rol}`)        
+            )._403_forbidden();
+        }          
+        await servicio_rol.eliminar_rol_id(id, rol)
+        return new Resp(
+            res, __filename,
+            {
+                mensaje: 'Rol eliminado usando un id',
+            },
+        )._200_ok();
     } catch (err) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Error al obtener un rol por id', 
+                mensaje: 'Error al eliminar un rol por id', 
                 error: err 
             }
-        )._422_unprocessable();          
+        )._422_unprocessable();        
     }
 }
 
@@ -133,9 +244,174 @@ const modificar_rol = async (req: Request, res: Response) => {
 // (o==================================================================o)
 
 
+// (o==================================================================o)
+//   ACCIONES EXTRA (INICIO)
+//   cualquier otra cosa que no caiga en el CRUD convencional
+// (o-----------------------------------------------------------\/-----o)
 
-export { 
+async function crear_permisos_en_rol_id(req: _Request, res: Response) {
+    try {
+        const { permisos, _id } = req.body;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['permisos', '_id'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }
+        let rol = await Rol.findById(_id);
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No existe un rol con ese id', 
+                }
+            )._404_not_found();
+        }
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: `No se pueden crear permisos en el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
+                }
+            )._403_forbidden();
+        }            
+        const { 
+            mensaje_res,
+            advertencias
+        } = await servicio_rol
+            .crear_permisos_en_rol_id(permisos, rol);
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: mensaje_res,
+                advertencias: advertencias,
+            }
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al crear ese o esos permisos', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function eliminar_permisos_en_rol_id(req: _Request, res: Response) {
+    try {
+        const { permisos, _id } = req.body;
+        const { valido, mensaje } = validar_existencia_de_campos(
+            ['permisos', '_id'],
+            req.body
+        );
+        if (!valido) {
+            return new Resp(res, __filename, { mensaje })
+                ._422_unprocessable();
+        }
+        let rol = await Rol.findById(_id);
+        if (!rol) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: 'No existe un rol con ese id', 
+                }
+            )._404_not_found();
+        }
+        if (rol.super_admin) {
+            return new Resp(
+                res, __filename, 
+                { 
+                    mensaje: `No se pueden eliminar permisos en el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
+                }
+            )._403_forbidden();
+        }               
+        const { 
+            mensaje_res,
+            advertencias
+        } = await servicio_rol
+            .eliminar_permisos_en_rol_id(permisos, rol);
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: mensaje_res,
+                advertencias: advertencias,
+            }
+        )._200_ok();
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al eleminar ese o esos permisos', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function crear_rol_super_admin(req: _Request, res: Response) {
+    try {
+        await servicio_rol
+            .crear_rol_super_admin();
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: `Rol de ${NOMBRE_ROL_SUPER_ADMIN} creado`, 
+            }
+        )._201_created();        
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: `Error al crear el rol de ${NOMBRE_ROL_SUPER_ADMIN}`, 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+async function obtener_permisos_disponibles(req: _Request, res: Response) {
+    try {
+        const permisos = await servicio_rol
+            .obtener_permisos_disponibles();
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Permisos obtenidos',
+                datos: permisos,
+            }
+        )._200_ok();        
+    } catch (err) {
+        return new Resp(
+            res, __filename, 
+            { 
+                mensaje: 'Error al obtener los permisos disponibles', 
+                error: err 
+            }
+        )._422_unprocessable();          
+    }
+}
+
+// (o-----------------------------------------------------------/\-----o)
+//   ACCIONES EXTRA (FIN)
+// (o==================================================================o)
+
+
+const ruta_rol = { 
     crear_rol, 
     obtener_roles_todo,
     obtener_rol_id,
+    obtener_rol_termino,
+    modificar_rol,
+    eliminar_rol_id,
+
+    crear_permisos_en_rol_id,
+    obtener_permisos_disponibles,
+    eliminar_permisos_en_rol_id,    
+    crear_rol_super_admin,
 };
+
+
+export { ruta_rol }

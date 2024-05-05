@@ -297,6 +297,51 @@ export function seleccionarCampoCualquierNivel(
     return resultado
 }
 
+
+
+export function seleccionarCampoCualquierNivelSimple(
+    objeto: any,
+    campo: string,
+    separador: string,
+) {
+    try {
+        let ruta = campo.split(separador)
+        let objetoActual: any | undefined
+        for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
+            function ver_sub_objetos_en_arrays() {
+                let objeto_temporal: any[] = [];
+                if (Object.prototype.toString.call(objetoActual) == '[object Array]') {
+                    objetoActual.map((un_sub_objeto: any) => {
+                        if (Object.prototype.toString.call(un_sub_objeto) == '[object Array]') {
+                            objetoActual = un_sub_objeto;
+                            ver_sub_objetos_en_arrays();
+                        }
+                        objeto_temporal.push(un_sub_objeto[pasoRuta]);
+                    });
+                    return objeto_temporal;
+                  } else {
+                  }
+                  return undefined;
+            }
+            const pasoRuta = ruta[iRuta]
+            let objetoEnArrays = ver_sub_objetos_en_arrays()
+            if (objetoEnArrays) {
+              objetoActual = objetoEnArrays
+            } else {
+                try {
+                    objetoActual = objetoActual[pasoRuta]
+                } catch {
+                    objetoActual = objeto[pasoRuta]
+                }
+            }
+        }
+        return objetoActual
+    } catch {
+        return undefined
+    }
+}
+
+
 /**
  * Ejecuta un retraso atravez de una promesa.
  *

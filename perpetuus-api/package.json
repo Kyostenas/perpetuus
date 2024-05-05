@@ -4,15 +4,10 @@
   "description": "API de la aplicacion para controlar registros de la adoracion perpetua",
   "main": "index.ts",
   "scripts": {
-<<<<<<< HEAD
-    "start": "ts-node-dev ./src/index.ts",
-    "release": "standard-version"
-=======
     "serv-dev": "ts-node-dev ./src/index.ts",
     "release": "standard-version",
     "build": "tsc",
     "serve": "node build/index.js"
->>>>>>> main
   },
   "repository": {
     "type": "git",
@@ -25,41 +20,34 @@
   },
   "homepage": "https://github.com/Kyostenas/perpetuus-api#readme",
   "devDependencies": {
-<<<<<<< HEAD
-    "@commitlint/cli": "^17.6.6",
-    "@commitlint/config-conventional": "^17.2.0",
-    "@types/express": "^4.17.17",
-    "@types/node": "^20.4.0",
-    "npm-run-all": "^1.7.0",
-    "prettier": "^2.7.1",
-    "standard-version": "^9.5.0",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.1.6"
-=======
-    "@commitlint/cli": "^17.7.1",
-    "@commitlint/config-conventional": "^17.7.0",
-    "@types/express": "^4.17.17",
-    "@types/node": "^20.5.1",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
     "npm-run-all": "^4.1.5",
-    "prettier": "^3.0.2",
+    "prettier": "^3.2.5",
     "standard-version": "^9.5.0",
-    "ts-node-dev": "^2.0.0",
-    "@types/cors": "^2.8.14"
->>>>>>> main
+    "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
-    "typescript": "^5.1.6",
-    "dotenv": "^16.3.1",
-    "axios": "^1.5.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/cookie-session": "^2.0.48",
+    "@types/jsonwebtoken": "^9.0.6",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-<<<<<<< HEAD
-    "mongoose": "^6.7.2"
-=======
-    "mongoose": "^7.4.3",
+    "deep-object-diff": "^1.1.9",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
     "express-graphql": "^0.12.0",
-    "graphql": "^15.8.0"
->>>>>>> main
+    "graphql": "^15.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.6.9",
+    "typescript": "^5.3.3"
   }
 }
