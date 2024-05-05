@@ -1,0 +1,40 @@
+:root {
+    --cuerpo-tema: rgba(0, 0, 0, 0);
+    --pie-tema: rgba(0, 0, 0, 0);
+}
+
+$modal-content-border-radius: 20px;
+// $modal-content-border-color: transparent;
+$modal-header-border-color: transparent;
+$modal-footer-border-color: transparent;
+$color-mode-type: data;
+
+// $modal-content-bg: rgba(var(--bs-body-color-rgb), .5);
+// $modal-footer-bg: rgba(var(--bs-body-color-rgb), .5);
+
+
+$modal-content-bg: rgba(var(--bs-body-bg-rgb), .5);
+$modal-footer-bg: rgba(var(--bs-body-bg-rgb), .5);
+
+@import "../../../../../../../node_modules/bootstrap/scss/bootstrap.scss";
+
+
+.modal-header {
+    backdrop-filter: blur(4px);
+}
+.modal-body {
+    backdrop-filter: blur(4px);
+}
+.modal-footer {
+    backdrop-filter: blur(4px);
+}
+
+// .contenedor {
+//     transition: 350ms ease-in-out;
+//     opacity: 0;
+// }
+
+// .contenedor.mostrando-modal {
+//     transition: 350ms ease-in-out;
+//     opacity: 100;
+// }

@@ -1,0 +1,5 @@
+@for (error of listaDeErrores(); track error) {
+    {{ obtenerMensaje(error) }}
+} @empty {
+    {{ ultimo_mensaje }}
+}

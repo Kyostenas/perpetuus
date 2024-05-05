@@ -1,2 +1,2 @@
-# Perpetuus GIU
+# Perpetuus GUI
 
