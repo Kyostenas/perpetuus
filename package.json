@@ -1,0 +1,21 @@
+{
+  "name": "perpetuus",
+  "version": "0.0.0",
+  "description": "Aplicacion modular multi-proposito",
+  "scripts": {
+    "release": "standard-version && git push --follow-tags origin main"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyostenas/perpetuus.git"
+  },
+  "author": "Kyostenas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyostenas/perpetuus/issues"
+  },
+  "homepage": "https://github.com/Kyostenas/perpetuus#readme",
+  "dependencies": {
+    "standard-version": "^9.5.0"
+  }
+}
