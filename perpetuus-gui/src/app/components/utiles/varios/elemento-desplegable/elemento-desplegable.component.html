@@ -1,0 +1,8 @@
+<div 
+    [(ngbCollapse)]="!expandido"
+    (hidden)="emitir_ocultado()"
+    (shown)="emitir_mostrado()"
+    (change)="emitir_cambio()"
+>
+    <ng-content></ng-content>
+</div>

@@ -1,0 +1,66 @@
+{
+  "name": "perpetuus-gui",
+  "version": "0.0.1",
+  "description": "Gui de la aplicacion para la adoracion perpetua.",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "release": "standard-version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kyostenas/perpetuus-gui.git"
+  },
+  "author": "Kyostenas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kyostenas/perpetuus-gui/issues"
+  },
+  "homepage": "https://github.com/Kyostenas/perpetuus-gui#readme",
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.0.8",
+    "@angular/common": "^17.0.8",
+    "@angular/compiler": "^17.0.8",
+    "@angular/core": "^17.0.8",
+    "@angular/forms": "^17.2.3",
+    "@angular/localize": "^17.2.3",
+    "@angular/platform-browser": "^17.0.8",
+    "@angular/platform-browser-dynamic": "^17.2.3",
+    "@angular/router": "^17.2.3",
+    "@angular/service-worker": "^17.2.3",
+    "@auth0/angular-jwt": "^5.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "@types/bootstrap": "^5.2.10",
+    "bootstrap": "^5.3.3",
+    "bootstrap-icons": "^1.11.3",
+    "bson-objectid": "^2.0.4",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "^0.14.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.2.2",
+    "@angular/compiler-cli": "^17.0.8",
+    "@angular/language-service": "^17.2.3",
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "@types/jasmine": "~4.0.0",
+    "@types/node": "^18.19.21",
+    "eslint": "^8.57.0",
+    "jasmine-core": "~4.3.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.8",
+    "standard-version": "^9.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.2.2"
+  }
+}
