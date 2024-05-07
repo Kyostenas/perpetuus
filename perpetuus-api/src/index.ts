@@ -40,18 +40,13 @@ const opciones_cors = {
   allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
 }
 
-// (o-----------------------------------------( VERFICACION TOKEN ))
-
-app.use(cookieParser());
-
-app.use((req: _Request, res: Response, next: any) => {
-  verificar_jwt(req, res, next);
-});
-
 // (o-----------------------------------------( CONFIGURACIONES ))
 
 app.disable('x-powered-by');
 app.use(cors(opciones_cors));
+
+// PARA PARSEAR LAS COOKIES
+app.use(cookieParser());
 
 // BODY PARSING
 app.use(express.json());
@@ -100,7 +95,20 @@ app.all('*', (req: _Request, res: Response, next: any)=>{
 app.get('/api/v1', async (req: _Request, res: Response): Promise<Response> => {
   return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200_ok()
 });
+
+// RUTAS DE INICIO DE SESION, CREACION DE TOKEN
+// Y TOKEN DE REFRESCADO
 app.use('/api/v1/auth', RUTA_AUTH());
+
+// VERIFICACION DE TOKEN
+// Debe ir despues de la ruta auth, porque esa no
+// debe validar el token. Esto es asi porque es
+// en base a esas rutas que se genera este mismo.
+app.use((req: _Request, res: Response, next: any) => {
+  verificar_jwt(req, res, next);
+});
+
+
 app.use('/api/v1/roles', RUTA_ROL());
 app.use('/api/v1/usuarios', RUTA_USUARIO());
 
