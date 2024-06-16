@@ -40,14 +40,14 @@ async function crear_refresh_token(usuario: UsuarioDocument) {
     const refresh_token_generado = new Types.ObjectId();
     let hoy = new Date();
     // 10 dias de validez para el refresh token
-    let validez = new Date().setDate(hoy.getDate() + 10);
-    await Usuario.findByIdAndUpdate(
-        usuario._id,
-        { 
+    let validez = new Date(hoy.setDate(hoy.getDate() + 10));
+    let modificado = await Usuario.findOneAndUpdate(
+        { _id: usuario._id },
+        { $set: { 
             rfrsh_tkn: refresh_token_generado,
             rfrsh_tkn_validity: validez,
-        },
-        { useFindAndModify: false }
+        }},
+        { useFindAndModify: false, new: true }
     );
 }
 
