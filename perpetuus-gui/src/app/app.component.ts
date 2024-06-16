@@ -35,19 +35,21 @@ export class AppComponent {
     private router: Router,
     private auth_service: AuthService,
   ) {
-    router.events.forEach((event: any) => {
-      if (event instanceof NavigationStart) {
-        if (!rutas_exentas.includes(event.url)) {
-          this.auth_service
-            .validar_sesion()
-            .subscribe(hay_sesion => {
-              if (!hay_sesion) {
-                this.router.navigate(['']);
-              }
-            })
-        }
-      }
-    })
+    // router.events.forEach((event: any) => {
+    //   if (event instanceof NavigationStart) {
+    //     if (!rutas_exentas.includes(event.url)) {
+    //       this.auth_service
+    //         .validar_sesion()
+    //         .subscribe(hay_sesion => {
+    //           if (!hay_sesion) {
+    //             this.router.navigate(['/inicio']);
+    //           }
+    //         }, _err => {
+    //           this.router.navigate(['/inicio/signin']);
+    //         })
+    //     }
+    //   }
+    // })
   }
 
   title = 'perpetuus-gui';
