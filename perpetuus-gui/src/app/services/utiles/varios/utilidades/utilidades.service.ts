@@ -57,6 +57,9 @@ export const SEGUNDOS_MES29 = SEGUNDOS_DIA * 29
 export const SEGUNDOS_ANIO = SEGUNDOS_DIA * 365
 export const SEGUNDOS_ANIOBIS = SEGUNDOS_DIA * 366
 
+export const NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE = 'usuario'
+export const NOMBRE_CAMPO_ROL_LOCAL_STORAGE = 'rol_usuario'
+
 // (o-----------------------------------------------------------/\-----o)
 //   FECHA Y TIEMPO (FIN)
 // (o==================================================================o)
@@ -82,6 +85,14 @@ export class UtilidadesService {
 
   crear_bsonobj_id_para_variable() {
     return '_' + new ObjectID().toHexString();
+  }
+
+  consultar_local_storage(nombre_item: string): any {
+    try {
+      return JSON.parse(<string>localStorage.getItem(nombre_item))
+    } catch {
+      return {}
+    }
   }
 
 }
