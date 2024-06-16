@@ -89,7 +89,7 @@ async function refrescar_token_inicio_sesion(usuario: UsuarioDocument, refresh_t
 
 function validar_sesion(req: _Request) {
     let sesion_valida = true
-    if (!req.session) sesion_valida = false
+    if (!req.session?.token) sesion_valida = false
     return { sesion_valida }
 }
 
