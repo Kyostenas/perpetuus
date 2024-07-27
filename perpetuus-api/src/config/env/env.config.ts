@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';  // Para archivos .env
-dotenv.config();
+import { config } from 'dotenv-safe';  // Para archivos .env
+config();
 
 /* :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
 /*                        ENVIRONMENT VARIABLES (START)                       */
