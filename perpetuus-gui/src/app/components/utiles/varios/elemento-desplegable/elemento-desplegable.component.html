@@ -1,5 +1,5 @@
 <div 
-    [(ngbCollapse)]="!expandido"
+    [ngbCollapse]="!expandido" (ngbCollapseChange)="expandido = $event"
     (hidden)="emitir_ocultado()"
     (shown)="emitir_mostrado()"
     (change)="emitir_cambio()"

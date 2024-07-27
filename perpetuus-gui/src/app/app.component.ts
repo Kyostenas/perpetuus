@@ -1,7 +1,7 @@
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { Component, LOCALE_ID } from '@angular/core';
-import { NavigationStart, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from './services/inicio/signin/auth.service';
 
 const rutas_exentas = [
@@ -17,8 +17,6 @@ const rutas_exentas = [
   imports: [
     CommonModule,
     RouterModule,
-    // APP_ROUTES,
-    HttpClientModule,
   ],  
   providers: [
     // Configuraciones de idioma.
