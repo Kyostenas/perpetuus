@@ -18,11 +18,14 @@ export class UserLayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.auth_service.validar_sesion()
-    .subscribe(sesion_es_valida => {
-      if (!sesion_es_valida) {
-        this.router.navigate(['inicio/signin'])
-      }
-    }, err => this.router.navigate(['inicio/signin']))    
+    .subscribe({
+      next: (sesion_es_valida) => {
+        if (!sesion_es_valida) {
+          this.router.navigate(['inicio/signin'])
+        }
+      },
+      error: err => this.router.navigate(['inicio/signin'])
+    }) 
   }
 
 }
