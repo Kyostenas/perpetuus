@@ -3,6 +3,7 @@ import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi 
 import { Component, LOCALE_ID } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from './services/inicio/signin/auth.service';
+import { ControlNotificacionesComponent } from './components/utiles/varios/control-notificaciones/control-notificaciones.component';
 
 const rutas_exentas = [
   '/',
@@ -17,6 +18,7 @@ const rutas_exentas = [
   imports: [
     CommonModule,
     RouterModule,
+    ControlNotificacionesComponent,
   ],  
   providers: [
     // Configuraciones de idioma.
