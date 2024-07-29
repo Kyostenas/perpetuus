@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom, isDevMode, provideExperimentalCheckNoChangesForDebug, provideExperimentalZonelessChangeDetection } from "@angular/core";
 import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading } from '@angular/router';
 import { APP_ROUTES } from "./app.routes";
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from "@angular/common/http";
@@ -36,6 +36,7 @@ export const APP_CONFIG: ApplicationConfig = {
         provideHttpClient(
             withFetch(), 
             withInterceptorsFromDi(),
-        ),        
+        ),
+        provideExperimentalZonelessChangeDetection(),
     ],
 };
