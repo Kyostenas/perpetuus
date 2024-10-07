@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
 
-   db_perpetuus:
+    db_perpetuus:
         image: mongo:latest
         restart: unless-stopped
         container_name: db_perpetuus
@@ -13,8 +13,8 @@ services:
         networks:
             - perpetuus_network
 
-  app_perpetuus:
-    image: kyostenas/perpetuus:latest
+    app_perpetuus:
+        image: kyostenas/perpetuus:latest
         restart: unless-stopped
         container_name: app_perpetuus
         stdin_open: true
@@ -35,5 +35,5 @@ services:
             TZ: "America/Mexico_City"
 
 networks:
-    tickets_network:
+    perpetuus_network:
         driver: bridge
