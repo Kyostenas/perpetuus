@@ -5,9 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "build": "ng build --configuration production",
+    "watch": "ng build --watch --configuration development"
   },
   "repository": {
     "type": "git",

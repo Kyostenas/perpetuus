@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "description": "Aplicacion modular multi-proposito",
   "scripts": {
-    "release": "standard-version && git push --follow-tags origin main"
+    "release": "standard-version && git push --follow-tags origin main",
+    "_build_gui": "cd perpetuus-gui && npm run build && cd .. && npm run _build_push_docker_gui",
+    "_build_push_docker_gui": "docker build -t kyostenas/perpetuus:latest . && docker push kyostenas/perpetuus:latest"
   },
   "repository": {
     "type": "git",

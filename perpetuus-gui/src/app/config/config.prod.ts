@@ -1,1 +1,1 @@
-export const URL_API = ''
+export const URL_API = 'http://perpetuus.mx/api/v1'
