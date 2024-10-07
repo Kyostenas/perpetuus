@@ -1,4 +1,4 @@
-version: '3.9'
+# version: '3.9'
 
 services:
 
@@ -28,7 +28,6 @@ services:
         ports:
             - 4000:4000
             - 4200:4200
-            - 80:80
         networks:
             - perpetuus_network
         environment:
