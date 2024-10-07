@@ -13,8 +13,8 @@ services:
         networks:
             - perpetuus_network
 
-	app_perpetuus:
-		image: kyostenas/perpetuus:latest
+  app_perpetuus:
+    image: kyostenas/perpetuus:latest
         restart: unless-stopped
         container_name: app_perpetuus
         stdin_open: true
