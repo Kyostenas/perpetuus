@@ -1,7 +1,29 @@
+// (o==================================================================o)
+//   IMPORTACIONES (INICIO)
+// (o-----------------------------------------------------------\/-----o)
+
 import { Injectable } from '@angular/core';
+import ObjectID from 'bson-objectid';
+
 import { URL_API } from 'src/app/config/config';
 
-import ObjectID from 'bson-objectid';
+// (o-----------------------------------------------------------/\-----o)
+//   IMPORTACIONES (FIN)
+// (o==================================================================o)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // (o==================================================================o)
 //   FECHA Y TIEMPO (INICIO)
@@ -57,11 +79,162 @@ export const SEGUNDOS_MES29 = SEGUNDOS_DIA * 29
 export const SEGUNDOS_ANIO = SEGUNDOS_DIA * 365
 export const SEGUNDOS_ANIOBIS = SEGUNDOS_DIA * 366
 
+export const NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE = 'usuario'
+export const NOMBRE_CAMPO_ROL_LOCAL_STORAGE = 'rol_usuario'
+
 // (o-----------------------------------------------------------/\-----o)
 //   FECHA Y TIEMPO (FIN)
 // (o==================================================================o)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// (o==================================================================o)
+//   TIPOS BOOTSTRAP (INICIO)
+// (o-----------------------------------------------------------\/-----o)
+
+
+export type COLORES_BS_FONDO = 'bg-primary'
+    | 'bg-primary-subtle'
+    | 'bg-secondary'
+    | 'bg-secondary-subtle'
+    | 'bg-success'
+    | 'bg-success-subtle'
+    | 'bg-danger'
+    | 'bg-danger-subtle'
+    | 'bg-warning'
+    | 'bg-warning-subtle'
+    | 'bg-info'
+    | 'bg-info-subtle'
+    | 'bg-light'
+    | 'bg-light-subtle'
+    | 'bg-dark'
+    | 'bg-dark-subtle'
+    | 'bg-body-secondary'
+    | 'bg-body-tertiary'
+    | 'bg-body'
+    | 'bg-black'
+    | 'bg-white'
+    | 'bg-transparent'
+
+export type COLROES_BS_BORDES = 'border-primary'
+    | 'border-primary'
+    | 'border-secondary'
+    | 'border-secondary'
+    | 'border-success'
+    | 'border-success'
+    | 'border-danger'
+    | 'border-danger'
+    | 'border-warning'
+    | 'border-warning'
+    | 'border-info'
+    | 'border-info'
+    | 'border-light'
+    | 'border-light'
+    | 'border-dark'
+    | 'border-dark'
+    | 'border-black'
+    | 'border-white'
+
+export type COLORES_BS_TEXTO = 'text-primary'
+    | 'text-primary-emphasis'
+    | 'text-secondary'
+    | 'text-secondary-emphasis'
+    | 'text-success'
+    | 'text-success-emphasis'
+    | 'text-danger'
+    | 'text-danger-emphasis'
+    | 'text-warning'
+    | 'text-warning-emphasis'
+    | 'text-info'
+    | 'text-info-emphasis'
+    | 'text-light'
+    | 'text-light-emphasis'
+    | 'text-dark'
+    | 'text-dark-emphasis'
+    | 'text-body'
+    | 'text-body-emphasis'
+    | 'text-body-secondary'
+    | 'text-body-tertiary'
+    | 'text-black'
+    | 'text-white'
+    | 'text-black-50'
+    | 'text-white-50'
+
+export type POSICIONES_BS = 'top_left'
+    | 'top_center'
+    | 'top_right'
+    | 'middle_left'
+    | 'middle_center'
+    | 'middle_right'
+    | 'bottom_left'
+    | 'bottom_center'
+    | 'bottom_right'
+
+export const POSICIONES_BS_A_CLASES = {
+  top_left: 'top-0 start-0',
+  top_center: 'top-0 start-50 translate-middle-x',
+  top_right: 'top-0 end-0',
+  middle_left: 'top-50 start-0 translate-middle-y',
+  middle_center: 'top-50 start-50 translate-middle',
+  middle_right: 'top-50 end-0 translate-middle-y',
+  bottom_left: 'bottom-0 start-0',
+  bottom_center: 'bottom-0 start-50 translate-middle-x',
+  bottom_right: 'bottom-0 end-0',
+}
+
+// (o-----------------------------------------------------------/\-----o)
+//   TIPOS BOOTSTRAP (FIN)
+// (o==================================================================o)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// (o==================================================================o)
+//   VALIDACIONES (INICIO)
+// (o-----------------------------------------------------------\/-----o)
+
 export const REGEX_VALIDACION_CORREO = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g
+
+// (o-----------------------------------------------------------/\-----o)
+//   VALIDACIONES (FIN)
+// (o==================================================================o)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +255,14 @@ export class UtilidadesService {
 
   crear_bsonobj_id_para_variable() {
     return '_' + new ObjectID().toHexString();
+  }
+
+  consultar_local_storage(nombre_item: string): any {
+    try {
+      return JSON.parse(<string>localStorage.getItem(nombre_item))
+    } catch {
+      return {}
+    }
   }
 
 }

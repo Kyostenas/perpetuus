@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { AjustadorLayoutComponent } from '../-general/ajustador-layout/ajustador-layout.component';
 import { BarraInferiorComponent } from '../../utiles/barras/barra-inferior/barra-inferior.component';
 import { BarraSuperiorComponent, LinkTextoBarraSuperior, LinkSimboloBarraSuperior } from '../../utiles/barras/barra-superior/barra-superior.component';
 import { ModalNormalComponent } from '../../utiles/flotantes/modal/modal-normal/modal-normal.component';
+import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 
 @Component({
   selector: 'app-admin-layout',
@@ -20,9 +21,23 @@ import { ModalNormalComponent } from '../../utiles/flotantes/modal/modal-normal/
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'
 })
-export class AdminLayoutComponent {
+export class AdminLayoutComponent implements OnInit {
 
-  constructor() {
+  constructor(
+    private auth_service: AuthService,
+    private router: Router,
+  ) { }
+
+  ngOnInit(): void {
+    this.auth_service.validar_sesion()
+    .subscribe({
+      next: (sesion_es_valida) => {
+        if (!sesion_es_valida) {
+          this.router.navigate(['inicio/signin'])
+        }
+      },
+      error: (error) => this.router.navigate(['inicio/signin'])
+    })
   }
 
   @ViewChild('modal_perfil', { static: false }) modal_perfil!: ModalNormalComponent;

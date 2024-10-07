@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormularioDinamicoComponent } from 'src/app/components/utiles/formularios/formulario-dinamico/formulario-dinamico.component';
@@ -17,12 +17,27 @@ import { AuthService } from 'src/app/services/inicio/signin/auth.service';
   templateUrl: './signin.component.html',
   styleUrl: './signin.component.scss'
 })
-export class SigninComponent {
+export class SigninComponent implements OnInit{
 
   constructor(
     private auth_service: AuthService,
     private router: Router,
-  ) {}  
+  ) {}
+
+  ngOnInit(): void {
+    this.auth_service.validar_sesion()
+    .subscribe(sesion_es_valida => {
+      if (sesion_es_valida) {
+        let rol = this.auth_service
+          .obtener_rol_usuario_local_storage()
+        if (rol.super_admin) {
+          this.router.navigate(['administracion']);
+        } else {
+          this.router.navigate(['usuario'])
+        }
+      }
+    })
+  }
 
   datos_formulario: CampoBaseFormularioDinamico<string>[] = [
     new CampoFormulario({

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
+import { NOMBRE_CAMPO_ROL_LOCAL_STORAGE, NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE, UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
 import { UsuarioEnviar, UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { HttpClient } from '@angular/common/http';
-import { catchError, map, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { RolUsuario } from 'src/app/models/usuario/rol-usuario.model';
 
 
 
@@ -84,15 +85,15 @@ export class AuthService {
 
   /**
    * Comprueba que la sesión exista, es decir, que no se
-   * halla cerrado desde el API.
+   * haya cerrado desde el API.
    * 
-   * @returns {Boolean} Booleano que dicta si hay una sesión
+   * @returns {Observable<Boolean>} Booleano que dicta si hay una sesión
    */
-  validar_sesion() {
+  validar_sesion(): Observable<Boolean> {
     const url = this.obtener_url(['validate-session']);
     return this.http.get(url, this.opciones).pipe(
       map((resp: any) => {
-        alert(resp.mensaje);
+        // alert(resp.mensaje);
         return resp.datos as Boolean
       }),
       catchError(err => {
@@ -101,7 +102,18 @@ export class AuthService {
       })
     );
   }
+  
+  obtener_usuario_local_storage(): UsuarioRecibir {
+    return <UsuarioRecibir>this.utilidades.consultar_local_storage(
+      NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE
+    )
+  }
 
+  obtener_rol_usuario_local_storage(): RolUsuario {
+    return <RolUsuario>this.utilidades.consultar_local_storage(
+      NOMBRE_CAMPO_ROL_LOCAL_STORAGE
+    )
+  }
 
 
 }

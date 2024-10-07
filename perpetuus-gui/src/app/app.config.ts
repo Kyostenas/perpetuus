@@ -1,7 +1,7 @@
-import { ApplicationConfig, importProvidersFrom, isDevMode } from "@angular/core";
+import { ApplicationConfig, importProvidersFrom, isDevMode, provideExperimentalCheckNoChangesForDebug, provideExperimentalZonelessChangeDetection } from "@angular/core";
 import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading } from '@angular/router';
 import { APP_ROUTES } from "./app.routes";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withFetch, withInterceptorsFromDi } from "@angular/common/http";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "src/environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
@@ -18,7 +18,6 @@ export const APP_CONFIG: ApplicationConfig = {
             withDebugTracing(),
         ),
         importProvidersFrom([
-            HttpClientModule,
             // ServiceWorkerModule.register('ngsw-worker.js', {
             //   enabled: environment.production,
             //   // Register the ServiceWorker as soon as the application is stable
@@ -34,5 +33,10 @@ export const APP_CONFIG: ApplicationConfig = {
             NgbModule,
             BrowserModule,
         ]),
+        provideHttpClient(
+            withFetch(), 
+            withInterceptorsFromDi(),
+        ),
+        provideExperimentalZonelessChangeDetection(),
     ],
 };

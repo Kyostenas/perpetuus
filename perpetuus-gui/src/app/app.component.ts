@@ -1,8 +1,9 @@
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
 import { Component, LOCALE_ID } from '@angular/core';
-import { NavigationStart, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from './services/inicio/signin/auth.service';
+import { ControlNotificacionesComponent } from './components/utiles/varios/control-notificaciones/control-notificaciones.component';
 
 const rutas_exentas = [
   '/',
@@ -17,8 +18,7 @@ const rutas_exentas = [
   imports: [
     CommonModule,
     RouterModule,
-    // APP_ROUTES,
-    HttpClientModule,
+    ControlNotificacionesComponent,
   ],  
   providers: [
     // Configuraciones de idioma.
@@ -35,19 +35,21 @@ export class AppComponent {
     private router: Router,
     private auth_service: AuthService,
   ) {
-    router.events.forEach((event: any) => {
-      if (event instanceof NavigationStart) {
-        if (!rutas_exentas.includes(event.url)) {
-          this.auth_service
-            .validar_sesion()
-            .subscribe(hay_sesion => {
-              if (!hay_sesion) {
-                this.router.navigate(['']);
-              }
-            })
-        }
-      }
-    })
+    // router.events.forEach((event: any) => {
+    //   if (event instanceof NavigationStart) {
+    //     if (!rutas_exentas.includes(event.url)) {
+    //       this.auth_service
+    //         .validar_sesion()
+    //         .subscribe(hay_sesion => {
+    //           if (!hay_sesion) {
+    //             this.router.navigate(['/inicio']);
+    //           }
+    //         }, _err => {
+    //           this.router.navigate(['/inicio/signin']);
+    //         })
+    //     }
+    //   }
+    // })
   }
 
   title = 'perpetuus-gui';
