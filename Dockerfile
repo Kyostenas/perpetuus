@@ -53,20 +53,21 @@ EXPOSE 9000
 # Instalar pm2 globalmente en la imagen y escribir su archivo de
 # configuracion
 RUN npm install pm2 --global
-run pm2 install typescript
-RUN echo 'module.exports = {\n\
-  apps : [{\n\
-    script: "/usr/src/perpetuus-api/index.ts",\n\
-    name: "PERPETUUS-APP",\n\
-    instances: "max",\n\
-    max_memory_restart: "600M",\n\
-    exec_mode: "cluster",\n\
-    env: {\n\
-    NODE_ENV: "production",\n\
-    }\n\
-  }]\n\
-};\n' \
->> ./ecosystem.config.js
+RUN pm2 install typescript
+# RUN echo 'module.exports = {\n\
+#   apps : [{\n\
+#     script: "/usr/src/perpetuus-api/index.ts",\n\
+#     name: "PERPETUUS-APP",\n\
+#     instances: "max",\n\
+#     max_memory_restart: "600M",\n\
+#     exec_mode: "cluster",\n\
+#     env: {\n\
+#     NODE_ENV: "production",\n\
+#     }\n\
+#   }]\n\
+# };\n' \
+# >> ./ecosystem.config.js
+COPY ./ecosystem.config.js ./
 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
