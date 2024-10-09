@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    script: "/usr/src/perpetuus-api/index.ts",
+    script: "/usr/src/perpetuus-api/src/index.ts",
     name: "PERPETUUS-APP",
     instances: "max",
     max_memory_restart: "600M",
