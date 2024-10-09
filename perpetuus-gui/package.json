@@ -1,6 +1,6 @@
 {
   "name": "perpetuus-gui",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Gui de la aplicacion para la adoracion perpetua.",
   "scripts": {
     "ng": "ng",
