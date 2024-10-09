@@ -17,6 +17,14 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 #                                    BACKEND                                   #
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 
+# Forzar a que el bash de este dockerfile pase a ser una 
+# "bash login shell". Esto significa que cada "RUN", "CMD" y
+# "ENTRYPOINT" subsequente se ejecutara en el usuario actual
+# y hara "source" al ~/.basrc automaticamente, solo si se
+# ejecutan en forma shell.
+# Ver: https://stackoverflow.com/a/57344191/13132076
+SHELL ["/bin/bash", "--login", "-c"]
+
 # OBTENER UNA VERSION ESPECIFICA DE NODE
 # Instalar nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -25,7 +33,7 @@ RUN nvm install 20.16.0
 
 # Trabajar sobre el directorio donde se va a guardar el codigo para
 # ejecutar con node
-WORKDIR /usr/src/perpetuus/api
+WORKDIR /usr/src/perpetuus-api
 
 # Copiar el package.json y el package-lock.json para instalar todas
 # las librerias que no sean de desarrollo (el comando ci ejecuta una
@@ -43,14 +51,14 @@ COPY ./perpetuus-api .
 EXPOSE 9000
 
 # Ejecutar la aplicacion (del API)
-RUN node index.js
+CMD npx ts-node --transpile-only ./src/index.ts
 
 # Instalar pm2 globalmente en la imagen y escribir su archivo de
 # configuracion
 RUN npm install pm2 --global
 RUN echo 'module.exports = {\n\
   apps : [{\n\
-    script: "/usr/src/tickets-api/index.js",\n\
+    script: "/usr/src/tickets-api/index.ts",\n\
     name: "TICKETS-API",\n\
     instances: "max",\n\
     max_memory_restart: "600M",\n\
@@ -62,6 +70,6 @@ RUN echo 'module.exports = {\n\
 };\n' \
 >> ./ecosystem.config.js
 
-RUN pm2-suntime start ecosystem.config.js
+CMD pm2-suntime start ecosystem.config.js
 
 # ---------------------------------------------------------------------------- #

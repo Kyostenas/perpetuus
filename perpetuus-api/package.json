@@ -47,6 +47,7 @@
     "graphql": "^15.8.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.6.9",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
 }
