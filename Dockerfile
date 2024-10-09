@@ -79,9 +79,7 @@ RUN echo 'module.exports = {\n\
 # la aplicacion quede "levantada"
 
 # Ejecutar el backend
-CMD ts-node --transpile-only ./src/index.ts
-
-# Ejecutar el frontend
+CMD ts-node --transpile-only ./perpetuus-api/src/index.ts
 CMD pm2-runtime start ecosystem.config.js
 
 
