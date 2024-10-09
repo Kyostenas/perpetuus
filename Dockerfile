@@ -50,9 +50,6 @@ COPY ./perpetuus-api .
 # Exponer el puerto 9000 para conexiones
 EXPOSE 9000
 
-# Ejecutar la aplicacion (del API)
-CMD npx ts-node --transpile-only ./src/index.ts
-
 # Instalar pm2 globalmente en la imagen y escribir su archivo de
 # configuracion
 RUN npm install pm2 --global
@@ -70,6 +67,21 @@ RUN echo 'module.exports = {\n\
 };\n' \
 >> ./ecosystem.config.js
 
+
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
+#                          EJECUCIONES AL USAR IMAGEN                          #
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
+
+# NOTA
+# Estos comando se ejecutan cuando se despliega la imagen
+# con el docker compose, y sirven para que al hacerlo
+# la aplicacion quede "levantada"
+
+# Ejecutar el backend
+CMD npx ts-node --transpile-only ./src/index.ts
+
+# Ejecutar el frontend
 CMD pm2-suntime start ecosystem.config.js
+
 
 # ---------------------------------------------------------------------------- #
