@@ -3,10 +3,12 @@
   "version": "0.0.0",
   "description": "Aplicacion modular multi-proposito",
   "scripts": {
-    "build-upload": "npm-run-all _realease _build_gui _build_push_docker",
+    "build-upload": "npm-run-all _realease _build_gui _build_push_docker_latest _build_push_docker_version_number",
+    "version": "npm -s run env echo '$npm_package_version'",
     "_release": "standard-version && git push --follow-tags origin main",
     "_build_gui": "cd perpetuus-gui && npm run build && cd ../",
-    "_build_push_docker": "docker build -t kyostenas/perpetuus:latest . && docker push kyostenas/perpetuus:latest"
+    "_build_push_docker_latest": "docker build -t kyostenas/perpetuus:latest . && docker push kyostenas/perpetuus:latest",
+    "_build_push_docker_version_number": "VERSION=`npm -s run env echo '$npm_package_version'` && docker build -t kyostenas/perpetuus:$VERSION . && docker push kyostenas/perpetuus:$VERSION"
   },
   "repository": {
     "type": "git",
