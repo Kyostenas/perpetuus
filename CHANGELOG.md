@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/Kyostenas/perpetuus/compare/v0.0.2...v0.0.3) (2024-10-09)
+
+
+### Bug Fixes
+
+* **frontend:** actualizacion de seguridad ([257ff38](https://github.com/Kyostenas/perpetuus/commit/257ff3866b043c5005acb2db98dec11f9ef29e0b))
+
 ### [0.0.2](https://github.com/Kyostenas/perpetuus/compare/v0.0.1...v0.0.2) (2024-10-09)
 
 ### 0.0.1 (2024-10-09)
