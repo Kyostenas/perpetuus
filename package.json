@@ -1,9 +1,9 @@
 {
   "name": "perpetuus",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Aplicacion modular multi-proposito",
   "scripts": {
-    "build-upload": "npm-run-all _realease _build_gui _build_push_docker_latest _build_push_docker_version_number",
+    "build-upload": "npm-run-all _release _build_gui _build_push_docker_latest _build_push_docker_version_number",
     "version": "npm -s run env echo ${npm_package_version}",
     "_release": "standard-version && git push --follow-tags origin main",
     "_build_gui": "cd perpetuus-gui && npm run build && cd ../",
