@@ -78,10 +78,10 @@ RUN echo 'module.exports = {\n\
 # la aplicacion quede "levantada"
 
 # Ejecutar el backend
-CMD npx ts-node --transpile-only ./src/index.ts
+CMD ts-node --transpile-only ./src/index.ts
 
 # Ejecutar el frontend
-CMD pm2-suntime start ecosystem.config.js
+CMD pm2-runtime start ecosystem.config.js
 
 
 # ---------------------------------------------------------------------------- #
