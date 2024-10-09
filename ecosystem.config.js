@@ -6,7 +6,8 @@ module.exports = {
     max_memory_restart: "600M",
     exec_mode: "cluster",
     env: {
-    NODE_ENV: "production"
-    }
+        NODE_ENV: "production"
+    },
+    interpreter: "node",
   }]
 };
