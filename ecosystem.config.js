@@ -9,6 +9,8 @@ module.exports = {
         NODE_ENV: "production"
     },
     interpreter: "node",
+    watch: ["/usr/src/perpetuus-api/src/index.ts"],
+    watch_delay: 1000,
     ignore_watch : [ "/pm2/logs" ],
   }]
 };
