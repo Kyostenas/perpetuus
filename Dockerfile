@@ -81,7 +81,7 @@ COPY ./ecosystem.config.js ./
 
 # Ejecutar el backend
 CMD ts-node --transpile-only ./perpetuus-api/src/index.ts
-CMD pm2-runtime start ecosystem.config.js
+CMD pm2-runtime start ecosystem.config.js --watch
 
 
 # ---------------------------------------------------------------------------- #
