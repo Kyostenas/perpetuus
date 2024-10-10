@@ -9,5 +9,6 @@ module.exports = {
         NODE_ENV: "production"
     },
     interpreter: "node",
+    ignore_watch : [ "$HOME/.pm2/logs"],
   }]
 };
