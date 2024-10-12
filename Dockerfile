@@ -11,8 +11,8 @@ COPY ./perpetuus-gui/dist/perpetuus-gui/ /usr/share/nginx/html/
 
 # Copiar el archivo de configuracion de NGINX y hacer que reemplaze
 # la configuracion por defecto en la imagen
-# COPY ./nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# COPY ./nginx.conf /etc/nginx/nginx.conf
 
 
 
