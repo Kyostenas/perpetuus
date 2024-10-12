@@ -16,7 +16,7 @@ export const SAVE_LOGS_ON_FILE = JSON.parse(process.env.SAVE_LOGS_ON_FILE ?? 'fa
 export const URI_DB = process.env.URI_DB;
 
 /* ------------------------------- aplicacion ------------------------------- */
-export const MODO = JSON.parse(process.env.NODE_ENV ?? 'development');
+export const MODO = process.env.NODE_ENV ?? 'development';
 export const PORT = process.env.PORT || 9000;
 export const URL_GUI = MODO === 'development' 
     ? process.env.URL_GUI_LOCAL
