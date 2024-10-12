@@ -50,8 +50,8 @@ docker compose up -d
 # renovar=`readlink -f ../certificados/renovar-certificados.sh`
 # echo "0 0,12 * * * $renovar" | sudo tee -a /etc/crontab > /dev/null
 
-echo " ----------------------------- (levantando nginx) "
-docker exec -t app_perpetuus service nginx start
+# echo " ----------------------------- (levantando nginx) "
+# docker exec -t app_perpetuus service nginx start
 
 
 echo " ===> fin script"

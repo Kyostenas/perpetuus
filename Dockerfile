@@ -66,7 +66,8 @@ RUN apt install python3-venv python3-pip libaugeas0 -y
 RUN python3 -m venv /opt/certbot/
 RUN /opt/certbot/bin/pip install --upgrade pip
 RUN /opt/certbot/bin/pip install certbot
-# RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+RUN mkdir /home/perpetuus
+RUN mkdir /home/perpetuus/certificados
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 #                          EJECUCIONES AL USAR IMAGEN                          #
@@ -77,15 +78,15 @@ RUN /opt/certbot/bin/pip install certbot
 # con el docker compose, y sirven para que al hacerlo
 # la aplicacion quede "levantada"
 
+
+# Instalar certificados
+CMD certbot certonly --standalone -d perpetuus.mx -n --agree-tos -m kyostenas@gmail.com --work-dir /home/perpetuus/certificados
+CMD nginx -t
+
 # Ejecutar el backend
 CMD pm2-runtime start ecosystem.config.js
 
 # Ejecutar el frontend
-# CMD service nginx start
-
-# Instalar certificados
-RUN mkdir /home/perpetuus/certificados
-CMD certbot certonly --standalone -d perpetuus.mx -n --agree-tos -m kyostenas@gmail.com --work-dir /home/perpetuus/certificados
-CMD nginx -t
+CMD service nginx start
 
 # ---------------------------------------------------------------------------- #
