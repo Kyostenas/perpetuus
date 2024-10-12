@@ -52,8 +52,13 @@ EXPOSE 9000
 
 # Instalar pm2 globalmente en la imagen y escribir su archivo de
 # configuracion
-RUN npm install pm2 --global
+RUN npm install pm2@latest --global
+RUN npm install -g typescript ts-node
 RUN pm2 install typescript
+RUN pm2 delete all
+RUN pm2 reset
+RUN pm2 flush
+RUN pm2 update
 # RUN echo 'module.exports = {\n\
 #   apps : [{\n\
 #     script: "/usr/src/perpetuus-api/index.ts",\n\
@@ -80,8 +85,7 @@ COPY ./ecosystem.config.js ./
 # la aplicacion quede "levantada"
 
 # Ejecutar el backend
-# CMD ts-node --transpile-only ./perpetuus-api/src/index.ts
-CMD pm2 start ecosystem.config.js
+CMD pm2-runtime start ecosystem.config.js
 
 
 # ---------------------------------------------------------------------------- #
