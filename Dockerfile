@@ -13,6 +13,20 @@ COPY ./perpetuus-gui/dist/perpetuus-gui/ /usr/share/nginx/html/
 # la configuracion por defecto en la imagen
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 #                                    BACKEND                                   #
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
@@ -20,8 +34,7 @@ COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 # Forzar a que el bash de este dockerfile pase a ser una 
 # "bash login shell". Esto significa que cada "RUN", "CMD" y
 # "ENTRYPOINT" subsequente se ejecutara en el usuario actual
-# y hara "source" al ~/.basrc automaticamente, solo si se
-# ejecutan en forma shell.
+# y hara "source" al ~/.basrc automaticamente
 # Ver: https://stackoverflow.com/a/57344191/13132076
 SHELL ["/bin/bash", "--login", "-c"]
 
@@ -50,26 +63,25 @@ COPY ./perpetuus-api .
 # Exponer el puerto 9000 para conexiones
 EXPOSE 9000
 
-# Instalar pm2 globalmente en la imagen y escribir su archivo de
-# configuracion
+# Instalar pm2 globalmente en la imagen, instalar typescript
+# y copiar su archivo de configuracion
 RUN npm install pm2@latest --global
 RUN npm install -g typescript ts-node
 RUN pm2 install typescript
-
-# RUN echo 'module.exports = {\n\
-#   apps : [{\n\
-#     script: "/usr/src/perpetuus-api/index.ts",\n\
-#     name: "PERPETUUS-APP",\n\
-#     instances: "max",\n\
-#     max_memory_restart: "600M",\n\
-#     exec_mode: "cluster",\n\
-#     env: {\n\
-#     NODE_ENV: "production",\n\
-#     }\n\
-#   }]\n\
-# };\n' \
-# >> ./ecosystem.config.js
 COPY ./ecosystem.config.js ./
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
@@ -83,6 +95,19 @@ COPY ./ecosystem.config.js ./
 
 # Ejecutar el backend
 CMD pm2-runtime start ecosystem.config.js
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # ---------------------------------------------------------------------------- #
