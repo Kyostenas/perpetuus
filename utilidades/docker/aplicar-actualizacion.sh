@@ -34,17 +34,17 @@ docker compose up db_perpetuus -d
 echo " ===> levantando servicios restantes de docker"
 docker compose up -d
 
-echo " ----------------------------- (instalando certificados ssl) "
-sudo snap install --classic certbot
-sudo ln -s /snap/bin/certbot /usr/bin/certbot
-mkdir /home/perpetuus/certificados
-# sudo certbot certonly --webroot -d perpetuus.mx --agree-tos -m kyostenas@gmail.com -n --webroot-path=/home/perpetuus/certificados
-sudo certbot certonly --manual --preferred-challenges dns \
-    -d perpetuus.mx -d www.perpetuus.mx \
-    --config-dir /home/perpetuus/certificados \
-    --work-dir /home/perpetuus/certificados \
-    --logs-dir /home/perpetuus/certificados \
-    -m kyostenas@gmail.com --agree-tos -n
+# echo " ----------------------------- (instalando certificados ssl) "
+# sudo snap install --classic certbot
+# sudo ln -s /snap/bin/certbot /usr/bin/certbot
+# mkdir /home/perpetuus/certificados
+# # sudo certbot certonly --webroot -d perpetuus.mx --agree-tos -m kyostenas@gmail.com -n --webroot-path=/home/perpetuus/certificados
+# sudo certbot certonly --manual --preferred-challenges dns \
+#     -d perpetuus.mx -d www.perpetuus.mx \
+#     --config-dir /home/perpetuus/certificados \
+#     --work-dir /home/perpetuus/certificados \
+#     --logs-dir /home/perpetuus/certificados \
+#     -m kyostenas
 
 #
 # renovar=`readlink -f ../certificados/renovar-certificados.sh`
