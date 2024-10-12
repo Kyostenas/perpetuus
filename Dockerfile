@@ -97,6 +97,9 @@ COPY ./ecosystem.config.js ./
 # Ejecutar el backend
 CMD pm2-runtime start ecosystem.config.js
 
+# Ejecutar el frontend
+CMD service nginx start
+
 
 
 
