@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7](https://github.com/Kyostenas/perpetuus/compare/v0.0.6...v0.0.7) (2024-10-12)
+
+
+### Bug Fixes
+
+* **backend:** error en importacion de node_env ([a11f412](https://github.com/Kyostenas/perpetuus/commit/a11f4126e56fb567d5eeef92ac12b3c58d953402))
+
 ### [0.0.6](https://github.com/Kyostenas/perpetuus/compare/v0.0.5...v0.0.6) (2024-10-12)
 
 ### [0.0.5](https://github.com/Kyostenas/perpetuus/compare/v0.0.4...v0.0.5) (2024-10-09)
