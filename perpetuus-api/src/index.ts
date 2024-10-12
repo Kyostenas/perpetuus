@@ -13,7 +13,7 @@ import cookieParser from 'cookie-parser';
 
 import { Resp } from './utils/response.utils';
 
-import { URI_DB, PORT, COOKIE_SECRET, URL_GUI_LOCAL } from './config/env/env.config';
+import { URI_DB, PORT, COOKIE_SECRET, URL_GUI } from './config/env/env.config';
 
 import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
 import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
@@ -33,7 +33,7 @@ import { _Request } from './tipos-personalizados';
 const app: Application = express();
 
 const opciones_cors = {
-  origin: URL_GUI_LOCAL,
+  origin: URL_GUI,
   methods: 'GET,HEAD,PUT,POST,DELETE,OPTIONS',
   preflightContinue: true,
   credentials: true,
