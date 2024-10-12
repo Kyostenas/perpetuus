@@ -19,6 +19,7 @@ module.exports = {
       path.join(__dirname, "../logs/*"),
       path.join(__dirname, "../.git/*"),
       "/root/.pm2",
+      "/usr/src/logs/pm2",
     ],
     wait_ready: true,
   }]

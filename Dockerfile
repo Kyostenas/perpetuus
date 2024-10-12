@@ -80,7 +80,7 @@ COPY ./ecosystem.config.js ./
 # la aplicacion quede "levantada"
 
 # Ejecutar el backend
-CMD ts-node --transpile-only ./perpetuus-api/src/index.ts
+# CMD ts-node --transpile-only ./perpetuus-api/src/index.ts
 CMD pm2 start ecosystem.config.js
 
 
