@@ -92,13 +92,13 @@ app.all('*', (req: _Request, res: Response, next: any)=>{
   next()
 });
 
-app.get('/', async (req: _Request, res: Response): Promise<Response> => {
+app.get('/api', async (req: _Request, res: Response): Promise<Response> => {
   return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200_ok()
 });
 
 // RUTAS DE INICIO DE SESION, CREACION DE TOKEN
 // Y TOKEN DE REFRESCADO
-app.use('/auth', RUTA_AUTH());
+app.use('/api/auth', RUTA_AUTH());
 
 // VERIFICACION DE TOKEN
 // Debe ir despues de la ruta auth, porque esa no
@@ -109,8 +109,8 @@ app.use((req: _Request, res: Response, next: any) => {
 });
 
 
-app.use('/roles', RUTA_ROL());
-app.use('/usuarios', RUTA_USUARIO());
+app.use('/api/roles', RUTA_ROL());
+app.use('/api/usuarios', RUTA_USUARIO());
 
 // (o-----------------------------------------( CONECCION MONGODB ))
 
