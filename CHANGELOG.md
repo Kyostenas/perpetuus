@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/Kyostenas/perpetuus/compare/v0.0.7...v0.1.0) (2024-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **backend:** ya no se usa la estructura `/api/v1` direcamente en el backend, si no en el nginx conf pero solo como `/api`
+
+* **backend:** version de api en rutas removido ([2ca7939](https://github.com/Kyostenas/perpetuus/commit/2ca7939a606ef5f2c5be3b31e6bf00cafd9a9939))
+
 ### [0.0.7](https://github.com/Kyostenas/perpetuus/compare/v0.0.6...v0.0.7) (2024-10-12)
 
 
