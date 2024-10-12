@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   apps : [{
     script: "/usr/src/perpetuus-api/src/index.ts",
