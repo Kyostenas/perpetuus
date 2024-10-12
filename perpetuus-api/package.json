@@ -1,6 +1,6 @@
 {
   "name": "perpetuus-api",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "API de la aplicacion para controlar registros de la adoracion perpetua",
   "main": "index.ts",
   "scripts": {
