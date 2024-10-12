@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/Kyostenas/perpetuus/compare/v0.2.1...v0.3.0) (2024-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **app:** ahora se usara https o puerto 443
+
+### Features
+
+* **app:** transferencia a protocolo ssl ([e75f7fd](https://github.com/Kyostenas/perpetuus/commit/e75f7fda3479053c45161b81262bccf1e28b5238))
+
 ### [0.2.1](https://github.com/Kyostenas/perpetuus/compare/v0.2.0...v0.2.1) (2024-10-12)
 
 
