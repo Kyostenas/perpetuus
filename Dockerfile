@@ -61,17 +61,12 @@ COPY ./ecosystem.config.js ./
 #                                 CERTIFICADOS                                 #
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 
-WORKDIR /
-
 RUN apt update && apt full-upgrade -y && apt install python3 python3-venv libaugeas0 -y && apt install python3-certbot-nginx -y
 RUN apt install python3-venv python3-pip libaugeas0 -y
 RUN python3 -m venv /opt/certbot/
 RUN /opt/certbot/bin/pip install --upgrade pip
 RUN /opt/certbot/bin/pip install certbot
 # RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
-
-RUN nginx -t
-RUN certbot --nginx -d perpetuus.mx -d www.perpetuus.mx
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 #                          EJECUCIONES AL USAR IMAGEN                          #
@@ -88,18 +83,8 @@ CMD pm2-runtime start ecosystem.config.js
 # Ejecutar el frontend
 # CMD service nginx start
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Instalar certificados
+CMD certbot certonly --standalone -d perpetuus.mx -n --agree-tos -m kyostenas@gmail.com
+CMD nginx -t
 
 # ---------------------------------------------------------------------------- #
