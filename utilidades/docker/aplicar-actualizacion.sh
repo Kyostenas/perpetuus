@@ -37,7 +37,13 @@ docker compose up -d
 echo " ===> levantando servidor de nginx dentro de la imagen de docker"
 docker exec -t app_perpetuus service nginx start
 
-# echo " ----------------------------- (instalando renovacion de certificados) "
+echo " ----------------------------- (instalando certificados ssl) "
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo certbot certonly --webroot -d perpetuus.mx --agree-tos -m kyostenas@gmail.com -n
+mkdir /home/perpetuus/certificados
+cp /etc/letsencrypt/live/perpetuus.mx/*  /home/perpetuus/certificados 
+
 #
 # renovar=`readlink -f ../certificados/renovar-certificados.sh`
 # echo "0 0,12 * * * $renovar" | sudo tee -a /etc/crontab > /dev/null
