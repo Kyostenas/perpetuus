@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/Kyostenas/perpetuus/compare/v0.1.0...v0.2.0) (2024-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **backend:** ahora si usan `/api` de nuevo.
+
+* **backend:** cambio de nuevo en rutas ([6bfb621](https://github.com/Kyostenas/perpetuus/commit/6bfb6214a581d7b083e1e7d22b37a3ebcfbe7af4))
+
 ## [0.1.0](https://github.com/Kyostenas/perpetuus/compare/v0.0.7...v0.1.0) (2024-10-12)
 
 
