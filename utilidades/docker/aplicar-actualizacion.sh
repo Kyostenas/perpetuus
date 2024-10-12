@@ -40,9 +40,9 @@ docker exec -t app_perpetuus service nginx start
 echo " ----------------------------- (instalando certificados ssl) "
 sudo snap install --classic certbot
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
-sudo certbot certonly --webroot -d perpetuus.mx --agree-tos -m kyostenas@gmail.com -n
 mkdir /home/perpetuus/certificados
-cp /etc/letsencrypt/live/perpetuus.mx/*  /home/perpetuus/certificados 
+sudo certbot certonly --webroot -d perpetuus.mx --agree-tos -m kyostenas@gmail.com -n --webroot-path=/home/perpetuus/certificados
+# cp /etc/letsencrypt/live/perpetuus.mx/*  /home/perpetuus/certificados 
 
 #
 # renovar=`readlink -f ../certificados/renovar-certificados.sh`
