@@ -55,10 +55,7 @@ EXPOSE 9000
 RUN npm install pm2@latest --global
 RUN npm install -g typescript ts-node
 RUN pm2 install typescript
-RUN pm2 delete all
-RUN pm2 reset
-RUN pm2 flush
-RUN pm2 update
+
 # RUN echo 'module.exports = {\n\
 #   apps : [{\n\
 #     script: "/usr/src/perpetuus-api/index.ts",\n\
