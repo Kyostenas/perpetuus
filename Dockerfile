@@ -84,6 +84,7 @@ CMD pm2-runtime start ecosystem.config.js
 # CMD service nginx start
 
 # Instalar certificados
+RUN mkdir /home/perpetuus/certificados
 CMD certbot certonly --standalone -d perpetuus.mx -n --agree-tos -m kyostenas@gmail.com --work-dir /home/perpetuus/certificados
 CMD nginx -t
 
