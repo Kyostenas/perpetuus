@@ -25,7 +25,6 @@ services:
             - db_perpetuus:db_perpetuus
         volumes:
             - /home/perpetuus:/home/perpetuus
-            - /home/perpetuus/certificados:/home/perpetuus/certificados
         ports:
             - 9000:9000
             - 4200:4200

@@ -14,20 +14,6 @@ COPY ./perpetuus-gui/dist/perpetuus-gui/ /usr/share/nginx/html/
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 # COPY ./nginx.conf /etc/nginx/nginx.conf
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 #                                    BACKEND                                   #
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
@@ -71,20 +57,6 @@ RUN npm install -g typescript ts-node
 RUN pm2 install typescript
 COPY ./ecosystem.config.js ./
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 #                                 CERTIFICADOS                                 #
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
@@ -96,24 +68,10 @@ RUN apt install python3-venv python3-pip libaugeas0 -y
 RUN python3 -m venv /opt/certbot/
 RUN /opt/certbot/bin/pip install --upgrade pip
 RUN /opt/certbot/bin/pip install certbot
-RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+# RUN ln -s /opt/certbot/bin/certbot /usr/bin/certbot
 
-RUN sudo nginx -t
-RUN sudo certbot --nginx -d perpetuus.mx -d www.perpetuus.mx
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+RUN nginx -t
+RUN certbot --nginx -d perpetuus.mx -d www.perpetuus.mx
 
 # :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
 #                          EJECUCIONES AL USAR IMAGEN                          #
