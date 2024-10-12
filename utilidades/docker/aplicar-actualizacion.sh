@@ -34,6 +34,8 @@ docker compose up db_perpetuus -d
 echo " ===> levantando servicios restantes de docker"
 docker compose up -d
 
+echo " ===> levantando servidor de nginx dentro de la imagen de docker"
+docker exec -t app_perpetuus service nginx start
 
 # echo " ----------------------------- (instalando renovacion de certificados) "
 #
