@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.2](https://github.com/Kyostenas/perpetuus/compare/v0.3.1...v0.3.2) (2024-10-12)
+
+
+### Bug Fixes
+
+* otro cambio (mas) para los certs ([d0ecc03](https://github.com/Kyostenas/perpetuus/commit/d0ecc03e7e71058b13db50648fdbacc8ad2bcb50))
+* **utilidades:** error al instalar certificados ([6088b11](https://github.com/Kyostenas/perpetuus/commit/6088b11909a0f812450edaebff8ff5e7d440a0c5))
+* **utilidades:** otro error de certs ([f00475f](https://github.com/Kyostenas/perpetuus/commit/f00475fc1e46221e95c536727d9ca9bc064a6c5c))
+
 ### [0.3.1](https://github.com/Kyostenas/perpetuus/compare/v0.3.0...v0.3.1) (2024-10-12)
 
 
