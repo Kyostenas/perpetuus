@@ -3,6 +3,13 @@ FROM ubuntu:18.04
 
 MAINTAINER Kyostenas (kyostenas@gmail.com)
 
+# Forzar a que el bash de este dockerfile pase a ser una 
+# "bash login shell". Esto significa que cada "RUN", "CMD" y
+# "ENTRYPOINT" subsequente se ejecutara en el usuario actual
+# y hara "source" al ~/.basrc automaticamente
+# Ver: https://stackoverflow.com/a/57344191/13132076
+SHELL ["/bin/bash", "--login", "-c"]
+
 # Instalacion de NGINX
 RUN apt update -y
 RUN apt install -y software-properties-common
@@ -26,6 +33,53 @@ ADD ./utilidades/nginx/perpetuus.mx /etc/nginx/sites-avialable/perpetuus.mx
 # carpeta de sites-enabled
 RUN ln -s /etc/nginx/sites-avialable/perpetuus.mx /etc/nginx/sites-enabled/perpetuus
 
+
+
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# INSERCION DE LOS ARCHIVOS DE LA GUI ::::::::::::::::::::::::::::::::
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    
+# Copiar los archivos compilados del frontend a la carpeta html
+# de NGINX para servir la aplicacion (de la GUI)
+COPY ./perpetuus-gui/dist/perpetuus-gui/ /var/www/html
+    
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# INSERCION DE LOS ARCHIVOS DEL API Y CONFIGURACION ::::::::::::::::::
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+# OBTENER UNA VERSION ESPECIFICA DE NODE
+# Instalar nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+# Instalar node con nvm
+RUN nvm install 20.16.0
+
+# Trabajar sobre el directorio donde se va a guardar el codigo para
+# ejecutar con node
+WORKDIR /usr/src/perpetuus-api
+
+# Copiar el package.json y el package-lock.json para instalar todas
+# las librerias que no sean de desarrollo (el comando ci ejecuta una
+# instalacion limpia, usando el package-lock.json)
+COPY ./perpetuus-api/package*.json ./
+# Configurar el nivel de logs de npm
+ENV NPM_CONFIG_LOGLEVEL warn
+RUN npm ci --omit=dev
+
+# Copiar todosl los archivos del backend al directorio que tenemos
+# como "workdir" (directorio de trabajo)
+COPY ./perpetuus-api .
+
+# Instalar pm2 globalmente en la imagen, instalar typescript
+# y copiar su archivo de configuracion
+RUN npm install pm2@latest --global
+RUN npm install -g typescript ts-node
+RUN pm2 install typescript
+COPY ./ecosystem.config.js .
+
+# ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
 # Cambiar la ruta actual de trabajo (aqui se va a quedar cuando el
 # contenedor se genere tambien)
 WORKDIR /etc/nginx
@@ -36,9 +90,6 @@ ADD ./utilidades/docker/docker-entrypoint.sh .
 
 # Hacer que se ejecute cuando la imagen se despliega
 ENTRYPOINT ["/etc/nginx/docker-entrypoint.sh"]
-
-
-
 
 
 

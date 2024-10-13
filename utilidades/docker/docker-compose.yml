@@ -25,8 +25,8 @@ services:
             - /volumenes-docker-peretuus/certificados:/etc/letsencrypt
             - /volumenes-docker-peretuus/datos-aplicacion:/datos-aplicacion
         ports:
-            - 9000:9000
-            - 4200:4200
+            # - 9000:9000
+            # - 4200:4200
             - 443:443
             - 80:80
         networks:

@@ -2,6 +2,8 @@
 
 # Esta es una script de prueba para ver se es posible hacer la
 # solicitud de certificacion de letsencrypt con certbod.
+
+
 # Llamar el comando de certbot en el contenedor (ya debe haberse
 # ejeutado el docker compose up)
     # --webroot 
