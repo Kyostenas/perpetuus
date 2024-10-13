@@ -74,7 +74,7 @@ COPY ./perpetuus-api .
 RUN npm install pm2@latest --global
 RUN npm install -g typescript ts-node
 RUN pm2 install typescript
-COPY ./ecosystem.config.js .
+COPY ./utilidades/pm2/ecosystem.config.js .
 
 # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
