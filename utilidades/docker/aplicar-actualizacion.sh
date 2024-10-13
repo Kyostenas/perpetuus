@@ -28,10 +28,10 @@ if (( ${#imgs[@]} < 1 ))
 fi
 
 echo " ----------------------------- (levantando servicios) "
-echo " ===> levantando solo el servicio de mongo de docker (base de datos)"
-docker compose up db_perpetuus -d
+# echo " ===> levantando solo el servicio de mongo de docker (base de datos)"
+# docker compose up db_perpetuus -d
 
-echo " ===> levantando servicios restantes de docker"
+# echo " ===> levantando servicios restantes de docker"
 docker compose up -d
 
 # echo " ----------------------------- (instalando certificados ssl) "
