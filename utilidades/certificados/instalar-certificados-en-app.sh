@@ -19,7 +19,7 @@
         # Especificar el dominio que se quiere certificar
     # -d perpetuus.mx
         # Especificar el dominio que se quiere certificar
-docker-exec -t app_perpetuus certbot certonly \
+docker exec -t app_perpetuus certbot certonly \
     --webroot \
     --webroot-path=/var/www/html \
     --email kyostenas@gmail.com \
@@ -29,4 +29,9 @@ docker-exec -t app_perpetuus certbot certonly \
     -d perpetuus.mx
 
 echo "==> certificados generados"
-echo "==> FIN SCRIPT
+
+echo "======== RESULTADO ========"
+docker exec -t app_perpetuus certbot ls -al /etc/letsencrupt/live/perpetuus.mx
+echo "==========================="
+
+echo "==> FIN SCRIPT"

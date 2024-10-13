@@ -25,7 +25,7 @@
         # de 7 solicitudes cada 20 dias)
     # -d perpetuus.mx
         # Especificar el dominio que se quiere certificar
-docker-exec -t app_perpetuus certbot certonly \
+docker exec -t app_perpetuus certbot certonly \
     --webroot \
     --webroot-path=/var/www/html \
     --email kyostenas@gmail.com \
@@ -34,10 +34,5 @@ docker-exec -t app_perpetuus certbot certonly \
     --staging \
     -d perpetuus.mx
 
-# Mostar los certificados obtenidos para confirmar visualmente que
-# todo este bien
-echo "======== MOSTRANDO CERTIFICADOS PARA COMPROBAR QUE SE PUEDEN GENERAR ========"
-docker-exec -t app_perpetuus certbot ls -al /etc/letsencrupt/live/perpetuus.mx
-echo "============================================================================="
 echo "==> Si todo esta correcto, ahora ejecutar 'instalar-certificados-en-app.sh'"
-echo "==> FIN SCRIPT
+echo "==> FIN SCRIPT"
