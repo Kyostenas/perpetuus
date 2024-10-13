@@ -22,8 +22,8 @@ services:
         # links:
         #     - db_perpetuus:db_perpetuus
         volumes:
-            - certificados:/etc/letsencrypt
-            - datos_aplicacion:/datos-aplicacion
+            - /volumenes-docker-peretuus/certificados:/etc/letsencrypt
+            - /volumenes-docker-peretuus/datos-aplicacion:/datos-aplicacion
         ports:
             - 9000:9000
             - 4200:4200
@@ -38,22 +38,22 @@ networks:
     perpetuus_network:
         driver: bridge
 
-volumes:
-    certificados:
-        driver: local
-        driver_opts:
-            type: 'none'
-            o: 'bind'
-            device: '/volumenes-docker-peretuus/certificados'
-    datos_aplicacion:
-        driver: local
-        driver_opts:
-            type: 'none'
-            o: 'bind'
-            device: '/volumenes-docker-peretuus/datos-aplicacion'
-    # datos_db:
-    #     driver: local
-    #     driver_opts:
-    #         type: 'none'
-    #         o: 'bind'
-    #         device: '/volumenes-docker-peretuus/datos-db'
+# volumes:
+#     certificados:
+#         driver: local
+#         driver_opts:
+#             type: 'none'
+#             o: 'bind'
+#             device: ' /volumenes-docker-peretuus/certificados'
+#     datos_aplicacion:
+#         driver: local
+#         driver_opts:
+#             type: 'none'
+#             o: 'bind'
+#             device: '/volumenes-docker-peretuus/datos-aplicacion'
+#     # datos_db:
+#     #     driver: local
+#     #     driver_opts:
+#     #         type: 'none'
+#     #         o: 'bind'
+#     #         device: '/volumenes-docker-peretuus/datos-db'
