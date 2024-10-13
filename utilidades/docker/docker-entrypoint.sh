@@ -16,4 +16,4 @@ echo "0 23 * * * certbot renew --dry-run" | crontab -
 echo "==> arrancando el servidor NGINX"
 nginx
 
-echo "==> fin de la script"
+echo "==> fin del entry point"
