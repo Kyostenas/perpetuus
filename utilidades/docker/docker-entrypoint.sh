@@ -18,6 +18,6 @@ echo "0 23 * * * certbot renew --dry-run" | crontab -
 
 # Iniciar nginx dentro de la imagen
 echo "==> arrancando el servidor NGINX"
-nginx -t
+nginx
 
 echo "==> fin del entry point"
