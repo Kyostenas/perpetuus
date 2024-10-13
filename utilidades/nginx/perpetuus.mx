@@ -14,7 +14,7 @@ server {
     listen [::]:80;
     server_name perpetuus.mx www.perpetuus.mx;
 
-    location ~ /.well-knwon/acme-challenge {
+    location ~ /.well-known/acme-challenge {
         allow all;
         root /var/www/html;
     }
