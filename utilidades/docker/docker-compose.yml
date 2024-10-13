@@ -23,7 +23,7 @@ services:
         #     - db_perpetuus:db_perpetuus
         volumes:
             - certificados:/etc/letsencrypt
-            - datos_aplicacion:~/datos-aplicacion
+            - datos_aplicacion:/datos-aplicacion
         ports:
             - 9000:9000
             - 4200:4200
