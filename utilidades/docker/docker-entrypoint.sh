@@ -13,8 +13,8 @@ echo "==> agregando crontab para renovar certificados de letsencrypt"
 echo "0 23 * * * certbot renew --dry-run" | crontab -
 
 # Ejecutar pm2 dentro de la imagen
-echo "==> arrancando PM2"
-pm2-runtime start /usr/src/perpetuus-api/ecosystem.config.js
+# echo "==> arrancando PM2"
+# pm2-runtime start /usr/src/perpetuus-api/ecosystem.config.js
 
 # Iniciar nginx dentro de la imagen
 echo "==> arrancando el servidor NGINX"

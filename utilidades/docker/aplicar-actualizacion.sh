@@ -34,26 +34,6 @@ echo " ----------------------------- (levantando servicios) "
 # echo " ===> levantando servicios restantes de docker"
 docker compose up -d
 
-# echo " ----------------------------- (instalando certificados ssl) "
-# sudo snap install --classic certbot
-# sudo ln -s /snap/bin/certbot /usr/bin/certbot
-# mkdir /home/perpetuus/certificados
-# # sudo certbot certonly --webroot -d perpetuus.mx --agree-tos -m kyostenas@gmail.com -n --webroot-path=/home/perpetuus/certificados
-# sudo certbot certonly --manual --preferred-challenges dns \
-#     -d perpetuus.mx -d www.perpetuus.mx \
-#     --config-dir /home/perpetuus/certificados \
-#     --work-dir /home/perpetuus/certificados \
-#     --logs-dir /home/perpetuus/certificados \
-#     -m kyostenas
-
-#
-# renovar=`readlink -f ../certificados/renovar-certificados.sh`
-# echo "0 0,12 * * * $renovar" | sudo tee -a /etc/crontab > /dev/null
-
-# echo " ----------------------------- (levantando nginx) "
-# docker exec -t app_perpetuus service nginx start
-
-
 echo " ===> fin script"
 
 
