@@ -3,13 +3,6 @@ FROM ubuntu:18.04
 
 MAINTAINER Kyostenas (kyostenas@gmail.com)
 
-# Forzar a que el bash de este dockerfile pase a ser una 
-# "bash login shell". Esto significa que cada "RUN", "CMD" y
-# "ENTRYPOINT" subsequente se ejecutara en el usuario actual
-# y hara "source" al ~/.basrc automaticamente
-# Ver: https://stackoverflow.com/a/57344191/13132076
-SHELL ["/bin/bash", "--login", "-c"]
-
 # Instalacion de NGINX
 RUN apt update -y
 RUN apt install -y software-properties-common
@@ -47,6 +40,14 @@ COPY ./perpetuus-gui/dist/perpetuus-gui/ /var/www/html
 # INSERCION DE LOS ARCHIVOS DEL API Y CONFIGURACION ::::::::::::::::::
 # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+# Forzar a que el bash de este dockerfile pase a ser una 
+# "bash login shell". Esto significa que cada "RUN", "CMD" y
+# "ENTRYPOINT" subsequente se ejecutara en el usuario actual
+# y hara "source" al ~/.basrc automaticamente
+# Ver: https://stackoverflow.com/a/57344191/13132076
+SHELL ["/bin/bash", "--login", "-c"]
+
+    
 # OBTENER UNA VERSION ESPECIFICA DE NODE
 # Instalar nvm
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
