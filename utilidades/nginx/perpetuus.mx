@@ -1,0 +1,59 @@
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
+#                           CONFIGURACION PARA NGINX                           #
+# :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: #
+
+
+
+# Este servidor es para que lets encrypt (a travez de certbot) pueda
+# generar los certificados del dominio de perpetuus usando el
+# ACME challenge. Para ellos, se necesita un servidor de nginx en
+# el puerto 80, pues no hay certificados aun para poder poner el 443
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name perpetuus.mx www.perpetuus.mx;
+
+    location ~ /.well-knwon/acme-challenge {
+        allow all;
+        root /var/www/html;
+    }
+}
+
+
+
+# Este es el servidor principal  
+
+# server {
+#     listen              443 ssl;
+#     server_name         perpetuus.mx www.perpetuus.mx;
+
+#     ssl_certificate /home/perpetuus/certificados/fullchain.pem;
+#     ssl_certificate_key /home/perpetuus/certificados/privkey.pem;
+
+#     location / {
+#         root   /usr/share/nginx/html;
+#         try_files $uri $uri/ /index.html;
+#         index  index.html index.html;
+#     }
+
+#     location /api {
+#         proxy_pass http://localhost:9000;
+#         proxy_http_version 1.1;
+#         proxy_set_header Upgrade $http_upgrade;
+#         proxy_set_header Connection 'upgrade';
+#         proxy_set_header Host $host;
+#         proxy_cache_bypass $http_upgrade;
+#     }
+
+#     location /ping {
+#         return 200 'pong';
+#         add_header Content-Type text/plain;
+#     }
+
+#     error_page   500 502 503 504  ../50x.html;
+#     location = /50x.html {
+#         root   /usr/share/nginx/html;
+#     }
+
+# }

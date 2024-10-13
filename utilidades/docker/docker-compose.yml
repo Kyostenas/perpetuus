@@ -1,17 +1,15 @@
-# version: '3.9'
-
 services:
 
-    db_perpetuus:
-        image: mongo:latest
-        restart: unless-stopped
-        container_name: db_perpetuus
-        volumes:
-            - /home/perpetuus/datos_bd_perpetuus:/home/perpetuus/datos_bd_perpetuus        
-        ports:
-            - 27017:27017
-        networks:
-            - perpetuus_network
+    # db_perpetuus:
+    #     image: mongo:latest
+    #     restart: unless-stopped
+    #     container_name: db_perpetuus
+    #     volumes:
+    #         - /home/perpetuus/datos_bd_perpetuus:/home/perpetuus/datos_bd_perpetuus        
+    #     ports:
+    #         - 27017:27017
+    #     networks:
+    #         - perpetuus_network
 
     app_perpetuus:
         image: kyostenas/perpetuus:latest
@@ -19,16 +17,17 @@ services:
         container_name: app_perpetuus
         stdin_open: true
         tty: true        
-        depends_on:
-            - db_perpetuus
-        links:
-            - db_perpetuus:db_perpetuus
+        # depends_on:
+        #     - db_perpetuus
+        # links:
+        #     - db_perpetuus:db_perpetuus
         volumes:
-            - /home/perpetuus:/home/perpetuus
-            - /home/perpetuus/certificados:/home/perpetuus/certificados
+            - certificados:/etc/letsencrypt
+            - datos_aplicacion:~/datos-aplicacion
         ports:
             - 9000:9000
             - 4200:4200
+            - 443:443
             - 80:80
         networks:
             - perpetuus_network
@@ -38,3 +37,23 @@ services:
 networks:
     perpetuus_network:
         driver: bridge
+
+volumes:
+    certificados:
+        driver: local
+        driver_opts:
+            type: 'none'
+            o: 'bind'
+            device: '~/volumenes-docker-peretuus/certificados'
+    datos_aplicacion:
+        driver: local
+        driver_opts:
+            type: 'none'
+            o: 'bind'
+            device: '~/volumenes-docker-peretuus/datos-aplicacion'
+    # datos_db:
+    #     driver: local
+    #     driver_opts:
+    #         type: 'none'
+    #         o: 'bind'
+    #         device: '~/volumenes-docker-peretuus/datos-db'
