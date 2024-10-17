@@ -98,4 +98,4 @@ WORKDIR /etc/nginx
 ADD ./utilidades/docker/docker-entrypoint.sh .
 
 # Hacer que se ejecute cuando la imagen se despliega
-ENTRYPOINT ["/etc/nginx/docker-entrypoint.sh"]
+CMD ["/etc/nginx/docker-entrypoint.sh"]

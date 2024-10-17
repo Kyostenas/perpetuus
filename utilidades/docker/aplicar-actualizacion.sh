@@ -14,7 +14,7 @@ if (( ${#containers[@]} < 1 ))
     then
         echo " ===> contenedores no encontrados"
     else
-        echo " ===> eliminando conenedores, excepto el de mongodb"
+        echo " ===> eliminando conenedores"
         docker rm -f ${containers[@]}
 fi
 
@@ -23,7 +23,7 @@ if (( ${#imgs[@]} < 1 ))
     then
         echo " ===> imagenes no encontradas"
     else
-        echo " ===> eliminando imagenes, excepto la de mongodb"
+        echo " ===> eliminando imagenes"
         docker rmi -f ${imgs[@]}
 fi
 

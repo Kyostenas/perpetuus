@@ -37,23 +37,3 @@ services:
 networks:
     perpetuus_network:
         driver: bridge
-
-# volumes:
-#     certificados:
-#         driver: local
-#         driver_opts:
-#             type: 'none'
-#             o: 'bind'
-#             device: ' /volumenes-docker-peretuus/certificados'
-#     datos_aplicacion:
-#         driver: local
-#         driver_opts:
-#             type: 'none'
-#             o: 'bind'
-#             device: '/volumenes-docker-peretuus/datos-aplicacion'
-#     # datos_db:
-#     #     driver: local
-#     #     driver_opts:
-#     #         type: 'none'
-#     #         o: 'bind'
-#     #         device: '/volumenes-docker-peretuus/datos-db'
