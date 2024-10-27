@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.3](https://github.com/Kyostenas/perpetuus/compare/v0.3.2...v0.3.3) (2024-10-27)
+
+
+### Features
+
+* imagen de aplicacion funcional ([b002fd8](https://github.com/Kyostenas/perpetuus/commit/b002fd87cd25b138ddcf1cad76c8a28daba8e731))
+
+
+### Bug Fixes
+
+* pm2 no arranca ([d6aae24](https://github.com/Kyostenas/perpetuus/commit/d6aae24db4b4bdee12208e263798ab6674eea88d))
+* **utilidades:** error en configuracion de nginx para acme-challenge ([0918495](https://github.com/Kyostenas/perpetuus/commit/09184956947e44b76c524fa2e18fc9f72c8ef4e2))
+
 ### [0.3.2](https://github.com/Kyostenas/perpetuus/compare/v0.3.1...v0.3.2) (2024-10-12)
 
 
