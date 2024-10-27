@@ -9,17 +9,19 @@
 # Agregar una linea al crontab del contenedor para que se renueve el
 # certificado de letsencrypt. Se debe correr todos los dias a las
 # 11:00 p. m.
-# echo "==> agregando crontab para renovar certificados de letsencrypt"
-# echo "0 23 * * * certbot renew --dry-run" | crontab -
+echo "==> agregando crontab para renovar certificados de letsencrypt"
+echo "0 23 * * * certbot renew --dry-run" | crontab -
 
 # Ejecutar pm2 dentro de la imagen
-# echo "==> arrancando PM2"
-# pm2-runtime start /usr/src/perpetuus-api/ecosystem.config.js
+echo "==> arrancando PM2"
+pm2-runtime start /pm2-config/ecosystem.config.js
 
 # Iniciar nginx dentro de la imagen
-# echo "==> arrancando el servidor NGINX"
-# nginx
+echo "==> arrancando el servidor NGINX"
+nginx
 
-# echo "==> fin del entry point"
+echo "==> fin del entry point"
 
-echo "==> solo se debe ejecutar 1 vez"
+# echo "==> solo se debe ejecutar 1 vez"
+
+/bin/bash
