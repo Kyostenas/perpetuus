@@ -14,7 +14,7 @@ echo "0 23 * * * certbot renew --dry-run" | crontab -
 
 # Ejecutar pm2 dentro de la imagen
 echo "==> arrancando PM2"
-pm2 start /pm2-config/ecosystem.config.js
+pm2-runtime start /usr/src/perpetuus-api/ecosystem.config.js
 
 # Iniciar nginx dentro de la imagen
 echo "==> arrancando el servidor NGINX"
