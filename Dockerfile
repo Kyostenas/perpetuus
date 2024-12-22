@@ -44,7 +44,7 @@ RUN ln -s /etc/nginx/sites-available/perpetuus.mx /etc/nginx/sites-enabled/perpe
     
 # Copiar los archivos compilados del frontend a la carpeta html
 # de NGINX para servir la aplicacion (de la GUI)
-COPY ./perpetuus-gui/dist/perpetuus-gui/ /var/www/html
+COPY ./perpetuus-gui/dist/perpetuus-gui/ /usr/share/nginx/html
     
 # ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 # INSERCION DE LOS ARCHIVOS DEL API Y CONFIGURACION ::::::::::::::::::
@@ -99,4 +99,4 @@ WORKDIR /etc/nginx
 ADD ./utilidades/docker/docker-entrypoint.sh .
 
 # Hacer que se ejecute cuando la imagen se despliega
-# CMD ["/etc/nginx/docker-entrypoint.sh"]
+CMD ["/etc/nginx/docker-entrypoint.sh"]
