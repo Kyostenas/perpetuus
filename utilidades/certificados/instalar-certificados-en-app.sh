@@ -31,7 +31,7 @@ docker exec -t app_perpetuus certbot certonly \
 echo "==> certificados generados"
 
 echo "======== RESULTADO ========"
-docker exec -t app_perpetuus certbot ls -al /etc/letsencrypt/live/perpetuus.mx
+docker exec -t app_perpetuus ls -lash /etc/letsencrypt/live/perpetuus.mx
 echo "==========================="
 
 echo "==> FIN SCRIPT"
