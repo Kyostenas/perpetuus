@@ -1,5 +1,10 @@
 import { config } from 'dotenv-safe';  // Para archivos .env
-config();
+import * as path from 'path';
+
+config({
+    path: path.join(__dirname, '../../../.env'), 
+    example: path.join(__dirname, '../../../.env.example'),
+});
 
 /* :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: */
 /*                        ENVIRONMENT VARIABLES (START)                       */

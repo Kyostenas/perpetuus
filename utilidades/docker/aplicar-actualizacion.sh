@@ -36,5 +36,10 @@ docker compose up -d
 
 echo " ===> fin script"
 
+echo " ----------------------------- (ejecutando PM2 (API)) "
+docker exec -t app_perpetuus pm2 start /usr/src/perpetuus-api/ecosystem.config.js
+
+echo " ----------------------------- (agregando crontab para renovar certificados de letsencrypt) "
+docker exec -t app_perpetuus echo "0 23 * * * certbot renew --dry-run" | crontab -
 
 echo " =========================== ACTUALIZACION COMPLETADA ============================ "

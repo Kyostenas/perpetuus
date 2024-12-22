@@ -28,12 +28,13 @@ RUN /opt/certbot/bin/pip install certbot
 RUN echo "\ndaemon off;" >> /etc/nginx/nginx.conf
 RUN chown -R www-data:www-data /var/lib/nginx
 
-# Agregar configuracion para NGINX en la carpeta de sites-avialable
-ADD ./utilidades/nginx/perpetuus.mx /etc/nginx/sites-avialable/perpetuus.mx
+# Agregar configuracion para NGINX en la carpeta de sites-available
+ADD ./utilidades/nginx/perpetuus.mx /etc/nginx/sites-available/perpetuus.mx
+RUN rm /etc/nginx/sites-enabled/default
 
 # Crear links simbolicos para dichas configuraciones en la
 # carpeta de sites-enabled
-RUN ln -s /etc/nginx/sites-avialable/perpetuus.mx /etc/nginx/sites-enabled/perpetuus
+RUN ln -s /etc/nginx/sites-available/perpetuus.mx /etc/nginx/sites-enabled/perpetuus
 
 
 
@@ -98,4 +99,4 @@ WORKDIR /etc/nginx
 ADD ./utilidades/docker/docker-entrypoint.sh .
 
 # Hacer que se ejecute cuando la imagen se despliega
-CMD ["/etc/nginx/docker-entrypoint.sh"]
+# CMD ["/etc/nginx/docker-entrypoint.sh"]
