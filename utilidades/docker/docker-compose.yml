@@ -1,39 +1,20 @@
 services:
-
-    # db_perpetuus:
-    #     image: mongo:latest
-    #     restart: unless-stopped
-    #     container_name: db_perpetuus
-    #     volumes:
-    #         - /home/perpetuus/datos_bd_perpetuus:/home/perpetuus/datos_bd_perpetuus        
-    #     ports:
-    #         - 27017:27017
-    #     networks:
-    #         - perpetuus_network
-
     app_perpetuus:
         image: kyostenas/perpetuus:latest
         restart: unless-stopped
         container_name: app_perpetuus
         stdin_open: true
         tty: true        
-        # depends_on:
-        #     - db_perpetuus
-        # links:
-        #     - db_perpetuus:db_perpetuus
         volumes:
             - /volumenes-docker-peretuus/certificados:/etc/letsencrypt
             - /volumenes-docker-peretuus/datos-aplicacion:/datos-aplicacion
         ports:
-            # - 9000:9000
-            # - 4200:4200
             - 443:443
             - 80:80
         networks:
             - perpetuus_network
         environment:
             TZ: "America/Mexico_City"
-
 networks:
     perpetuus_network:
         driver: bridge

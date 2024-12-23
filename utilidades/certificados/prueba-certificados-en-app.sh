@@ -3,6 +3,7 @@
 # Esta es una script de prueba para ver se es posible hacer la
 # solicitud de certificacion de letsencrypt con certbod.
 
+sudo docker exec -it app_perpetuus rm -r /etc/letsencrypt/live/perpetuus.mx/ 
 
 # Llamar el comando de certbot en el contenedor (ya debe haberse
 # ejeutado el docker compose up)
