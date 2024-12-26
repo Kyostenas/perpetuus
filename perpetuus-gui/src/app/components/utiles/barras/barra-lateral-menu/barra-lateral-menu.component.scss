@@ -1,0 +1,19 @@
+.recuadro-notificaciones
+
+.bd-sidebar {
+    max-height: 70vh;
+}
+
+.sidebar-completa {
+    transition: width 300ms ease-in-out;
+    width: 300px;
+}
+
+.sidebar-cerrada {
+    transition: width 300ms ease-in-out;
+    width: 60px;
+}
+
+.list-group {
+    width: 350px;
+}

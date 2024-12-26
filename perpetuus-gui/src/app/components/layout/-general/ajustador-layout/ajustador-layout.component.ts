@@ -9,31 +9,25 @@ import { Component } from '@angular/core';
 })
 export class AjustadorLayoutComponent {
 
-  get clases_display_sticky_barra_arriba() {
-    return `
-      d-none 
-      d-sm-none 
-      d-md-none 
-      d-lg-block 
-      d-xl-block 
-      d-xxl-block
-      sticky-top
-    `;
-  }
-
-  get clases_display_sticky_barra_abajo() {
-    return `
-      d-block 
-      d-sm-block 
-      d-m
-      d-block 
-      d-lg-none 
-      d-xl-none 
-      d-xxl-none
-      sticky-bottom
-      mt-5
-    `;
-  }
+  clases_display_sticky_barra_arriba = `
+    d-none 
+    d-sm-none 
+    d-md-none 
+    d-lg-block 
+    d-xl-block 
+    d-xxl-block
+  `
+  clases_display_sticky_barra_abajo = `
+    d-block 
+    d-sm-block 
+    d-m
+    d-block 
+    d-lg-none 
+    d-xl-none 
+    d-xxl-none
+    sticky-bottom
+    mt-5
+  `
 
 
 }

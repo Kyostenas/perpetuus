@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import ObjectID from 'bson-objectid';
 import { SwitchBootstrapShowDirective } from 'src/app/directives/utiles/varios/switch-bootstrap-show/switch-bootstrap-show.directive';
+import { BarraLateralMenuComponent } from '../barra-lateral-menu/barra-lateral-menu.component';
 
 export type LinkTextoBarraSuperior = {
   texto: string;
@@ -21,7 +22,8 @@ export type LinkSimboloBarraSuperior = {
   standalone: true,
   imports: [
     CommonModule,
-    SwitchBootstrapShowDirective,
+    BarraLateralMenuComponent,
+    // SwitchBootstrapShowDirective,
   ],
   templateUrl: './barra-superior.component.html',
   styleUrl: './barra-superior.component.scss'
@@ -37,7 +39,7 @@ export class BarraSuperiorComponent implements OnInit {
   @Input() links_texto: LinkTextoBarraSuperior[] = [];
   @Input() links_simbolo: LinkSimboloBarraSuperior[] = [];
   @Input() forzar_offcanvas: boolean = false;
-  @Input() posicion_offcanvas: 'start' | 'end' | 'top' | 'bottom' = 'bottom';
+  @Input() posicion_offcanvas: 'start' | 'end' | 'top' | 'bottom' = 'end';
   @Input() sticky: boolean = true;
 
   get clase_mostrar_offcanvas() {

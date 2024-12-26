@@ -6,6 +6,7 @@ import { BarraInferiorComponent } from '../../utiles/barras/barra-inferior/barra
 import { BarraSuperiorComponent, LinkTextoBarraSuperior, LinkSimboloBarraSuperior } from '../../utiles/barras/barra-superior/barra-superior.component';
 import { ModalNormalComponent } from '../../utiles/flotantes/modal/modal-normal/modal-normal.component';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
+import { BarraLateralMenuComponent } from '../../utiles/barras/barra-lateral-menu/barra-lateral-menu.component';
 
 @Component({
   selector: 'app-admin-layout',
@@ -17,6 +18,7 @@ import { AuthService } from 'src/app/services/inicio/signin/auth.service';
     BarraInferiorComponent,
     AjustadorLayoutComponent,
     ModalNormalComponent,
+    BarraLateralMenuComponent,
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'

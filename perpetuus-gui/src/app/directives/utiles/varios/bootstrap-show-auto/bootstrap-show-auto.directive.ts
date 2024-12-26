@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[bs-show-auto]',
@@ -11,7 +11,18 @@ export class BootstrapShowAutoDirective implements OnInit {
     private renderer2: Renderer2,
   ) { }
 
+  @Input('mostrar-manual') set mostrar_manual(value: boolean) {
+    if(value) {
+      console.log('MOSTRAR')
+      this.mostrar()
+    }
+  }
+
   ngOnInit(): void {
+    this.mostrar()
+  }
+
+  mostrar() {
     setTimeout(() => {
       const ELEMENTO = this.elementRef.nativeElement
       this.renderer2.addClass(ELEMENTO, 'hide')

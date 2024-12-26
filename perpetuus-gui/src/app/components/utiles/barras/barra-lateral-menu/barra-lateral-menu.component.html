@@ -1,0 +1,124 @@
+
+<aside 
+    class="
+        bd-sidebar 
+        ps-1 pt-1 pb-1 sticky-top 
+    "
+    [ngClass]="{
+        'sidebar-completa': completo,
+        'sidebar-cerrada': !completo
+    }"
+>
+    <div class="card h-100 overflow-x-hidden mb-2">
+        <ul class="list-group list-group-flush">
+            <li 
+                class="list-group-item list-group-item-action list-group-item-secondary w-100"
+            >
+                <span class="h5 mr-2">
+                    <i class="bi bi-search"></i>
+                </span>
+                <span 
+                    class="h5"
+                    
+                    bs-show-auto
+                    [mostrar-manual]="completo"
+
+                    [bs-hide-auto]="0"
+                    [no-ocultar-automatico]="true"
+                    [ocultar-manual]="!completo"
+                    [no-eliminar]="true"
+                >
+                    Buscar
+                </span>
+            </li>
+            <li 
+                class="list-group-item list-group-item-action list-group-item-secondary w-100"
+            >
+                <span class="h5 mr-2">
+                    <i class="bi bi-bell"></i>
+                </span>
+                <span 
+                    class="h5"
+                    
+                    bs-show-auto
+                    [mostrar-manual]="completo"
+
+                    [bs-hide-auto]="0"
+                    [no-ocultar-automatico]="true"
+                    [ocultar-manual]="!completo"
+                    [no-eliminar]="true"
+                >
+                    Notificaciones
+                </span>
+            </li>
+        </ul>
+    </div>
+    <div class="card h-100 overflow-x-hidden">
+        <ul class="list-group list-group-flush">
+            <li 
+                class="list-group-item list-group-item-light w-100"
+            >
+                <span
+                    class="h5 mr-2 pointer"
+                    type="button"
+                    (click)="completo = !completo"
+                >
+                    @switch (completo) {
+                    @case (true) {
+                        <i bs-show-auto class="bi bi-chevron-left"></i>
+                    }
+                    @case (false) {
+                        <i bs-show-auto class="bi bi-chevron-right"></i>
+                    }
+                    @default {
+                        <i bs-show-auto class="bi bi-chevron-right"></i>
+                    }
+                    }
+                </span>
+                <span 
+                    class="h5"
+                    
+                    bs-show-auto
+                    [mostrar-manual]="completo"
+
+                    [bs-hide-auto]="0"
+                    [no-ocultar-automatico]="true"
+                    [ocultar-manual]="!completo"
+                    [no-eliminar]="true"
+                >
+                    PERPETUUS
+                </span>
+            </li>
+            <ng-container *ngTemplateOutlet="contenidoMenu"></ng-container>
+        </ul>
+    </div>
+</aside>
+
+<ng-template
+    #contenidoMenu
+>
+    @for (link_menu of lista_menu; track link_menu.texto) {
+        <li 
+            class="list-group-item list-group-item-action list-group-item-light w-100"
+            [routerLink]="[link_menu.link]" 
+            routerLinkActive="router-link-active" 
+        >
+            <span class="h5 mr-2">
+                <i [class]="link_menu.simbolo"></i>
+            </span>
+            <span 
+                class="h5"
+                
+                bs-show-auto
+                [mostrar-manual]="completo"
+
+                [bs-hide-auto]="0"
+                [no-ocultar-automatico]="true"
+                [ocultar-manual]="!completo"
+                [no-eliminar]="true"
+            >
+                {{ link_menu.texto }}
+            </span>
+        </li>
+    }
+</ng-template>

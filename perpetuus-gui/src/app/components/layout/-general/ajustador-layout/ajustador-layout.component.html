@@ -1,16 +1,23 @@
-<div class="min-vh-100 d-flex flex-column justify-content-between">
-    <div>
-        <div [class]="clases_display_sticky_barra_arriba">
-            <ng-content select="[barra-superior]"></ng-content>
+<div class="min-vh-100 d-flex flex-column justify-content-between overflow-y-auto overflow-x-hidden" style="max-height: 100vh;">
+    <!-- <div [class]="clases_display_sticky_barra_arriba">
+        <ng-content select="[barra-superior]"></ng-content>
+    </div> -->
+    <!-- <div class=""> -->
+        <div class="d-flex">
+            <div>
+                <ng-content select="[barra-lateral-menu]"></ng-content>
+            </div>
+            <div>
+                <div class="mt-1 mb-4 me-1">
+                    <ng-content select="[_router_outlet]"></ng-content>
+                </div>
+            </div>
         </div>
-        <div class="container-xxl bd-gutter mt-3 my-md-4 bd-layout">
-            <ng-content select="[_router_outlet]"></ng-content>
-        </div>        
-    </div>
-    <div [class]="clases_display_sticky_barra_abajo">
+    <!-- </div> -->
+    <!-- <div [class]="clases_display_sticky_barra_abajo">
         <ng-content select="[barra-superior-inferior]"></ng-content>
-    </div>
-    <div [class]="clases_display_sticky_barra_arriba">
+    </div> -->
+    <!-- <div [class]="clases_display_sticky_barra_arriba">
         <ng-content select="[barra-inferior]"></ng-content>
-    </div>    
+    </div>     -->
 </div>
