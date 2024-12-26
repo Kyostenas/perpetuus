@@ -19,7 +19,7 @@
         "
         (click)="emitir_click_cuadro_dialogo()"
     >
-        <div *ngIf="mostrarContenido" class="modal-content">
+        <div class="modal-content">
 
             <ng-container *ngIf="!ocultarEncabezado">
                 <div class="modal-header">
@@ -37,7 +37,7 @@
                 </div>
             </ng-container>
 
-            <div class="modal-body">
+            <div class="modal-body" *ngIf="mostrarContenido">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12">
@@ -46,6 +46,8 @@
                     </div>
                 </div>
             </div>
+
+            <ng-content select="[contenidoSinBody]"></ng-content>
 
             <ng-container *ngIf="!ocultarPie">
                 <div class="modal-footer">

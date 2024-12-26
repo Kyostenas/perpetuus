@@ -182,6 +182,15 @@ export type POSICIONES_BS = 'top_left'
     | 'bottom_center'
     | 'bottom_right'
 
+export type COLORES_BS_ALERT = 'alert-primary'
+    | 'alert-secondary'
+    | 'alert-success'
+    | 'alert-danger'
+    | 'alert-warning'
+    | 'alert-info'
+    | 'alert-light'
+    | 'alert-dark'
+
 export const POSICIONES_BS_A_CLASES = {
   top_left: 'top-0 start-0',
   top_center: 'top-0 start-50 translate-middle-x',

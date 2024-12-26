@@ -25,7 +25,7 @@ which nvm
 sleep 15
 pm2 start /usr/src/perpetuus-api/ecosystem.config.js
 
-Iniciar nginx dentro de la imagen
+# Iniciar nginx dentro de la imagen
 echo "==> arrancando el servidor NGINX"
 nginx
 
