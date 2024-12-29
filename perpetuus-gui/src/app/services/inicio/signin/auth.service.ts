@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NOMBRE_CAMPO_ROL_LOCAL_STORAGE, NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE, UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
-import { UsuarioEnviar, UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
+import { DESCRIPCION_MENU, UsuarioEnviar, UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { RolUsuario } from 'src/app/models/usuario/rol-usuario.model';
@@ -48,7 +48,7 @@ export class AuthService {
     return this.http.post(url, datos, this.opciones).pipe(
       map((resp: any) => {
         alert(resp.mensaje);
-        return resp.datos as UsuarioRecibir
+        return resp.datos as {usuario: UsuarioRecibir, menus: DESCRIPCION_MENU}
       }),
       catchError(err => {
         alert('¡Error al iniciar sesión! ' + err.error.mensaje);

@@ -1,3 +1,4 @@
+import { PERMISOS_MENU_PERPETUUS } from "src/app/config/permisos-gui.config";
 import { RolUsuario } from "./rol-usuario.model";
 
 export class UsuarioEnviar {
@@ -42,4 +43,13 @@ export class UsuarioRecibir {
         let primer_apellido = apellidos.split(' ')[0];
         return primer_apellido;
     }
+}
+
+export interface DESCRIPCION_MENU {
+    nombre: string
+    simbolo: string
+    link: string
+    permiso: PERMISOS_MENU_PERPETUUS | 'LIBRE'
+    descripcion?: string
+    sub_menus?: DESCRIPCION_MENU[]
 }

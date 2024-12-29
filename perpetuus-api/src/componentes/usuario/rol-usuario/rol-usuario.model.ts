@@ -1,4 +1,5 @@
 import mongoose, { Schema, Model, Document, mongo } from "mongoose";
+import { PERMISOS_PERPETUUS } from "../../../config/roles/permisos-api.config";
 
 // type Capacidad = {
 //     metodo: ('post' | 'put' | 'get' | 'delete')[];
@@ -14,7 +15,7 @@ import mongoose, { Schema, Model, Document, mongo } from "mongoose";
 type RolDocument = Document & {
     nombre: string;
     descripcion: string;
-    permisos?: string[];
+    permisos?: PERMISOS_PERPETUUS[];
     super_admin?: boolean;
 };
 

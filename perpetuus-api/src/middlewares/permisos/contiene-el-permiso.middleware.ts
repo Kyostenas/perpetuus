@@ -54,6 +54,12 @@ export function tiene_permiso(
         }
         const USUARIO = await Usuario.findOne({_id: ID_USUARIO}).select('rol').lean()
         const ROL = USUARIO?.rol
+        if (!USUARIO) {
+            await controlador_auth.cerrar_sesion(
+                req, res,
+                'Se ha forzado el cierre de sesión porque no se encuentra el usuario'
+            )
+        }
         if (String(ID_ROL) !== String(ROL?._id)) {
             await controlador_auth.cerrar_sesion(
                 req, res,

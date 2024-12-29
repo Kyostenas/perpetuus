@@ -26,17 +26,17 @@ export const APP_ROUTES: Routes = [
     },
     {
         path: 'inicio',
-        loadChildren: () => import('./components/pages/inicio/inicio.routes')
+        loadChildren: () => import('./components/pages/inicio/inicio-public-layout.routes')
             .then(rutas => rutas.INICIO_ROUTES),
     },
     {
         path: 'usuario',
-        loadChildren: () => import('./components/pages/usuario/usuario.routes')
+        loadChildren: () => import('./components/pages/usuario/usuario-layout.routes')
             .then(rutas => rutas.USARIO_ROUTES),
     },
     {
         path: 'administracion',
-        loadChildren: () => import('./components/pages/admin/admin.routes')
+        loadChildren: () => import('./components/pages/admin/admin-layout.routes')
             .then(rutas => rutas.ADMIN_ROUTES),
     },
     { path: '**', redirectTo: '/' },

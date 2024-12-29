@@ -1,4 +1,4 @@
-import { ValoresAnidadosRecursivosDeObjeto } from "../../tipos-personalizados"
+import { ValoresAnidadosRecursivosDeObjeto } from '../utiles/tipos-personalizados';
 
 export const PERMISOS_DISPONIBLES = {
     SUPER_ADMIN: 'SUPER_ADMIN',

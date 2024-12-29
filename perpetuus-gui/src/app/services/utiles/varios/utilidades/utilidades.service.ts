@@ -274,4 +274,8 @@ export class UtilidadesService {
     }
   }
 
+  guardar_local_storage(nombre_item: string, valor: any) {
+    localStorage.setItem(nombre_item, JSON.stringify(valor))
+  }
+
 }

@@ -68,17 +68,20 @@ export class SigninComponent implements OnInit{
 
   iniciar_sesion() {
     this.auth_service.iniciar_sesion(this.valores_formulario)
-      .subscribe((usuario: UsuarioRecibir) => {
+      .subscribe((datos_usuario) => {
         this.limpiar_formulario();
-        if (usuario.rol?.super_admin) {
+        const USUARIO = datos_usuario.usuario
+        if (USUARIO.rol?.super_admin) {
           this.router.navigate(['administracion']);
         } else {
           this.router.navigate(['usuario'])
         }
-        let rol_usuario = usuario.rol
-        delete usuario.rol        
-        localStorage.setItem('usuario', JSON.stringify(usuario))
+        let rol_usuario = USUARIO.rol
+        let menu_usuario = datos_usuario.menus
+        delete USUARIO.rol        
+        localStorage.setItem('usuario', JSON.stringify(USUARIO))
         localStorage.setItem('rol_usuario', JSON.stringify(rol_usuario))
+        localStorage.setItem('menus', JSON.stringify(menu_usuario))
       });
   }
 

@@ -61,7 +61,7 @@
                 <span
                     class="h5 mr-2 pointer"
                     type="button"
-                    (click)="completo = !completo"
+                    (click)="toggle_menu_lateral()"
                 >
                     @switch (completo) {
                     @case (true) {
@@ -97,10 +97,10 @@
 <ng-template
     #contenidoMenu
 >
-    @for (link_menu of lista_menu; track link_menu.texto) {
+    @for (link_menu of lista_menu; track link_menu.nombre) {
         <li 
             class="list-group-item list-group-item-action list-group-item-light w-100"
-            [routerLink]="[link_menu.link]" 
+            [routerLink]="['./', link_menu.link]" 
             routerLinkActive="router-link-active" 
         >
             <span class="h5 mr-2">
@@ -117,7 +117,7 @@
                 [ocultar-manual]="!completo"
                 [no-eliminar]="true"
             >
-                {{ link_menu.texto }}
+                {{ link_menu.nombre }}
             </span>
         </li>
     }
