@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { controlador_usuario } from './usuario.controller';
 import { _Request } from '../../../tipos-personalizados';
 import { tiene_permiso, PERMISOS } from '../../../middlewares/permisos/contiene-el-permiso.middleware';

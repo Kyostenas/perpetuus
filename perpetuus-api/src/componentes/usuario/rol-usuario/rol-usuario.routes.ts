@@ -1,35 +1,72 @@
 import { Router, Request, Response } from 'express';
 import { ruta_rol } from './rol-usuario.controller';
 import { _Request } from '../../../tipos-personalizados';
+import { tiene_permiso, PERMISOS } from '../../../middlewares/permisos/contiene-el-permiso.middleware';
 
 const RUTA_ROL = () => {
     const router = Router();
 
     // (o-----------------------------------------( CRUD ))
     
-    router.post('/', async (req: _Request, res: Response) => { 
-        return await ruta_rol.crear_rol(req, res) });
-    router.get('/', async (req: _Request, res: Response) => { 
-        return await ruta_rol.obtener_roles_todo(req, res) });
-    router.get('/id/:id', async (req: _Request, res: Response) => { 
-        return await ruta_rol.obtener_rol_id(req, res) });
-    router.get('/termino/:termino', async (req: _Request, res: Response) => { 
-        return await ruta_rol.obtener_rol_termino(req, res) });
-    router.put('/', async (req: _Request, res: Response) => { 
-        return await ruta_rol.modificar_rol(req, res) });
-    router.delete('/id/:id', async (req: _Request, res: Response) => { 
-        return await ruta_rol.eliminar_rol_id(req, res) });
+    router.post('/', 
+        tiene_permiso(PERMISOS.ROL.CREAR),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.crear_rol(req, res)
+        }
+    );
+    router.get('/', 
+        tiene_permiso(PERMISOS.ROL.OBTENER),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.obtener_roles_todo(req, res)
+        }
+    );
+    router.get('/id/:id', 
+        tiene_permiso(PERMISOS.ROL.OBTENER),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.obtener_rol_id(req, res)
+        }
+    );
+    router.get('/termino/:termino', 
+        tiene_permiso(PERMISOS.ROL.OBTENER),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.obtener_rol_termino(req, res)
+        }
+    );
+    router.put('/', 
+        tiene_permiso(PERMISOS.ROL.MODIFICAR),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.modificar_rol(req, res)
+        }
+    );
+    router.delete('/id/:id', 
+        tiene_permiso(PERMISOS.ROL.ELIMINAR),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.eliminar_rol_id(req, res)
+        }
+    );
 
 
     // (o-----------------------------------------( ACCIONES EXTRA ))
         
     // PERMISOS
-    router.post('/permisos', async (req: _Request, res: Response) => { 
-        return await ruta_rol.crear_permisos_en_rol_id(req, res) });
-    router.get('/permisos', async (req: _Request, res: Response) => { 
-        return await ruta_rol.obtener_permisos_disponibles(req, res) });
-    router.delete('/permisos', async (req: _Request, res: Response) => { 
-        return await ruta_rol.eliminar_permisos_en_rol_id(req, res) });
+    router.post('/permisos', 
+        tiene_permiso(PERMISOS.ROL.PERMISO.AGREGAR),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.crear_permisos_en_rol_id(req, res)
+        }
+    );
+    router.get('/permisos', 
+        tiene_permiso(PERMISOS.ROL.PERMISO.OBTENER),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.obtener_permisos_disponibles(req, res)
+        }
+    );
+    router.delete('/permisos', 
+        tiene_permiso(PERMISOS.ROL.PERMISO.ELIMINAR),
+        async (req: _Request, res: Response) => { 
+            return await ruta_rol.eliminar_permisos_en_rol_id(req, res)
+        }
+    );
     
     // SUPER ADMIN
     // router.post('/super-admin', async (req: _Request, res: Response) => { 
