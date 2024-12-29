@@ -13,7 +13,6 @@ export class BootstrapShowAutoDirective implements OnInit {
 
   @Input('mostrar-manual') set mostrar_manual(value: boolean) {
     if(value) {
-      console.log('MOSTRAR')
       this.mostrar()
     }
   }

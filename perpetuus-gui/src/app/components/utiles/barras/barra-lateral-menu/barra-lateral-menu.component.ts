@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-hide-auto/bootstrap-hide-auto.directive';
 import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
 import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
+import { FragmentCallbackService } from 'src/app/services/utiles/estructurales/fragment-callback/fragment-callback.service';
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class BarraLateralMenuComponent implements OnInit {
 
   constructor(
     private utiles: UtilidadesService,
+    private fragmentos: FragmentCallbackService,
   ) {}
 
   completo: boolean = true
@@ -36,6 +38,10 @@ export class BarraLateralMenuComponent implements OnInit {
       this.utiles.consultar_local_storage('menus')
     this.completo =
       this.utiles.consultar_local_storage('menu_abierto')
+  }
+
+  agregar_framento(fragmento: string) {
+    this.fragmentos.agregar_fragmento(fragmento)
   }
 
   lista_menu!: DESCRIPCION_MENU[]

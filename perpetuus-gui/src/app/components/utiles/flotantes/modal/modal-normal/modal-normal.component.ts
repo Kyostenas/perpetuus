@@ -124,6 +124,17 @@ export class ModalNormalComponent {
    * @memberof ModalNormalComponent
    */
   @Input() permitirCerrarFueraDeModal: boolean = true;
+  @Input() set abrir_modal(value: boolean) {
+    if (!value) {
+      if (!this.__mostrando_modal) {
+        this.mostrar_modal()
+      }
+    } else {
+      if (this.__mostrando_modal) {
+        this.ocultar_modal()
+      }
+    }
+  }
 
   /**
    * Genera una emision cuando se le da click
