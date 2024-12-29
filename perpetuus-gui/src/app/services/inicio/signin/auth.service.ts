@@ -4,6 +4,7 @@ import { DESCRIPCION_MENU, UsuarioEnviar, UsuarioRecibir } from 'src/app/models/
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { RolUsuario } from 'src/app/models/usuario/rol-usuario.model';
+import { ControlNotificacionesService } from '../../utiles/varios/control-notificaciones/control-notificaciones.service';
 
 
 
@@ -15,7 +16,8 @@ export class AuthService {
 
   constructor(
     private utilidades: UtilidadesService,
-    private http: HttpClient
+    private http: HttpClient,
+    private notificaciones: ControlNotificacionesService,
   ) { }
 
   private ruta_base = 'auth';
@@ -34,10 +36,18 @@ export class AuthService {
     const url = this.obtener_url(['signup']);
     return this.http.post(url, usuario).pipe(
       map((resp: any) => {
-        alert(resp.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'success',
+          cuerpo_mensaje: resp.mensaje
+        });
       }),
       catchError(err => {
-        alert('¡Error al registrarse! ' + err.error.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'danger',
+          cuerpo_mensaje: '¡Error al registrarse! ' + err.error.mensaje
+        });
         return throwError(() => new Error(err))
       })
     );
@@ -47,11 +57,19 @@ export class AuthService {
     const url = this.obtener_url(['signin']);
     return this.http.post(url, datos, this.opciones).pipe(
       map((resp: any) => {
-        alert(resp.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'success',
+          cuerpo_mensaje: resp.mensaje
+        });
         return resp.datos as {usuario: UsuarioRecibir, menus: DESCRIPCION_MENU}
       }),
       catchError(err => {
-        alert('¡Error al iniciar sesión! ' + err.error.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'danger',
+          cuerpo_mensaje: '¡Error al iniciar sesión! ' + err.error.mensaje
+        });
         return throwError(() => new Error(err))
       })
     );
@@ -61,10 +79,18 @@ export class AuthService {
     const url = this.obtener_url(['signout']);
     return this.http.post(url, {}, this.opciones).pipe(
       map((resp: any) => {
-        alert(resp.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'success',
+          cuerpo_mensaje: resp.mensaje
+        });
       }),
       catchError(err => {
-        alert('¡Error al cerrar sesión! ' + err.error.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'danger',
+          cuerpo_mensaje: '¡Error al cerrar sesión! ' + err.error.mensaje
+        });
         return throwError(() => new Error(err));
       })
     );
@@ -74,10 +100,18 @@ export class AuthService {
     const url = this.obtener_url(['refresh-session', refrsh_tkn]);
     return this.http.post(url, {}, this.opciones).pipe(
       map((resp: any) => {
-        alert(resp.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'success',
+          cuerpo_mensaje: resp.mensaje
+        });
       }),
       catchError(err => {
-        alert('¡Error refrescar la sesión! ' + err.error.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'danger',
+        cuerpo_mensaje:   '¡Error refrescar la sesión! ' + err.error.mensaje
+      });
         return throwError(() => new Error(err));
       })
     );
@@ -93,11 +127,18 @@ export class AuthService {
     const url = this.obtener_url(['validate-session']);
     return this.http.get(url, this.opciones).pipe(
       map((resp: any) => {
-        // alert(resp.mensaje);
+        // this.notificaciones.crear_notificacion({
+        // tipo: 'toast',
+        // modo: 'success',
+        // cuerpo_mensaje: resp.mensaje});
         return resp.datos as Boolean
       }),
       catchError(err => {
-        alert('¡Error validar la sesión! ' + err.error.mensaje);
+        this.notificaciones.crear_notificacion({
+          tipo: 'toast',
+          modo: 'danger',
+        cuerpo_mensaje:   '¡Error validar la sesión! ' + err.error.mensaje
+      });
         return throwError(() => new Error(err));
       })
     );
