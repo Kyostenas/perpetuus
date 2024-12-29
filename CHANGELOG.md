@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/Kyostenas/perpetuus/compare/v0.3.4...v0.3.5) (2024-12-29)
+
+
+### Features
+
+* sistema de accionado por fragmentos (url) ([#8](https://github.com/Kyostenas/perpetuus/issues/8)) ([7157c96](https://github.com/Kyostenas/perpetuus/commit/7157c96f5845eac144669ed8614fccf979738c69))
+* sistema de menus funcional ([#2](https://github.com/Kyostenas/perpetuus/issues/2)) ([46d4c45](https://github.com/Kyostenas/perpetuus/commit/46d4c458a88a49f12970ba907f4efbc41839731d))
+* sistema de permisos funcional ([#3](https://github.com/Kyostenas/perpetuus/issues/3)) ([f2c684c](https://github.com/Kyostenas/perpetuus/commit/f2c684cda7d34e705ebb5c09936c052d360aa856))
+
 ### [0.3.4](https://github.com/Kyostenas/perpetuus/compare/v0.3.3...v0.3.4) (2024-12-26)
 
 
