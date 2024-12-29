@@ -1,10 +1,10 @@
 import { syslog as _syslog } from '../../../utils/logs.utils';
 const syslog = _syslog(module)
 
-import { Rol, RolInput, Permiso, RolDocument } from '../rol-usuario/rol-usuario.model';
+import { Rol, RolInput, RolDocument } from '../rol-usuario/rol-usuario.model';
 import { convertirArregloObjetosAObjeto } from '../../../utils/general.utils'
 
-import { PERMISOS_DISPONIBLES } from '../../../config/roles/permisos.config';
+import { PERMISOS_DISPONIBLES } from '../../../config/roles/permisos-api.config';
 import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
 
 
@@ -71,16 +71,16 @@ async function eliminar_rol_id(id: string, rol_comprobar: RolDocument) {
 //   cualquier otra cosa que no caiga en el CRUD convencional
 // (o-----------------------------------------------------------\/-----o)
 
-function mensaje_permiso_ya_existe(permiso: Permiso) {
-    return `Permiso para "${permiso.ruta}" ya existe`;
+function mensaje_permiso_ya_existe(permiso: string) {
+    return `Permiso "${permiso}" ya existe`;
 }
 
-function mensaje_permiso_no_existe(permiso: Permiso) {
-    return `Permiso para "${permiso.ruta}" no existe`;
+function mensaje_permiso_no_existe(permiso: string) {
+    return `Permiso "${permiso}" no existe`;
 }
 
 
-async function crear_permisos_en_rol_id(permisos_nuevos: Permiso[], rol: RolDocument): Promise<{
+async function crear_permisos_en_rol_id(permisos_nuevos: string[], rol: RolDocument): Promise<{
     mensaje_res: string;
     advertencias: string[] | undefined;
 }> {
@@ -91,11 +91,11 @@ async function crear_permisos_en_rol_id(permisos_nuevos: Permiso[], rol: RolDocu
     let permisos_para_agregar = [];
     let nombres_existentes: String[] = [];
     if (permisos_existentes) {
-        nombres_existentes = permisos_existentes.map(un_perm => un_perm.ruta);
+        nombres_existentes = permisos_existentes.map(un_perm => un_perm);
     }
     for (let i_perm = 0; i_perm < permisos_nuevos.length; i_perm++) {
         const un_permiso_nuevo = permisos_nuevos[i_perm];
-        if (nombres_existentes.includes(un_permiso_nuevo.ruta)) {
+        if (nombres_existentes.includes(un_permiso_nuevo)) {
             existentes += 1;
             let advertencia = mensaje_permiso_ya_existe(un_permiso_nuevo);
             syslog.warning(advertencia);
@@ -124,7 +124,7 @@ async function crear_permisos_en_rol_id(permisos_nuevos: Permiso[], rol: RolDocu
     }
 }
 
-async function eliminar_permisos_en_rol_id(permisos_a_eliminar: Permiso[], rol: RolDocument): Promise<{
+async function eliminar_permisos_en_rol_id(permisos_a_eliminar: string[], rol: RolDocument): Promise<{
     mensaje_res: string;
     advertencias: string[] | undefined;
 }> {
@@ -134,17 +134,15 @@ async function eliminar_permisos_en_rol_id(permisos_a_eliminar: Permiso[], rol: 
     let permisos_existentes = rol.permisos;
     let nombres_existentes: String[] = [];
     if (permisos_existentes) {
-        let permisos_para_conservar = convertirArregloObjetosAObjeto(
-            permisos_existentes, 'ruta'
-        );
-        nombres_existentes = permisos_existentes.map(un_perm => un_perm.ruta);
+        let permisos_para_conservar = permisos_existentes
+        nombres_existentes = permisos_existentes.map(un_perm => un_perm);
         conservados = nombres_existentes.length
         for (let i_perm = 0; i_perm < permisos_a_eliminar.length; i_perm++) {
             const un_permiso_a_eliminar = permisos_a_eliminar[i_perm];
-            if (nombres_existentes.includes(un_permiso_a_eliminar.ruta)) {
+            if (nombres_existentes.includes(un_permiso_a_eliminar)) {
                 conservados -= 1;
                 eliminados += 1;
-                delete permisos_para_conservar[un_permiso_a_eliminar.ruta]
+                permisos_para_conservar.filter(permiso => permiso !== un_permiso_a_eliminar)
             } else {
                 let advertencia = mensaje_permiso_no_existe(un_permiso_a_eliminar);
                 syslog.warning(advertencia);

@@ -1,0 +1,25 @@
+
+export const PERMISOS_DISPONIBLES = {
+    SUPER_ADMIN: 'SUPER_ADMIN',
+    ROL: {
+        CREAR: 'ROL.CREAR',
+        OBTENER: 'RO.OBTENER',
+        MODIFICAR: 'ROL.MODIFICAR',
+        ELIMINAR: 'ROL.ELIMINAR',
+        PERMISO: {
+            AGREGAR: 'ROL.PERMISO.AGREGAR',
+            OBTENER: 'ROL.PERMISO.OBTENER',
+            ELIMINAR: 'ROL.PERMISO.ELIMINAR',
+        }
+    },
+    USUARIO: {
+        CREAR: 'USUARIO.CREAR',
+        OBTENER: 'USUARIO.OBTENER',
+        MODIFICAR: 'USUARIO.MODIFICAR',
+        ELIMINAR: 'USUARIO.ELIMINAR',
+        ROL: {
+            AGREGAR: 'USUARIO.ROL.AGREGAR',
+            ELIMINAR: 'USUARIO.ROL.ELIMINAR',
+        }
+    }
+}

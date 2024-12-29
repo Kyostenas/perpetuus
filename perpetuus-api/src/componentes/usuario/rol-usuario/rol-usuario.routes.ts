@@ -32,8 +32,8 @@ const RUTA_ROL = () => {
         return await ruta_rol.eliminar_permisos_en_rol_id(req, res) });
     
     // SUPER ADMIN
-    router.post('/super-admin', async (req: _Request, res: Response) => { 
-        return await ruta_rol.crear_rol_super_admin(req, res) }); 
+    // router.post('/super-admin', async (req: _Request, res: Response) => { 
+    //     return await ruta_rol.crear_rol_super_admin(req, res) }); 
 
 
     return router

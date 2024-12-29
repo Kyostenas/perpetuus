@@ -270,75 +270,187 @@ export function convertirArregloObjetosAObjeto(
     return objetoDeObjetos
 }
 
-export function seleccionarCampoCualquierNivel(
+// export function seleccionarCampoCualquierNivel(
+//     objeto: any,
+//     campo: string,
+//     separador: string,
+//     campoSeleccionado: number = 0
+// ): CampoObtenido {
+//     let ruta = campo.split(separador)
+//     let objetoActual: any
+//     let ultimoCampo: string = ''
+//     let primerCampo: string = ruta[0]
+//     objetoActual = objeto[primerCampo]
+//     for (let iRuta = 1; iRuta < ruta.length; iRuta++) {
+//         const pasoRuta = ruta[iRuta]
+//         objetoActual = objetoActual[pasoRuta]
+//         ultimoCampo = pasoRuta
+//     }
+
+//     let resultado: CampoObtenido = {
+//         valor: objetoActual,
+//         ultimoCampo: ultimoCampo,
+//         primerCampo: primerCampo,
+//         campoSeleccionado: ruta[campoSeleccionado]
+//     }
+
+//     return resultado
+// }
+
+
+
+// export function seleccionarCampoCualquierNivelSimple(
+//     objeto: any,
+//     campo: string,
+//     separador: string,
+// ) {
+//     try {
+//         let ruta = campo.split(separador)
+//         let objetoActual: any | undefined
+//         for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
+//             function ver_sub_objetos_en_arrays() {
+//                 let objeto_temporal: any[] = [];
+//                 if (Object.prototype.toString.call(objetoActual) == '[object Array]') {
+//                     objetoActual.map((un_sub_objeto: any) => {
+//                         if (Object.prototype.toString.call(un_sub_objeto) == '[object Array]') {
+//                             objetoActual = un_sub_objeto;
+//                             ver_sub_objetos_en_arrays();
+//                         }
+//                         objeto_temporal.push(un_sub_objeto[pasoRuta]);
+//                     });
+//                     return objeto_temporal;
+//                   } else {
+//                   }
+//                   return undefined;
+//             }
+//             const pasoRuta = ruta[iRuta]
+//             let objetoEnArrays = ver_sub_objetos_en_arrays()
+//             if (objetoEnArrays) {
+//               objetoActual = objetoEnArrays
+//             } else {
+//                 try {
+//                     objetoActual = objetoActual[pasoRuta]
+//                 } catch {
+//                     objetoActual = objeto[pasoRuta]
+//                 }
+//             }
+//         }
+//         return objetoActual
+//     } catch {
+//         return undefined
+//     }
+// }
+
+/**
+ * Permite seleccionar un campo a cualquier profundidad de cualquier
+ * objeto, incluso si hay arreglos implicados.
+ * 
+ * Ejemplo:
+ * ```
+ * const OBJETO = {
+ *     campo1: {
+ *         campo2: {
+ *             campo3: 'a',
+ *             campo4: [
+ *                 {
+ *                     ah_mira1: 'jala1',
+ *                     ah_mira2: 'jala2',
+ *                     ah_mira3: [
+ *                         { jeje1: 'si1', jeje2: 'no1' },
+ *                         { jeje1: 'si2', jeje2: 'no2' },
+ *                         { jeje1: 'si3', jeje2: 'no3' },
+ *                     ],
+ *                 },
+ *                 {
+ *                     ah_mira1: 'otro1',
+ *                     ah_mira2: 'otro2',
+ *                     ah_mira3: 'otro2',
+ *                 },
+ *                 {
+ *                     ah_mira1: 'final1',
+ *                     ah_mira2: 'final2',
+ *                     ah_mira3: [
+ *                         { jeje1: 'a', jeje2: 'b' },
+ *                         { jeje1: 'c', jeje2: 'd' },
+ *                         { jeje1: 'e', jeje2: 'f' },
+ *                     ],                    
+ *                 },
+ *             ]
+ *         }
+ *     }
+ * };
+ * 
+ * const SELECCION = seleccionarCampoCualquierNivelProfundo(
+ *     OBJETO, 'campo1.campo2.campo4.ah_mira3.jeje1', '.'
+ * );
+ *
+ * console.log(SELECCION);
+ * ```
+ * Tiene el siguiente resultado:
+ * ```
+ * ["si1", "si2", "si3", "", "a", "c", "e"] 
+ * ```
+ * 
+ * @param objeto El objeto que tendra uno de sus campos seleccionados.
+ * @param campo La ruta del campo a seleccionar, puede contener varios campos.
+ * @param separador La separacion que se uso en el argumento "campo" para dividir los subcampos.
+ * @param opciones Algunas opciones extra para alterar el resultado.
+ * @returns El objeto contenido en la ruta especificada
+ */
+export function seleccionarCampoCualquierNivelProfundo(
     objeto: any,
     campo: string,
     separador: string,
-    campoSeleccionado: number = 0
-): CampoObtenido {
-    let ruta = campo.split(separador)
-    let objetoActual: any
-    let ultimoCampo: string = ''
-    let primerCampo: string = ruta[0]
-    objetoActual = objeto[primerCampo]
-    for (let iRuta = 1; iRuta < ruta.length; iRuta++) {
-        const pasoRuta = ruta[iRuta]
-        objetoActual = objetoActual[pasoRuta]
-        ultimoCampo = pasoRuta
+    opciones?: {
+        reemplazoValorIndefinido?: any,
+        valorError?: any,
+        aplanarSubArreglos?: boolean,
     }
-
-    let resultado: CampoObtenido = {
-        valor: objetoActual,
-        ultimoCampo: ultimoCampo,
-        primerCampo: primerCampo,
-        campoSeleccionado: ruta[campoSeleccionado]
+): any {
+    if (!opciones) opciones = {}
+    opciones.reemplazoValorIndefinido = opciones.reemplazoValorIndefinido ?? ''
+    opciones.valorError = opciones.valorError ?? undefined
+    opciones.aplanarSubArreglos = opciones.aplanarSubArreglos ?? true
+    try {
+        let ruta = campo.split(separador);
+        let objetoActual: any = objeto;
+        for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
+            const pasoRuta = ruta[iRuta];
+            const esArreglo = revisarTipo(objetoActual, 'Array')
+            if (esArreglo) {
+                let objetoActualTemporal = objetoActual.map((unSubObjeto: any) => {
+                    return seleccionarCampoCualquierNivelProfundo(
+                        unSubObjeto, pasoRuta, ' ', opciones
+                    );
+                });
+                if (!opciones.aplanarSubArreglos) {
+                    objetoActual = objetoActualTemporal;
+                } else {
+                    let aplanado: any[] = [];
+                    objetoActualTemporal.forEach((objeto: any) => {
+                        const esArreglo = revisarTipo(objeto, 'Array');
+                        if (esArreglo) aplanado.push(...objeto);
+                        else aplanado.push(objeto);
+                    })
+                    objetoActual = aplanado;
+                }
+            } else {
+                objetoActual = objetoActual[pasoRuta];
+            }
+        };
+        if (objetoActual === undefined || objetoActual === null) {
+            return opciones.reemplazoValorIndefinido;
+        } else {
+            return objetoActual;
+        }
+    } catch {
+        return opciones.valorError;
     }
-
-    return resultado
 }
 
-
-
-export function seleccionarCampoCualquierNivelSimple(
-    objeto: any,
-    campo: string,
-    separador: string,
-) {
-    try {
-        let ruta = campo.split(separador)
-        let objetoActual: any | undefined
-        for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
-            function ver_sub_objetos_en_arrays() {
-                let objeto_temporal: any[] = [];
-                if (Object.prototype.toString.call(objetoActual) == '[object Array]') {
-                    objetoActual.map((un_sub_objeto: any) => {
-                        if (Object.prototype.toString.call(un_sub_objeto) == '[object Array]') {
-                            objetoActual = un_sub_objeto;
-                            ver_sub_objetos_en_arrays();
-                        }
-                        objeto_temporal.push(un_sub_objeto[pasoRuta]);
-                    });
-                    return objeto_temporal;
-                  } else {
-                  }
-                  return undefined;
-            }
-            const pasoRuta = ruta[iRuta]
-            let objetoEnArrays = ver_sub_objetos_en_arrays()
-            if (objetoEnArrays) {
-              objetoActual = objetoEnArrays
-            } else {
-                try {
-                    objetoActual = objetoActual[pasoRuta]
-                } catch {
-                    objetoActual = objeto[pasoRuta]
-                }
-            }
-        }
-        return objetoActual
-    } catch {
-        return undefined
-    }
+export function revisarTipo(objeto: any, tipoAChecar: string) {
+    return Object.prototype.toString.call(objeto) 
+        == `[object ${tipoAChecar}]`
 }
 
 

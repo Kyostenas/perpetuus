@@ -6,7 +6,7 @@ mongoose.Promise = global.Promise;
 import { syslog as _syslog } from './utils/logs.utils';
 const syslog = _syslog(module);
 
-import express, { Application, Request, Response } from 'express';
+import express, { Application, ErrorRequestHandler, Errback, Response } from 'express';
 import cors from 'cors';
 import cookie_session from 'cookie-session';
 import cookieParser from 'cookie-parser';
@@ -20,6 +20,7 @@ import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
 import { RUTA_AUTH } from './componentes/auth-login/auth.routes';
 import { verificar_jwt } from './middlewares/auth-login/jwt.middleware';
 import { _Request } from './tipos-personalizados';
+import { error } from 'console';
 
 
 
@@ -111,6 +112,33 @@ app.use((req: _Request, res: Response, next: any) => {
 
 app.use('/api/roles', RUTA_ROL());
 app.use('/api/usuarios', RUTA_USUARIO());
+
+// (o-----------------------------------------( MANEJO DE ERRORES ))
+
+app.use(function (err: any, req: _Request, res: Response, next: any) {
+  // console.log('SI LLEGA??')
+  // console.log(err)
+  // const ERRORES = [
+  //   //Cuando el token no trae un usuario
+  //   "user_object_not_found",
+  //   //No autorizado
+  //   "permission_denied",
+  // ]
+  if (err.code === 'user_object_not_found') {
+    return new Resp(res, __filename, { 
+      mensaje: `Token no válido.`,
+      error: err,
+    })._403_forbidden()
+  }
+  if (err.code === 'permission_denied') {
+    return new Resp(res, __filename, { 
+      mensaje: `No tienes permiso para `
+        .concat(`acceder al siguiente `)
+        .concat(`contenido: ${req.permiso_denegado}`),
+      error: err
+    })._403_forbidden()
+  }
+})
 
 // (o-----------------------------------------( CONECCION MONGODB ))
 

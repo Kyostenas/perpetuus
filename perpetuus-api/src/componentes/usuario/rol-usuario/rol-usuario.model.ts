@@ -1,20 +1,20 @@
 import mongoose, { Schema, Model, Document, mongo } from "mongoose";
 
-type Capacidad = {
-    metodo: ('post' | 'put' | 'get' | 'delete')[];
-    subcapacidades: string[];
-};
+// type Capacidad = {
+//     metodo: ('post' | 'put' | 'get' | 'delete')[];
+//     subcapacidades: string[];
+// };
 
-type Permiso = {
-    ruta: string;
-    capacidades: Capacidad[];
+// type Permiso = {
+//     ruta: string;
+//     capacidades: Capacidad[];
     
-};
+// };
 
 type RolDocument = Document & {
     nombre: string;
     descripcion: string;
-    permisos?: Permiso[];
+    permisos?: string[];
     super_admin?: boolean;
 };
 
@@ -40,20 +40,7 @@ const ROL_SCHEMA = new Schema(
             type: Schema.Types.String,
         },
         permisos: [{
-            ruta: {
-                type: Schema.Types.String,
-                required: [true, 'Nombre de ruta de permiso requerida'],             
-            },
-            capacidades: [{
-                metodo: {
-                    type: Schema.Types.String,
-                    enum: ['post', 'put', 'get', 'delete'],
-                    required: true,
-                },
-                subcapacidades: {
-                    type: [ Schema.Types.String ]
-                }
-            }]
+            type: Schema.Types.String,
         }]
     },
     {
@@ -75,4 +62,4 @@ ROL_SCHEMA.index({ '$**': 'text' });
 // (o==================================================================o)
 
 const MODELO_ROL: Model<RolDocument> = mongoose.model<RolDocument>('Rol', ROL_SCHEMA);
-export { MODELO_ROL as Rol, RolInput, RolDocument, Permiso }; 
+export { MODELO_ROL as Rol, RolInput, RolDocument }; 

@@ -24,10 +24,10 @@ export function verificar_jwt(req: _Request, res: Response, next: any) {
                 }
             )._403_forbidden();
         }
-        jwt_verify(token, <string>AUTH_SECRET, (err: any, decoded: any) => {
+        jwt_verify(token, <string>AUTH_SECRET, async (err: any, decoded: any) => {
             if (err) {
                 if (!!token) {
-                    controlador_auth.cerrar_sesion(
+                    await controlador_auth.cerrar_sesion(
                         req, res, 
                         'Se ha forzado el cierre de tu sesión porque ya no es válida'
                     )
