@@ -2,7 +2,7 @@ import { Routes } from "@angular/router";
 
 
 export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
-    path: '/s',
+    path: '',
     loadComponent: () => import('../../admin-usuario/panel-de-sub-menus/panel-de-sub-menus.component')
         .then(x => x.PanelDeSubMenusComponent),
     children: [
