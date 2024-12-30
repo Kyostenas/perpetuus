@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.6](https://github.com/Kyostenas/perpetuus/compare/v0.3.5...v0.3.6) (2024-12-30)
+
+
+### Features
+
+* sistema de breadcrumbs y sub-menus ([#2](https://github.com/Kyostenas/perpetuus/issues/2)) ([fa98688](https://github.com/Kyostenas/perpetuus/commit/fa98688c3852a1f2963aa82f4a9c399c305ab644))
+
 ### [0.3.5](https://github.com/Kyostenas/perpetuus/compare/v0.3.4...v0.3.5) (2024-12-29)
 
 
