@@ -7,7 +7,7 @@ import { servicio_auth } from './auth.service';
 
 import { Usuario, UsuarioDocument } from '../usuario/usuario/usuario.model';
 import { _Request } from '../../tipos-personalizados';
-import { obtener_menus } from '../menu/menu.service';
+import { MENUS, obtener_menus } from '../menu/menu.service';
 
 
 
@@ -49,7 +49,10 @@ async function iniciar_sesion(req: _Request, res: Response) {
             .findById(usuario._id)
             .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn')
             .lean();
-        let menu_usuario = obtener_menus(usuario_enviar as UsuarioDocument)
+        let menu_usuario = obtener_menus(
+            usuario_enviar as UsuarioDocument,
+            MENUS
+        )
         delete usuario.rol?.permisos
         delete usuario.rol?.__v
         let nombre_completo = `${usuario.nombres} ${usuario.apellidos}`

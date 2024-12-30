@@ -7,8 +7,11 @@
             <div>
                 <ng-content select="[barra-lateral-menu]"></ng-content>
             </div>
-            <div>
-                <div class="mt-1 mb-4 me-1">
+            <div class="ms-1 mt-1 mb-4 me-1 container-fluid vstack gap-1">
+                <div class="">
+                    <ng-content select="[barra-breadcrumbs]"></ng-content>
+                </div>
+                <div class="">
                     <ng-content select="[_router_outlet]"></ng-content>
                 </div>
             </div>

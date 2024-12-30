@@ -7,6 +7,7 @@ import { BarraSuperiorComponent, LinkTextoBarraSuperior, LinkSimboloBarraSuperio
 import { ModalNormalComponent } from '../../utiles/flotantes/modal/modal-normal/modal-normal.component';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 import { BarraLateralMenuComponent } from '../../utiles/barras/barra-lateral-menu/barra-lateral-menu.component';
+import { BarraBreadcrumbsComponent } from '../../utiles/barras/barra-breadcrumbs/barra-breadcrumbs.component';
 
 @Component({
   selector: 'app-admin-layout',
@@ -17,8 +18,9 @@ import { BarraLateralMenuComponent } from '../../utiles/barras/barra-lateral-men
     BarraSuperiorComponent,
     BarraInferiorComponent,
     AjustadorLayoutComponent,
-    ModalNormalComponent,
+    // ModalNormalComponent,
     BarraLateralMenuComponent,
+    BarraBreadcrumbsComponent,
   ],
   templateUrl: './admin-layout.component.html',
   styleUrl: './admin-layout.component.scss'
@@ -42,18 +44,18 @@ export class AdminLayoutComponent implements OnInit {
     })
   }
 
-  @ViewChild('modal_perfil', { static: false }) modal_perfil!: ModalNormalComponent;
+  // @ViewChild('modal_perfil', { static: false }) modal_perfil!: ModalNormalComponent;
 
-  private _id_modal!: string;
+  // private _id_modal!: string;
 
-  get id_modal(): string {
-    return this._id_modal;
-  }
+  // get id_modal(): string {
+  //   return this._id_modal;
+  // }
 
-  set id_modal(value: string) {
-    this._id_modal = value;
-    this.crear_links();
-  }
+  // set id_modal(value: string) {
+  //   this._id_modal = value;
+  //   this.crear_links();
+  // }
 
   links_texto!: LinkTextoBarraSuperior[];
   links_simbolo!: LinkSimboloBarraSuperior[];
@@ -69,18 +71,18 @@ export class AdminLayoutComponent implements OnInit {
         href: 'inicio/signup'
       }
     ];
-    this.links_simbolo = [
-      {
-        texto: 'Perfil',
-        data_bs_target: '#'.concat(this.id_modal),
-        data_bs_toggle: 'modal',
-        simbolo: 'bi-person-fill'
-      },
-    ];
+    // this.links_simbolo = [
+    //   {
+    //     texto: 'Perfil',
+    //     data_bs_target: '#'.concat(this.id_modal),
+    //     data_bs_toggle: 'modal',
+    //     simbolo: 'bi-person-fill'
+    //   },
+    // ];
   }
 
 
-  abrir_modal() {
-    this.modal_perfil.mostrar_modal()
-  }
+  // abrir_modal() {
+  //   this.modal_perfil.mostrar_modal()
+  // }
 }

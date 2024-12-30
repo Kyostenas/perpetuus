@@ -11,13 +11,24 @@ import {  UsuarioDocument } from '../usuario/usuario/usuario.model';
  * Obtener los menus que el usuario podra ver en su barra lateral,
  * basandose en sus permisos.
  * 
+ * Es una funcion recursiva porque los menus pueden tener sub-menus.
+ * 
  * @param [id_usuario] El id del usuario que esta haciendo login
+ * @param [menus] Los menus a evaluar. Esto es para la recursion.
  */
-function obtener_menus(usuario: UsuarioDocument) {
+function obtener_menus(usuario: UsuarioDocument, menus: DESCRIPCION_MENU[]) {
     let menus_enviar: DESCRIPCION_MENU[] = []
     const PERMISOS_USUARIO: PERMISOS_PERPETUUS[] = usuario?.rol?.permisos || []
-    for (let iMenu = 0; iMenu < MENUS.length; iMenu++) {
-        const UN_MENU = MENUS[iMenu];
+    for (let iMenu = 0; iMenu < menus.length; iMenu++) {
+        let UN_MENU = menus[iMenu];
+        if (!!UN_MENU.sub_menus) {
+            const SUB_MENUS = obtener_menus(usuario, UN_MENU.sub_menus)
+            if (SUB_MENUS.length === 0) {
+                UN_MENU.sub_menus = undefined
+            } else {
+                UN_MENU.sub_menus = SUB_MENUS
+            }
+        }
         let incluir = false
         if (UN_MENU.permiso === 'LIBRE') {
             incluir = true
@@ -70,7 +81,7 @@ const MENUS: DESCRIPCION_MENU[] = [
             },
             {
                 nombre: 'Parámetros',
-                simbolo: 'bi bi-person-sliders',
+                simbolo: 'bi bi-sliders',
                 link: 'parametros',
                 permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.PARAMETROS,
             },

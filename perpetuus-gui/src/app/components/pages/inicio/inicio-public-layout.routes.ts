@@ -1,26 +1,26 @@
 import { Routes } from "@angular/router";
-import { PublicLayoutComponent } from "../../layout/public-layout/public-layout.component";
-import { LandingComponent } from "./landing/landing.component";
-import { SigninComponent } from "./signin/signin.component";
-import { SignupComponent } from "./signup/signup.component";
 
 
 export const INICIO_ROUTES: Routes = [{
     path: '',
-    component: PublicLayoutComponent,
+    loadComponent: () => import('../../layout/public-layout/public-layout.component')
+        .then(x => x.PublicLayoutComponent),
     providers: [],
     children: [
         {
             path: '',
-            component: LandingComponent, 
+            loadComponent: () => import('./landing/landing.component')
+                .then(x => x.LandingComponent),
         },
         {
             path: 'signin',
-            component: SigninComponent,
+            loadComponent: () => import('./signin/signin.component')
+                .then(x => x.SigninComponent),
         },
         {
             path: 'signup',
-            component: SignupComponent,
+            loadComponent: () => import('./signup/signup.component')
+                .then(x => x.SignupComponent),
         },
     ]
 }];

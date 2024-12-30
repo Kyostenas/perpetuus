@@ -1,5 +1,5 @@
 <app-ajustador-layout>
-    <app-barra-superior
+    <!-- <app-barra-superior
         barra-superior
         [sticky]="false"
         [links_texto]="links_texto"
@@ -10,14 +10,17 @@
         [sticky]="false"
         [links_texto]="links_texto"
         [links_simbolo]="links_simbolo"
-    ></app-barra-superior>
+    ></app-barra-superior> -->
     <app-barra-lateral-menu
         barra-lateral-menu
     ></app-barra-lateral-menu>
+    <app-barra-breadcrumbs
+        barra-breadcrumbs
+    ></app-barra-breadcrumbs>
     <router-outlet _router_outlet></router-outlet>    
     <app-barra-inferior barra-inferior></app-barra-inferior>    
 </app-ajustador-layout>
-<app-modal-normal
+<!-- <app-modal-normal
     (id_modal)="id_modal=$event"
     [medida]="'grande'"
 >
@@ -30,4 +33,4 @@
             Este es el contenido
         </p>
     </div>
-</app-modal-normal>
+</app-modal-normal> -->

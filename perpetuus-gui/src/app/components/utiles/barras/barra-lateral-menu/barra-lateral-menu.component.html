@@ -58,7 +58,7 @@
     <div class="card h-100 overflow-x-hidden">
         <ul class="list-group list-group-flush">
             <li 
-                class="list-group-item list-group-item-light w-100"
+                class="list-group-item list-group-item-primary w-100"
             >
                 <span
                     class="h5 mr-2 pointer"
@@ -77,8 +77,8 @@
                     }
                     }
                 </span>
-                <span 
-                    class="h5"
+                <strong 
+                    class="h4"
                     
                     bs-show-auto
                     [mostrar-manual]="completo"
@@ -89,38 +89,32 @@
                     [no-eliminar]="true"
                 >
                     PERPETUUS
-                </span>
+                </strong>
             </li>
-            <ng-container *ngTemplateOutlet="contenidoMenu"></ng-container>
+            @for (link_menu of lista_menu; track link_menu.nombre) {
+                <li 
+                    class="list-group-item list-group-item-action list-group-item-light w-100"
+                    [routerLink]="['./', link_menu.link]" 
+                    routerLinkActive="router-link-active" 
+                >
+                    <span class="h5 mr-2">
+                        <i [class]="link_menu.simbolo"></i>
+                    </span>
+                    <span 
+                        class="h5"
+                        
+                        bs-show-auto
+                        [mostrar-manual]="completo"
+        
+                        [bs-hide-auto]="0"
+                        [no-ocultar-automatico]="true"
+                        [ocultar-manual]="!completo"
+                        [no-eliminar]="true"
+                    >
+                        {{ link_menu.nombre }}
+                    </span>
+                </li>
+            }
         </ul>
     </div>
 </aside>
-
-<ng-template
-    #contenidoMenu
->
-    @for (link_menu of lista_menu; track link_menu.nombre) {
-        <li 
-            class="list-group-item list-group-item-action list-group-item-light w-100"
-            [routerLink]="['./', link_menu.link]" 
-            routerLinkActive="router-link-active" 
-        >
-            <span class="h5 mr-2">
-                <i [class]="link_menu.simbolo"></i>
-            </span>
-            <span 
-                class="h5"
-                
-                bs-show-auto
-                [mostrar-manual]="completo"
-
-                [bs-hide-auto]="0"
-                [no-ocultar-automatico]="true"
-                [ocultar-manual]="!completo"
-                [no-eliminar]="true"
-            >
-                {{ link_menu.nombre }}
-            </span>
-        </li>
-    }
-</ng-template>

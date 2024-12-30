@@ -28,3 +28,74 @@ border-radius: 10px;
 ::-webkit-scrollbar-thumb:hover {
 background-color: white;
 }
+
+
+$utilities: (
+    "shadow": (
+        property: box-shadow,
+        class: shadow-hover,
+        state: hover,
+        values: (
+            sm: 0 1px 2px rgba(0, 0, 0, 0.3),
+            md: 0 4px 6px rgba(0, 0, 0, 0.3),
+            lg: 0 10px 15px rgba(0, 0, 0, 0.3),
+            xl: 0 20px 25px rgba(0, 0, 0, 0.3),
+        )
+    ),
+    "transform": (
+        property: transform,
+        class: scale-hover,
+        state: hover,
+        values: (
+            sm: scale(0.975),
+            md: scale(1.025),
+            lg: scale(1.05),
+        )
+    ),
+    "border-color": (
+        property: border-color,
+        class: border-hover,
+        state: hover,
+        values: (
+            primary: var(--bs-primary),
+            secondary: var(--bs-secondary),
+            success: var(--bs-success),
+            info: var(--bs-info),
+            warning: var(--bs-warning),
+            danger: var(--bs-danger),
+            light: var(--bs-light),
+            dark: var(--bs-dark),
+        )
+    ),
+    "text-color": (
+        property: color,
+        class: text-hover,
+        state: hover,
+        values: (
+            primary: var(--bs-primary),
+            secondary: var(--bs-secondary),
+            success: var(--bs-success),
+            info: var(--bs-info),
+            warning: var(--bs-warning),
+            danger: var(--bs-danger),
+            light: var(--bs-light),
+            dark: var(--bs-dark),
+        )
+    )
+);
+
+@each $utility, $settings in $utilities {
+    @each $value, $css-value in map-get($settings, values) {
+        .#{map-get($settings, class)}-#{$value} {
+            // #{map-get($settings, property)}: $css-value;
+            // transform: scale(1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .#{map-get($settings, class)}-#{$value}:#{map-get($settings, state)} {
+            #{map-get($settings, property)}: $css-value;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    }
+}

@@ -1,11 +1,9 @@
 import { Routes } from "@angular/router";
-import { AdminLayoutComponent } from "../../layout/admin-layout/admin-layout.component";
-import { DashboardComponent } from "../admin-usuario/dashboard/dashboard.component";
 
 export const ADMIN_ROUTES: Routes = [{
     path: '',
-    component: AdminLayoutComponent,
-    providers: [],
+    loadComponent: () => import('../../layout/admin-layout/admin-layout.component')
+        .then(x => x.AdminLayoutComponent),
     children: [
         { 
             path: '', 
@@ -14,7 +12,8 @@ export const ADMIN_ROUTES: Routes = [{
         },
         {
             path: 'dashboard',
-            component: DashboardComponent,
+            loadComponent: () => import('../admin-usuario/dashboard/dashboard.component')
+                .then(x => x.DashboardComponent),
         },
         {
             path: 'panel-administrador',

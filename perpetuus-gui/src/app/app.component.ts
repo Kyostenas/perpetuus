@@ -7,6 +7,7 @@ import { ControlNotificacionesComponent } from './components/utiles/varios/contr
 import { ModalNormalComponent } from './components/utiles/flotantes/modal/modal-normal/modal-normal.component';
 import { FragmentCallbackService } from './services/utiles/estructurales/fragment-callback/fragment-callback.service';
 import { Subscription } from 'rxjs';
+import { ControlBreadcrumbsService } from './services/utiles/estructurales/control-breadcrumbs/control-breadcrumbs.service';
 
 const rutas_exentas = [
   '/',
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private auth_service: AuthService,
     private fragmentService: FragmentCallbackService,
+    private controlBreadcrumbs: ControlBreadcrumbsService,
   ) {
 
   }
@@ -48,6 +50,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.preparar_escucha_de_fragmentos()
+    this.controlBreadcrumbs.subscribirse_a_los_cambios_de_url()
   }
   
   ngOnDestroy(): void {
@@ -55,6 +58,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.subscripcion_fragmentos.unsubscribe()
     } catch (error) {
       console.debug('No se pudo eliminar la subscripción a los fragmentos: ' + error)
+    }
+    try {
+      this.controlBreadcrumbs.desuscribirse_cambios_url()
+    } catch (error) {
+      console.debug('No se pudo eliminar la subscripción a la url (breadcrumbs): ' + error)
     }
   }
   

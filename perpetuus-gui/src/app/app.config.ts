@@ -15,7 +15,7 @@ export const APP_CONFIG: ApplicationConfig = {
         provideRouter(
             APP_ROUTES,
             withPreloading( PreloadAllModules ),
-            withDebugTracing(),
+            // withDebugTracing(),
         ),
         importProvidersFrom([
             // ServiceWorkerModule.register('ngsw-worker.js', {

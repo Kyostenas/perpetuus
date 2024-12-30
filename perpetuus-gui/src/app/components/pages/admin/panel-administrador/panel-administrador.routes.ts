@@ -1,26 +1,25 @@
 import { Routes } from "@angular/router";
-import { PanelDeSubMenusComponent } from "../../admin-usuario/panel-de-sub-menus/panel-de-sub-menus.component";
-import { AdministracionRolesComponent } from "./administracion-roles/administracion-roles.component";
-import { AdministracionUsuariosComponent } from "./administracion-usuarios/administracion-usuarios.component";
-import { AdministracionParametrosComponent } from "./administracion-parametros/administracion-parametros.component";
 
 
 export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
-    path: '',
-    component: PanelDeSubMenusComponent,
-    providers: [],
+    path: '/s',
+    loadComponent: () => import('../../admin-usuario/panel-de-sub-menus/panel-de-sub-menus.component')
+        .then(x => x.PanelDeSubMenusComponent),
     children: [
         {
             path: 'roles',
-            component: AdministracionRolesComponent,
+            loadComponent: () => import('./administracion-roles/administracion-roles.component')
+                .then(x => x.AdministracionRolesComponent),
         },
         {
             path: 'usuarios',
-            component: AdministracionUsuariosComponent,
+            loadComponent: () => import('./administracion-usuarios/administracion-usuarios.component')
+                .then(x => x.AdministracionUsuariosComponent),
         },
         {
             path: 'parametros',
-            component: AdministracionParametrosComponent,
+            loadComponent: () => import('./administracion-parametros/administracion-parametros.component')
+                .then(x => x.AdministracionParametrosComponent),
         },
     ],
 }];

@@ -1,10 +1,9 @@
 import { Routes } from "@angular/router";
-import { UserLayoutComponent } from "../../layout/user-layout/user-layout.component";
 
 export const USARIO_ROUTES: Routes = [{
     path: '',
-    component: UserLayoutComponent,
-    providers: [],
+    loadComponent: () => import('../../layout/user-layout/user-layout.component')
+        .then(x => x.UserLayoutComponent),
     children: [
         {
             path: '',
