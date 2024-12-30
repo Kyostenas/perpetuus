@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.7](https://github.com/Kyostenas/perpetuus/compare/v0.3.6...v0.3.7) (2024-12-30)
+
+
+### Bug Fixes
+
+* error rutas gui ([c66871d](https://github.com/Kyostenas/perpetuus/commit/c66871ddd7a640b95331a7d55cfdc6a0cc7f4025))
+
 ### [0.3.6](https://github.com/Kyostenas/perpetuus/compare/v0.3.5...v0.3.6) (2024-12-30)
 
 
