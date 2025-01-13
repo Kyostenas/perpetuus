@@ -57,33 +57,95 @@ function obtener_menus(usuario: UsuarioDocument, menus: DESCRIPCION_MENU[]) {
 const MENUS: DESCRIPCION_MENU[] = [
     {
         nombre: 'Dashboard',
-        simbolo: 'bi bi-pie-chart',
+        simbolo: 'bi bi-bar-chart',
         link: 'dashboard',
-        permiso: 'LIBRE'
+        ruta_completa: 'dashboard',
+        permiso: 'LIBRE',
+        es_sub_menu: false,
+        nivel: 0,
     },
     {
         nombre: 'Panel Administrador',
         simbolo: 'bi bi-person-gear',
         link: 'panel-administrador',
+        ruta_completa: 'panel-administrador',
         permiso: PERMISOS_DISPONIBLES.MENU._ADMIN,
+        es_sub_menu: false,
+        nivel: 0,
         sub_menus: [
             {
                 nombre: 'Roles',
                 simbolo: 'bi bi-person-lines-fill',
                 link: 'roles',
+                ruta_completa: 'panel-administrador/roles',
                 permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.ROL,
+                es_sub_menu: true,
+                nivel: 1,
             },
             {
                 nombre: 'Usuarios',
                 simbolo: 'bi bi-person-circle',
                 link: 'usuarios',
+                ruta_completa: 'panel-administrador/usuarios',
                 permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.USUARIO,
+                es_sub_menu: true,
+                nivel: 1,
             },
             {
                 nombre: 'Parámetros',
                 simbolo: 'bi bi-sliders',
                 link: 'parametros',
+                ruta_completa: 'panel-administrador/parametros',
                 permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.PARAMETROS,
+                es_sub_menu: true,
+                nivel: 1,
+            },
+            {
+                nombre: 'Áreas',
+                simbolo: 'bi bi-building',
+                link: 'areas',
+                ruta_completa: 'panel-administrador/areas',
+                permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.AREAS,
+                es_sub_menu: true,
+                nivel: 1,
+            },
+            {
+                nombre: 'Flujos',
+                simbolo: 'bi bi-arrow-left-right',
+                link: 'flujos',
+                ruta_completa: 'panel-administrador/flujos',
+                permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.FLUJOS,
+                es_sub_menu: true,
+                nivel: 1,
+            },
+            {
+                nombre: 'Almacenes',
+                simbolo: 'bi bi-boxes',
+                link: 'almacenes',
+                ruta_completa: 'panel-administrador/almacenes',
+                permiso: PERMISOS_DISPONIBLES.MENU.ADMIN._ALMACENES,
+                es_sub_menu: true,
+                nivel: 1,
+                sub_menus: [
+                    {
+                        nombre: 'Control Almacenes',
+                        simbolo: 'bi bi-box2',
+                        link: 'administrar',
+                        ruta_completa: 'panel-administrador/almacenes/administrar',
+                        permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.ALMACENES.ADMINISTRAR,
+                        es_sub_menu: true,
+                        nivel: 2,
+                    },
+                    {
+                        nombre: 'Control Artículos',
+                        simbolo: 'bi bi-stack',
+                        link: 'articulos',
+                        ruta_completa: 'panel-administrador/almacenes/articulos',
+                        permiso: PERMISOS_DISPONIBLES.MENU.ADMIN.ALMACENES.ARTICULOS,
+                        es_sub_menu: true,
+                        nivel: 2,
+                    },
+                ]
             },
         ]
     },
@@ -98,7 +160,10 @@ interface DESCRIPCION_MENU {
     nombre: string
     simbolo: string
     link: string
+    ruta_completa: string
     permiso: PERMISOS_MENU_PERPETUUS | 'LIBRE'
+    es_sub_menu: boolean
+    nivel: number
     descripcion?: string
     sub_menus?: DESCRIPCION_MENU[]
 }

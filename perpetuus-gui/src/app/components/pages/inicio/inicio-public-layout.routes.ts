@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { PaginaNoEncontrada404Component } from "../general/pagina-no-encontrada-404/pagina-no-encontrada-404.component";
 
 
 export const INICIO_ROUTES: Routes = [{
@@ -22,5 +23,6 @@ export const INICIO_ROUTES: Routes = [{
             loadComponent: () => import('./signup/signup.component')
                 .then(x => x.SignupComponent),
         },
+        { path: '**', component: PaginaNoEncontrada404Component },
     ]
 }];

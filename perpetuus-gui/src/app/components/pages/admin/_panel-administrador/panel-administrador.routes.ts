@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { PaginaNoEncontrada404Component } from "../../general/pagina-no-encontrada-404/pagina-no-encontrada-404.component";
 
 
 export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
@@ -21,5 +22,21 @@ export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
             loadComponent: () => import('./administracion-parametros/administracion-parametros.component')
                 .then(x => x.AdministracionParametrosComponent),
         },
+        {
+            path: 'areas',
+            loadComponent: () => import('./administracion-areas/administracion-areas.component')
+                .then(x => x.AdministracionAreasComponent),
+        },
+        {
+            path: 'flujos',
+            loadComponent: () => import('./administracion-flujos/administracion-flujos.component')
+                .then(x => x.AdministracionFlujosComponent),
+        },
+        {
+            path: 'almacenes',
+            loadChildren: () => import('./_almacenes/administracion-almacenes.routes')
+                .then(rutas => rutas.ADMINSITRACION_ALMACENES_ROUTES)
+        },
+        { path: '**', component: PaginaNoEncontrada404Component }
     ],
 }];

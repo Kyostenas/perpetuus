@@ -8,7 +8,14 @@ export const PERMISOS_DISPONIBLES = {
         ADMIN: {
             ROL: 'MENU.ADMIN.ROLES',
             USUARIO: 'MENU.ADMIN.USUARIO',
-            PARAMETROS: 'MENU.ADMIN.PARAMETROS'
+            PARAMETROS: 'MENU.ADMIN.PARAMETROS',
+            AREAS: 'MENU.ADMIN.AREAS',
+            FLUJOS: 'MENU.ADMIN.FLUJOS',
+            _ALMACENES: 'MENU.ADMIN.ALMACENES',
+            ALMACENES: {
+                ADMINISTRAR: 'MENU.ADMIN.ALMACENES.ADMINSITRAR',
+                ARTICULOS: 'MENU.ADMIN.ALMACENES.ARTICULOS',
+            },
         },
     },
     ROL: {

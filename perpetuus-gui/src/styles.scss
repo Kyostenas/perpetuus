@@ -50,6 +50,10 @@ $utilities: (
             sm: scale(0.975),
             md: scale(1.025),
             lg: scale(1.05),
+            xl: scale(1.1),
+            xxl: scale(1.2),
+            xxxl: scale(1.3),
+            d: scale(2),
         )
     ),
     "border-color": (
@@ -93,7 +97,7 @@ $utilities: (
             transition: all 0.3s ease;
         }
         .#{map-get($settings, class)}-#{$value}:#{map-get($settings, state)} {
-            #{map-get($settings, property)}: $css-value;
+            #{map-get($settings, property)}: $css-value !important;
             cursor: pointer;
             transition: all 0.3s ease;
         }

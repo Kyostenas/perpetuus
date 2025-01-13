@@ -14,18 +14,28 @@ import { ControlBreadcrumbsService } from 'src/app/services/utiles/estructurales
   styleUrl: './panel-de-sub-menus.component.scss'
 })
 export class PanelDeSubMenusComponent implements OnInit, OnDestroy {
-
+ 
   constructor(
-    private breadcrumb_service: ControlBreadcrumbsService
+    public breadcrumb_service: ControlBreadcrumbsService
   ) {
     
   }
 
   ngOnInit(): void {
+    // this.se_muestra_panel_de_menus = false
     this.subscripcion_sub_menus = this.breadcrumb_service
       .estado_conjunto_sub_menus_disponibles$
       .subscribe({
         next: (sub_menus) => {
+          if (!!sub_menus) {
+            if (sub_menus.length > 0) {
+              this.se_muestra_panel_de_menus = true
+            } else {
+              this.se_muestra_panel_de_menus = false
+            }
+          } else {
+            this.se_muestra_panel_de_menus = false
+          }
           this.sub_menus = sub_menus
         }
       })
@@ -39,6 +49,7 @@ export class PanelDeSubMenusComponent implements OnInit, OnDestroy {
   }
   
   ngOnDestroy(): void {
+    this.se_muestra_panel_de_menus = false
     try {
       this.subscripcion_sub_menus.unsubscribe()
     } catch (error) {
@@ -51,6 +62,7 @@ export class PanelDeSubMenusComponent implements OnInit, OnDestroy {
     }
   }
   
+  se_muestra_panel_de_menus!: boolean
   private subscripcion_sub_menus!: Subscription
   private subscripcion_menu_actual!: Subscription
   sub_menus: DESCRIPCION_MENU[] = []

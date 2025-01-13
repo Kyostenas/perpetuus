@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { PaginaNoEncontrada404Component } from './components/pages/general/pagina-no-encontrada-404/pagina-no-encontrada-404.component';
 
 
 // const appRoutes: Routes = [
@@ -39,6 +40,6 @@ export const APP_ROUTES: Routes = [
         loadChildren: () => import('./components/pages/admin/admin-layout.routes')
             .then(rutas => rutas.ADMIN_ROUTES),
     },
-    { path: '**', redirectTo: '/' },
     { path: '*', redirectTo: '' },
+    { path: '**', component: PaginaNoEncontrada404Component },
 ];

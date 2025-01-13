@@ -1,7 +1,7 @@
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
 import { provideHttpClient, withFetch, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-import { Component, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Component, HostListener, LOCALE_ID, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule, Scroll } from '@angular/router';
 import { AuthService } from './services/inicio/signin/auth.service';
 import { ControlNotificacionesComponent } from './components/utiles/varios/control-notificaciones/control-notificaciones.component';
 import { ModalNormalComponent } from './components/utiles/flotantes/modal/modal-normal/modal-normal.component';

@@ -49,7 +49,10 @@ export interface DESCRIPCION_MENU {
     nombre: string
     simbolo: string
     link: string
+    ruta_completa: string
     permiso: PERMISOS_MENU_PERPETUUS | 'LIBRE'
+    es_sub_menu: boolean
+    nivel: number
     descripcion?: string
     sub_menus?: DESCRIPCION_MENU[]
 }

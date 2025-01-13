@@ -11,7 +11,7 @@ import { ObtenerListadoSubMenusDropDownBreadCrumbsPipe } from '../_pipes-para-ba
   selector: 'app-barra-breadcrumbs',
   standalone: true,
   imports: [
-    KeyValuePipe,
+    // KeyValuePipe,
     CommonModule,
     RouterModule,
     BootstrapDropdownDirective,
@@ -23,7 +23,7 @@ import { ObtenerListadoSubMenusDropDownBreadCrumbsPipe } from '../_pipes-para-ba
 export class BarraBreadcrumbsComponent implements OnInit, OnDestroy {
 
   constructor(
-    private breadcrumbService: ControlBreadcrumbsService,
+    public breadcrumb_service: ControlBreadcrumbsService,
   ) {}
   
   ngOnInit(): void {
@@ -36,37 +36,41 @@ export class BarraBreadcrumbsComponent implements OnInit, OnDestroy {
     this.subscripcion_sub_menus_actual.unsubscribe()
   }
 
-  private _lista_menu_actuales!: {[ key: string]: DESCRIPCION_MENU }
-  private _menu_actual!: DESCRIPCION_MENU
+  lista_menu_actuales!: DESCRIPCION_MENU[]
+  menu_actual!: DESCRIPCION_MENU
   private _sub_menus_disponibles!: DESCRIPCION_MENU[]
   private subscripcion_list_menus!: Subscription
   private subscripcion_menu_actual!: Subscription
   private subscripcion_sub_menus_actual!: Subscription
   
-  get menus_actuales(): {[ key: string]: DESCRIPCION_MENU } {
-    return this._lista_menu_actuales
-  }
+  // get menus_actuales(): {[ key: string]: DESCRIPCION_MENU } {
+  //   return this._lista_menu_actuales
+  // }
 
-  get menu_actual(): DESCRIPCION_MENU {
-    return this._menu_actual
-  }
+  // get menu_actual(): DESCRIPCION_MENU {
+  //   return this._menu_actual
+  // }
 
   suscribirse_menus_actuales() {
-    this.subscripcion_list_menus = this.breadcrumbService
-      .estado_conjunto_menus_actual$
+    this.subscripcion_list_menus = this.breadcrumb_service
+      .estado_ruta_menus_actual$
       .subscribe({
         next: (lista_actual) => {
-          this._lista_menu_actuales = lista_actual
+          let valores = Object.values(lista_actual).sort(
+            (a, b) => a.nivel - b.nivel
+          )
+          this.lista_menu_actuales = valores
         }
       })
-    this.subscripcion_menu_actual = this.breadcrumbService
+    this.subscripcion_menu_actual = this.breadcrumb_service
       .estado_menu_actual$
       .subscribe({
         next: (menu_actual) => {
-          this._menu_actual = menu_actual
+          // console.log(menu_actual)
+          this.menu_actual = menu_actual
         }
       })
-    this.subscripcion_sub_menus_actual = this.breadcrumbService
+    this.subscripcion_sub_menus_actual = this.breadcrumb_service
       .estado_conjunto_sub_menus_disponibles$
       .subscribe({
         next: (sub_menus) => {

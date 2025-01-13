@@ -1,4 +1,14 @@
-<div class="min-vh-100 d-flex flex-column justify-content-between overflow-y-auto overflow-x-hidden" style="max-height: 100vh;">
+<div 
+    class="
+        min-vh-100 
+        d-flex flex-column 
+        justify-content-between 
+        overflow-y-auto 
+        overflow-x-hidden
+    " 
+    (scroll)="scroll_ventana($event)"
+    style="max-height: 100vh;"
+>
     <!-- <div [class]="clases_display_sticky_barra_arriba">
         <ng-content select="[barra-superior]"></ng-content>
     </div> -->
@@ -24,3 +34,24 @@
         <ng-content select="[barra-inferior]"></ng-content>
     </div>     -->
 </div>
+<button
+    *ngIf="mostrar_boton_top"
+    class="
+        btn 
+        position-fixed 
+        bottom-0 
+        end-0 
+        mb-2
+        me-2
+        boton-scroll-top
+        rounded-circle
+        border
+        text-hover-warning
+        border-hover-warning
+        scale-hover-xxl
+        shadow-hover-xl
+    "
+    (click)="scroll_hasta_arriba()"
+>
+    <i class="bi bi-arrow-up"></i>
+</button>

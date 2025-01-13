@@ -17,7 +17,7 @@ export const ADMIN_ROUTES: Routes = [{
         },
         {
             path: 'panel-administrador',
-            loadChildren: () => import('./panel-administrador/panel-administrador.routes')
+            loadChildren: () => import('./_panel-administrador/panel-administrador.routes')
                 .then(rutas => rutas.PANEL_ADMINISTRACION_ROUTES)
         },
     ],

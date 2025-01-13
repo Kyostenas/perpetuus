@@ -8,13 +8,13 @@ import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 export class ObtenerListadoSubMenusDropDownBreadCrumbsPipe implements PipeTransform {
 
   transform(menu: DESCRIPCION_MENU, menu_actual: DESCRIPCION_MENU): string {
-    // [routerLink]="['./', ${sub_menu.link !== menu_actual.link? sub_menu.link: ''}]" 
-    // [routerLinkActive]="${sub_menu.link !== menu_actual.link? 'router-link-active' : ''}" 
     if (!!menu.sub_menus) {
       const LISTA = menu.sub_menus
-        .map(sub_menu => {
-            return `
-              <li><a 
+      .map(sub_menu => {
+        return `
+            <li><a 
+                [routerLink]="['${sub_menu.ruta_completa}']" 
+                [routerLinkActive]="'${sub_menu.link !== menu_actual.link? 'router-link-active' : ''}'" 
                 class="dropdown-item ${sub_menu.link === menu_actual.link? 'active' : ''}"
               >
                 <i class="${sub_menu.simbolo}"></i>

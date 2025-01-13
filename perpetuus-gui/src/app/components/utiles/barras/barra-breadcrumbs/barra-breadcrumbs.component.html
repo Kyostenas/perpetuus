@@ -1,64 +1,39 @@
-<nav style="--bs-breadcrumb-divider: '';" aria-label="breadcrumb">
+<nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
     <ol class="breadcrumb">
-        @for (menu of menus_actuales | keyvalue; track menu.value.link)  {
+        @for (menu of lista_menu_actuales; track menu.nivel)  {
             <li 
-                class="breadcrumb-item"
-                [ngClass]="{'active': menu.value.link === menu_actual.link}"
+                class="breadcrumb-item ms-0 me-0 ps-0 pe-0 mt-0"
+                [ngClass]="{
+                    'active text-hover-secondary': menu.link === menu_actual.link,
+                    'active text-hover-warning': !(menu.link === menu_actual.link)
+                }"
                 [routerLink]="[
-                    './', 
-                    menu.value.link === menu_actual.link
-                        ? menu.value.link
-                        : ''
-                ]" 
+                    '/', breadcrumb_service.url_layout
+                ].concat(menu.ruta_completa.split('/'))" 
                 [routerLinkActive]="
-                    menu.value.link === menu_actual.link
+                    menu.link === menu_actual.link
                         ? 'router-link-active'
                         : ''
                 " 
             >
-                <div class="btn-group">
-                    <button 
-                        class="btn p-1"
-                        type="button"
-                        [ngClass]="{
-                            'text-bg-primary': menu.value.link === menu_actual.link,
-                            'text-bg-secondary': !(menu.value.link === menu_actual.link)
-                        }"
-                    >
-                        <span class="h6">
-                            <i [class]="menu.value.simbolo"></i>
-                            {{ menu.value.nombre }}
-                        </span>
-                    </button>
-                    @if (menu.value.sub_menus) {                     
-                        <button
+                <div class="d-flex">
+                    <span class="h5 me-1">
+                        <i [class]="menu.simbolo"></i>
+                        {{ menu.nombre }}
+                        <br>
+                    </span>
+                    <!-- @if (menu.sub_menus) {                     
+                        <div
                             [bs-dropdown]="
-                                menu.value | sub_menus_breadcrumb_dropdown: menu_actual
+                                menu | sub_menus_breadcrumb_dropdown: menu_actual
                             "
-                            class="btn p-1"
-                            type="button"
-                            [ngClass]="{
-                                'text-bg-primary': menu.value.link === menu_actual.link,
-                                'text-bg-secondary': !(menu.value.link === menu_actual.link)
-                            }"
                         >
-                            <i class="bi bi-chevron-down"></i>
-                        </button>
-                    }
+                            <i class="bi bi-arrow-down-short me-2" ></i>
+                        </div>
+                    } -->
 
                 </div>
             </li>
-            @if (menu.value.link !== menu_actual.link) {
-                <li 
-                    class="breadcrumb-item"
-                >
-                    <button class="btn ps-0 pe-0" type="button">
-                        <span class="h6 fw-bold">
-                            <i class="bi bi-arrow-right"></i>
-                        </span>
-                    </button>
-                </li>
-            }
         }
     </ol>
 </nav>
