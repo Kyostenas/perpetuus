@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 
 @Component({
-  selector: 'app-landing',
-  standalone: true,
-  imports: [],
-  templateUrl: './landing.component.html',
-  styleUrl: './landing.component.scss'
+    selector: 'app-landing',
+    imports: [],
+    templateUrl: './landing.component.html',
+    styleUrl: './landing.component.scss'
 })
 export class LandingComponent implements OnInit {
 

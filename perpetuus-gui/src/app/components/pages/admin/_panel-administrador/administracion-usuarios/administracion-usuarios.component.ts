@@ -4,13 +4,12 @@ import { JsonAStringPipe } from 'src/app/pipes/utiles/json-a-string/json-a-strin
 import { AdministracionUsuariosService } from 'src/app/services/admin/administracion-usuarios/administracion-usuarios.service';
 
 @Component({
-  selector: 'app-administracion-usuarios',
-  standalone: true,
-  imports: [
-    JsonAStringPipe
-  ],
-  templateUrl: './administracion-usuarios.component.html',
-  styleUrl: './administracion-usuarios.component.scss'
+    selector: 'app-administracion-usuarios',
+    imports: [
+        JsonAStringPipe
+    ],
+    templateUrl: './administracion-usuarios.component.html',
+    styleUrl: './administracion-usuarios.component.scss'
 })
 export class AdministracionUsuariosComponent implements OnInit {
 

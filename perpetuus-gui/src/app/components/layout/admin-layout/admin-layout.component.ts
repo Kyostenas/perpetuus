@@ -3,27 +3,25 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AjustadorLayoutComponent } from '../-general/ajustador-layout/ajustador-layout.component';
 import { BarraInferiorComponent } from '../../utiles/barras/barra-inferior/barra-inferior.component';
-import { BarraSuperiorComponent, LinkTextoBarraSuperior, LinkSimboloBarraSuperior } from '../../utiles/barras/barra-superior/barra-superior.component';
-import { ModalNormalComponent } from '../../utiles/flotantes/modal/modal-normal/modal-normal.component';
+import { LinkTextoBarraSuperior, LinkSimboloBarraSuperior } from '../../utiles/barras/barra-superior/barra-superior.component';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 import { BarraLateralMenuComponent } from '../../utiles/barras/barra-lateral-menu/barra-lateral-menu.component';
 import { BarraBreadcrumbsComponent } from '../../utiles/barras/barra-breadcrumbs/barra-breadcrumbs.component';
 
 @Component({
-  selector: 'app-admin-layout',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    BarraSuperiorComponent,
-    BarraInferiorComponent,
-    AjustadorLayoutComponent,
-    // ModalNormalComponent,
-    BarraLateralMenuComponent,
-    BarraBreadcrumbsComponent,
-  ],
-  templateUrl: './admin-layout.component.html',
-  styleUrl: './admin-layout.component.scss'
+    selector: 'app-admin-layout',
+    imports: [
+        CommonModule,
+        RouterModule,
+        // BarraSuperiorComponent,
+        BarraInferiorComponent,
+        AjustadorLayoutComponent,
+        // ModalNormalComponent,
+        BarraLateralMenuComponent,
+        BarraBreadcrumbsComponent,
+    ],
+    templateUrl: './admin-layout.component.html',
+    styleUrl: './admin-layout.component.scss'
 })
 export class AdminLayoutComponent implements OnInit {
 

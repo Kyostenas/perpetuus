@@ -1,14 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-elemento-desplegable',
-  standalone: true,
-  imports: [
-    NgbCollapseModule
-  ],
-  templateUrl: './elemento-desplegable.component.html',
-  styleUrl: './elemento-desplegable.component.scss'
+    selector: 'app-elemento-desplegable',
+    imports: [
+        // NgbCollapseModule
+    ],
+    templateUrl: './elemento-desplegable.component.html',
+    styleUrl: './elemento-desplegable.component.scss'
 })
 export class ElementoDesplegableComponent {
 

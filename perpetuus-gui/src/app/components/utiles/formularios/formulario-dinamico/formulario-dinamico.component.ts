@@ -7,19 +7,18 @@ import { CampoBaseFormularioDinamico } from 'src/app/models/utiles/formularios/f
 import { ElementoDesplegableComponent } from '../../varios/elemento-desplegable/elemento-desplegable.component';
 
 @Component({
-  selector: 'app-formulario-dinamico',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormularioDinamicoCampoComponent,
-    ElementoDesplegableComponent,
-  ],
-  providers: [
-    FormularioDinamicoService
-  ],
-  templateUrl: './formulario-dinamico.component.html',
-  styleUrl: './formulario-dinamico.component.scss'
+    selector: 'app-formulario-dinamico',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormularioDinamicoCampoComponent,
+        ElementoDesplegableComponent,
+    ],
+    providers: [
+        FormularioDinamicoService
+    ],
+    templateUrl: './formulario-dinamico.component.html',
+    styleUrl: './formulario-dinamico.component.scss'
 })
 export class FormularioDinamicoComponent implements OnInit{
   

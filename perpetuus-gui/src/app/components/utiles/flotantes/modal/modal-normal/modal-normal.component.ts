@@ -43,14 +43,13 @@ import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/uti
  * ```
  */
 @Component({
-  selector: 'app-modal-normal',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SwitchBootstrapShowDirective,
-  ],
-  templateUrl: './modal-normal.component.html',
-  styleUrl: './modal-normal.component.scss'
+    selector: 'app-modal-normal',
+    imports: [
+        CommonModule,
+        SwitchBootstrapShowDirective,
+    ],
+    templateUrl: './modal-normal.component.html',
+    styleUrl: './modal-normal.component.scss'
 })
 export class ModalNormalComponent {
   

@@ -9,14 +9,13 @@ import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 import { REGEX_VALIDACION_CORREO } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
 
 @Component({
-  selector: 'app-signup',
-  standalone: true,
-  imports: [
-    FormularioDinamicoComponent,
-    CardComponent,
-  ],
-  templateUrl: './signup.component.html',
-  styleUrl: './signup.component.scss'
+    selector: 'app-signup',
+    imports: [
+        FormularioDinamicoComponent,
+        CardComponent,
+    ],
+    templateUrl: './signup.component.html',
+    styleUrl: './signup.component.scss'
 })
 export class SignupComponent {
 

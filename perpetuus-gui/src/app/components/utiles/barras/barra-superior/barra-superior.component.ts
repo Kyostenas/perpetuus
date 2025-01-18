@@ -18,15 +18,14 @@ export type LinkSimboloBarraSuperior = {
 }
 
 @Component({
-  selector: 'app-barra-superior',
-  standalone: true,
-  imports: [
-    CommonModule,
-    BarraLateralMenuComponent,
-    // SwitchBootstrapShowDirective,
-  ],
-  templateUrl: './barra-superior.component.html',
-  styleUrl: './barra-superior.component.scss'
+    selector: 'app-barra-superior',
+    imports: [
+        CommonModule,
+        BarraLateralMenuComponent,
+        // SwitchBootstrapShowDirective,
+    ],
+    templateUrl: './barra-superior.component.html',
+    styleUrl: './barra-superior.component.scss'
 })
 export class BarraSuperiorComponent implements OnInit {
 

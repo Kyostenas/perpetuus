@@ -5,13 +5,12 @@ import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 import { ControlBreadcrumbsService } from 'src/app/services/utiles/estructurales/control-breadcrumbs/control-breadcrumbs.service';
 
 @Component({
-  selector: 'app-panel-de-sub-menus',
-  standalone: true,
-  imports: [
-    RouterModule
-  ],
-  templateUrl: './panel-de-sub-menus.component.html',
-  styleUrl: './panel-de-sub-menus.component.scss'
+    selector: 'app-panel-de-sub-menus',
+    imports: [
+        RouterModule
+    ],
+    templateUrl: './panel-de-sub-menus.component.html',
+    styleUrl: './panel-de-sub-menus.component.scss'
 })
 export class PanelDeSubMenusComponent implements OnInit, OnDestroy {
  

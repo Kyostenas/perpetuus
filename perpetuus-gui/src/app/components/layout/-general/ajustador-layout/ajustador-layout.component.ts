@@ -4,13 +4,12 @@ import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/boo
 import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
 
 @Component({
-  selector: 'app-ajustador-layout',
-  standalone: true,
-  imports: [
-    CommonModule,
-  ],
-  templateUrl: './ajustador-layout.component.html',
-  styleUrl: './ajustador-layout.component.scss'
+    selector: 'app-ajustador-layout',
+    imports: [
+        CommonModule,
+    ],
+    templateUrl: './ajustador-layout.component.html',
+    styleUrl: './ajustador-layout.component.scss'
 })
 export class AjustadorLayoutComponent {
 

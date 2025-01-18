@@ -2,11 +2,10 @@ import { Component, Input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-mensajes-error-validacion-formularios',
-  standalone: true,
-  imports: [],
-  templateUrl: './mensajes-error-validacion-formularios.component.html',
-  styleUrl: './mensajes-error-validacion-formularios.component.scss'
+    selector: 'app-mensajes-error-validacion-formularios',
+    imports: [],
+    templateUrl: './mensajes-error-validacion-formularios.component.html',
+    styleUrl: './mensajes-error-validacion-formularios.component.scss'
 })
 export class MensajesErrorValidacionFormulariosComponent {
   _campo!: AbstractControl

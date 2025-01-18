@@ -3,11 +3,10 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 
 @Component({
-  selector: 'app-user-layout',
-  standalone: true,
-  imports: [],
-  templateUrl: './user-layout.component.html',
-  styleUrl: './user-layout.component.scss'
+    selector: 'app-user-layout',
+    imports: [],
+    templateUrl: './user-layout.component.html',
+    styleUrl: './user-layout.component.scss'
 })
 export class UserLayoutComponent implements OnInit {
 

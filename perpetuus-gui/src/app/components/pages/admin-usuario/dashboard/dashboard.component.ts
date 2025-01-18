@@ -3,13 +3,12 @@ import { ModalNormalComponent } from 'src/app/components/utiles/flotantes/modal/
 import { ControlNotificacionesService } from 'src/app/services/utiles/varios/control-notificaciones/control-notificaciones.service';
 
 @Component({
-  selector: 'app-dashboard',
-  standalone: true,
-  imports: [
-    ModalNormalComponent,
-  ],
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+    selector: 'app-dashboard',
+    imports: [
+        ModalNormalComponent,
+    ],
+    templateUrl: './dashboard.component.html',
+    styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent {
 

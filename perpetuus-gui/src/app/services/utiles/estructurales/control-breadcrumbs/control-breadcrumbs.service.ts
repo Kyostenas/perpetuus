@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { NavigationEvent } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-view-model';
 import { BehaviorSubject, filter, Subscription, takeUntil } from 'rxjs';
 import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 import { UtilidadesService } from '../../varios/utilidades/utilidades.service';

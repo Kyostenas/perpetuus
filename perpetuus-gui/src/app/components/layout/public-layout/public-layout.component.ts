@@ -6,17 +6,16 @@ import { BarraInferiorComponent } from '../../utiles/barras/barra-inferior/barra
 import { AjustadorLayoutComponent } from '../-general/ajustador-layout/ajustador-layout.component';
 
 @Component({
-  selector: 'app-public-layout',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    BarraSuperiorComponent,
-    BarraInferiorComponent,
-    AjustadorLayoutComponent,
-  ],
-  templateUrl: './public-layout.component.html',
-  styleUrl: './public-layout.component.scss'
+    selector: 'app-public-layout',
+    imports: [
+        CommonModule,
+        RouterModule,
+        BarraSuperiorComponent,
+        BarraInferiorComponent,
+        AjustadorLayoutComponent,
+    ],
+    templateUrl: './public-layout.component.html',
+    styleUrl: './public-layout.component.scss'
 })
 export class PublicLayoutComponent {
 

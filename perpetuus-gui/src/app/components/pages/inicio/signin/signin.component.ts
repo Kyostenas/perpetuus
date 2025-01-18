@@ -8,14 +8,13 @@ import { CampoBaseFormularioDinamico, CampoFormulario } from 'src/app/models/uti
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 
 @Component({
-  selector: 'app-signin',
-  standalone: true,
-  imports: [
-    FormularioDinamicoComponent,
-    CardComponent,
-  ],
-  templateUrl: './signin.component.html',
-  styleUrl: './signin.component.scss'
+    selector: 'app-signin',
+    imports: [
+        FormularioDinamicoComponent,
+        CardComponent,
+    ],
+    templateUrl: './signin.component.html',
+    styleUrl: './signin.component.scss'
 })
 export class SigninComponent implements OnInit{
 

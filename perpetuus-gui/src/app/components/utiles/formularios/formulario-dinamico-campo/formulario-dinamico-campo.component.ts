@@ -11,7 +11,6 @@ import { MensajesErrorValidacionFormulariosComponent } from '../mensajes-error-v
 
 @Component({
     selector: 'app-formulario-dinamico-campo',
-    standalone: true,
     imports: [
         CommonModule,
         ReactiveFormsModule,
