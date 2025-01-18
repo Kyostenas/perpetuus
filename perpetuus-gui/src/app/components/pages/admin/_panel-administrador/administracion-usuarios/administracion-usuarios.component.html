@@ -1,1 +1,13 @@
-<p>administracion-usuarios works!</p>
+<div class="row gy-3 gx-3">
+    @for (usuario of usuarios; track usuario._id) {
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <pre><code class="language-json"
+                    >{{ usuario | json_stringify: 4 }}</code>
+                    </pre>
+                </div>
+            </div>
+        </div>
+    }
+</div>
