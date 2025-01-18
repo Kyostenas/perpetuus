@@ -6,6 +6,7 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "src/environments/environment";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { BrowserModule } from "@angular/platform-browser";
+import { JsonAStringPipe } from "./pipes/utiles/json-a-string/json-a-string.pipe";
 
 
 
@@ -37,6 +38,6 @@ export const APP_CONFIG: ApplicationConfig = {
             withFetch(), 
             withInterceptorsFromDi(),
         ),
-        provideExperimentalZonelessChangeDetection(),
+        // provideExperimentalZonelessChangeDetection(),
     ],
 };

@@ -18,7 +18,6 @@ const RUTA_USUARIO = () => {
     router.get('/', 
         tiene_permiso(PERMISOS.USUARIO.OBTENER),
         async (req: _Request, res: Response) => { 
-            console.log(req.usuario)
             return await controlador_usuario.obtener_usuarios_todo(req, res)
         }
     );
