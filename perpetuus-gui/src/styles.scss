@@ -16,19 +16,64 @@
   }
   
 ::-webkit-scrollbar-track {
-border-radius: 10px;
-background-color: transparent;
+    border-radius: 10px;
+    background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-background-color: rgba(161, 161, 161, 0.65);
-border-radius: 10px;
+    background-color: rgba(161, 161, 161, 0.65);
+    border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-background-color: white;
+    background-color: white;
 }
 
+.border-hover {
+    border: 1px solid transparent;
+    padding: .4rem;
+}
+
+.tooltip-primary {
+    --bs-tooltip-bg: var(--bs-primary);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-secondary {
+    --bs-tooltip-bg: var(--bs-secondary);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-success {
+    --bs-tooltip-bg: var(--bs-success);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-info {
+    --bs-tooltip-bg: var(--bs-info);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-warning {
+    --bs-tooltip-bg: var(--bs-warning);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-danger {
+    --bs-tooltip-bg: var(--bs-danger);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-light {
+    --bs-tooltip-bg: var(--bs-light);
+    --bs-tooltip-color: var(--bs-dark)
+}
+.tooltip-dark {
+    --bs-tooltip-bg: var(--bs-dark);
+    --bs-tooltip-color: var(--bs-light)
+}
+.tooltip-black {
+    --bs-tooltip-bg: var(--bs-black);
+    --bs-tooltip-color: var(--bs-white)
+}
+.tooltip-white {
+    --bs-tooltip-bg: var(--bs-white);
+    --bs-tooltip-color: var(--bs-black)
+}
 
 $utilities: (
     "shadow": (
@@ -69,6 +114,14 @@ $utilities: (
             danger: var(--bs-danger),
             light: var(--bs-light),
             dark: var(--bs-dark),
+            primary-subtle: var(--bs-primary-border-subtle),
+            secondary-subtle: var(--bs-secondary-border-subtle),
+            success-subtle: var(--bs-success-border-subtle),
+            info-subtle: var(--bs-info-border-subtle),
+            warning-subtle: var(--bs-warning-border-subtle),
+            danger-subtle: var(--bs-danger-border-subtle),
+            light-subtle: var(--bs-light-border-subtle),
+            dark-subtle: var(--bs-dark-border-subtle),
         )
     ),
     "text-color": (
@@ -84,6 +137,37 @@ $utilities: (
             danger: var(--bs-danger),
             light: var(--bs-light),
             dark: var(--bs-dark),
+            primary-emphasis: var(--bs-primary-text-emphasis),
+            secondary-emphasis: var(--bs-secondary-text-emphasis),
+            success-emphasis: var(--bs-success-text-emphasis),
+            info-emphasis: var(--bs-info-text-emphasis),
+            warning-emphasis: var(--bs-warning-text-emphasis),
+            danger-emphasis: var(--bs-danger-text-emphasis),
+            light-emphasis: var(--bs-light-text-emphasis),
+            dark-emphasis: var(--bs-dark-text-emphasis),
+        )
+    ),
+    "background-color": (
+        property: background-color,
+        class: bg-hover,
+        state: hover,
+        values: (
+            primary: var(--bs-primary),
+            secondary: var(--bs-secondary),
+            success: var(--bs-success),
+            info: var(--bs-info),
+            warning: var(--bs-warning),
+            danger: var(--bs-danger),
+            light: var(--bs-light),
+            dark: var(--bs-dark),
+            primary-subtle: var(--bs-primary-bg-subtle),
+            secondary-subtle: var(--bs-secondary-bg-subtle),
+            success-subtle: var(--bs-success-bg-subtle),
+            info-subtle: var(--bs-info-bg-subtle),
+            warning-subtle: var(--bs-warning-bg-subtle),
+            danger-subtle: var(--bs-danger-bg-subtle),
+            light-subtle: var(--bs-light-bg-subtle),
+            dark-subtle: var(--bs-dark-bg-subtle),
         )
     )
 );
