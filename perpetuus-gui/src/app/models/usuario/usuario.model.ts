@@ -13,22 +13,32 @@ export class UsuarioEnviar {
 }
 
 export class UsuarioRecibir {
-    constructor(
-        public _id: string,
-        public nombres?: string,
-        public apellidos?: string,
-        public nombre_usuario?: string,
-        public correo?: string,
-        public numero_celular?: string,
-        public rol?: RolUsuario,
-        public createdAt?: Date,
-        public updatedAt?: Date,
-    ) {}
+    _id!: string
+    nombres?: string
+    apellidos?: string
+    nombre_usuario?: string
+    correo?: string
+    numero_celular?: string
+    rol?: RolUsuario
+    createdAt?: Date
+    updatedAt?: Date
+
+    constructor(datos: DATOS_USUARIO_RECIBIR) {
+        this._id = datos._id
+        this.nombres = datos.nombres
+        this.apellidos = datos.apellidos
+        this.nombre_usuario = datos.nombre_usuario
+        this.correo = datos.correo
+        this.numero_celular = datos.numero_celular
+        this.rol = datos.rol
+        this.createdAt = datos.createdAt
+        this.updatedAt = datos.updatedAt
+    }
 
     get nombre_completo(): string {
         let nombres = this.nombres ?? '';
         let apellidos = this.apellidos ?? '';
-        let nombre_completo = nombres.concat(apellidos);
+        let nombre_completo = [nombres, apellidos].join(' ');
         return nombre_completo;
     }
 
@@ -55,4 +65,16 @@ export interface DESCRIPCION_MENU {
     nivel: number
     descripcion?: string
     sub_menus?: DESCRIPCION_MENU[]
+}
+
+interface DATOS_USUARIO_RECIBIR {
+    _id: string,
+    nombres?: string,
+    apellidos?: string,
+    nombre_usuario?: string,
+    correo?: string,
+    numero_celular?: string,
+    rol?: RolUsuario,
+    createdAt?: Date,
+    updatedAt?: Date,
 }
