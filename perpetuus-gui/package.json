@@ -4,7 +4,7 @@
   "description": "Gui de la aplicacion para la adoracion perpetua.",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --no-hmr",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development"
   },
