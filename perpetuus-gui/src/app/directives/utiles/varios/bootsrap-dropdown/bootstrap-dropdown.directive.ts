@@ -26,8 +26,15 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.posicionado_por_salir_de_pantalla = false
     this.no_eliminar = false
     this.ocultar()
+    try {
+      this.resize_observer?.disconnect()
+      delete this.resize_observer
+    } catch {
+
+    }
   }
   
   // (o-----------------------------------------------------------/\-----o)
@@ -41,9 +48,12 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   @Input('bs-dropdown') contenido_dropdown!: string
   @Input('plantilla') plantilla_dropdown!: TemplateRef<any>
   @Input('contexto_plantilla') contexto_plantilla = {}
-  @Input('mostrar_con_click') mostrar_con_click: boolean = false
+  @Input('mostrar_dropdown_con_click') mostrar_con_click: boolean = false
   @Input('no_eliminar') no_eliminar: boolean = false
   @Input('padding') padding: number = 5
+  @Input('posicion_dropdown') posicion: 'up' | 'start' | 'end' | 'down' = 'down'
+  @Input('definir_scroll_maximo_automatico') definir_scroll_maximo_automatico = false
+  @Input('ocultar_dropdown_con_click_interno') ocultar_con_click = false
   @Output('dropdown_destruido') emisor_dropdown_destruido: EventEmitter<void> = new EventEmitter()
   @Output('mostrando_dropdown') emisor_mostrando_dropdown: EventEmitter<boolean> = new EventEmitter()
 
@@ -51,6 +61,10 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   private dropdown?: HTMLElement
   private vista_embebida!: EmbeddedViewRef<any>
   private se_esta_mostrando: boolean = false
+  private top_dropdown = 0
+  private left_dropdown = 0
+  private posicionado_por_salir_de_pantalla = false
+  private resize_observer?: ResizeObserver
   
   // (o-----------------------------------------------------------/\-----o)
   //   #endregion INPUTS, OUTPUTS Y VARIABLES (FIN)
@@ -87,7 +101,30 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
       } else {
         if (
           (!ESTA_DENTRO_DROPDOWN && ESTA_DENTRO_PADRE) 
-          || !ESTA_EN_ESTE_DROP_DOWN 
+          || !ESTA_EN_ESTE_DROP_DOWN
+          || this.ocultar_con_click
+        ) {
+          this.ocultar()
+        }
+      }
+    }
+  }
+
+  @HostListener('enter', ['$event'])
+  onEnter(event: KeyboardEvent) {
+    if (this.mostrar_con_click) {
+      const TARGET = event.target as HTMLElement
+      const ESTA_DENTRO_DROPDOWN = this.control_dropdowns
+        .elemento_esta_dentro_de_dropdown(TARGET as Node)
+      const ESTA_DENTRO_PADRE = this.elemento_padre.contains(event.target as Node)
+      const ESTA_EN_ESTE_DROP_DOWN = this.dropdown?.contains(event.target as Node)
+      if (!this.se_esta_mostrando) {
+        this.mostrar()
+      } else {
+        if (
+          (!ESTA_DENTRO_DROPDOWN && ESTA_DENTRO_PADRE) 
+          || !ESTA_EN_ESTE_DROP_DOWN
+          || this.ocultar_con_click
         ) {
           this.ocultar()
         }
@@ -128,19 +165,42 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   //   #region PROCESAMIENTO DE DROPDOWN (INICIO)
   // (o-----------------------------------------------------------\/-----o)
   
+  detectar_cambios() {
+    try {
+      this.cdr.detectChanges()
+      this.vista_embebida.detectChanges()
+    } catch {}
+  }
+  
   construir_dropdown() {
     if (!!this.dropdown) return
     if (!this.elemento_padre) {
       this.elemento_padre = this.el.nativeElement
     }
     this.dropdown = this.renderer.createElement('ul')
+
+    this.resize_observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        setTimeout(() => {
+          if (this.se_esta_mostrando) {
+            this.posicionar_dropdown(true)
+            this.relocalizar_por_salir_de_pantalla()
+            this.detectar_cambios()
+          }
+        })
+      }
+    })
+
+    this.resize_observer.observe(<HTMLElement>this.dropdown)
+    
     this.renderer.addClass(this.dropdown, 'dropdown-menu')
     this.renderer.setStyle(this.dropdown, 'max-width', '15vw')
     this.renderer.addClass(this.dropdown, 'shadow')
     this.renderer.addClass(this.dropdown, 'border-hover-secondary')
     this.renderer.addClass(this.dropdown, 'shadow-hover-lg')
     this.renderer.addClass(this.dropdown, 'scale-hover-md')
-    this.renderer.addClass(this.dropdown, 'text-center')
+    this.renderer.setProperty(this.dropdown, 'tabindex', 1)
+    // this.renderer.addClass(this.dropdown, 'text-center')
     this.renderer.setStyle(this.dropdown, 'padding', `${this.padding}px`)
 
     if (this.contenido_dropdown) {
@@ -157,10 +217,7 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
       this.vista_embebida.rootNodes.forEach(node => {
         this.renderer.appendChild(this.dropdown, node)
         // node.detectChanges()
-        try {
-          this.cdr.detectChanges()
-          this.vista_embebida.detectChanges()
-        } catch {}
+        this.detectar_cambios()
       })
     } else {
       this.renderer.setProperty(
@@ -180,6 +237,11 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
     this.control_dropdowns.eliminar_dropdown(<HTMLElement>this.dropdown)
     delete this.dropdown
     this.emisor_dropdown_destruido.emit()
+    try {
+      this.resize_observer?.disconnect()
+    } catch {
+
+    }
   }
 
   mostrar() {
@@ -188,12 +250,14 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
     if (!this.dropdown) {
       this.construir_dropdown()
     }
-    try {
-      this.cdr.detectChanges()
-      this.vista_embebida.detectChanges()
-    } catch {}
+    this.posicionar_dropdown()
+    this.detectar_cambios()
     setTimeout(() => {
+      this.renderer.setStyle(this.dropdown, 'display', 'block');
       this.renderer.addClass(this.dropdown, 'show');
+      setTimeout(() => {
+        this.relocalizar_por_salir_de_pantalla()
+      }, 0)
     }, 0)
     this.emitir_mostrando()
   }
@@ -277,14 +341,143 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
       this.renderer.setStyle(elementoHR, 'background-color', 'white')
       this.renderer.setStyle(elementoHR, 'border-width', '1px')
       this.renderer.setStyle(elementoHR, 'box-sizing', 'border-box')
+      this.renderer.setStyle(elementoHR, 'margin-top', '5px')
+      this.renderer.setStyle(elementoHR, 'margin-bottom', '5px')
     })
   }
-
   
   // (o-----------------------------------------------------------/\-----o)
   //   #endregion ESTILOS PERSONALIZADOS INTERNOS (FIN)
   // (o==================================================================o)
+  
+  private posicionar_dropdown(noOcultar: boolean = false) {
+    let posicionAValorar = this.posicion
+    const posicionHost = this.elemento_padre.getBoundingClientRect()
+    const alturaHost = this.el.nativeElement.innerHeight
+    const scrollYAxis = window.scrollY || document.documentElement.scrollTop
+    const scrollXAxis = window.scrollX || document.documentElement.scrollLeft
+    const viewPortHeight = window.innerHeight
+    const espacioInferiorMinimo = 10
+    const alturaMaximaScroll = `${viewPortHeight - this.top_dropdown - espacioInferiorMinimo}`
+    if (!noOcultar) {
+      this.renderer.setStyle(this.dropdown, 'visibility', 'hidden')
+      this.renderer.setStyle(this.dropdown, 'display', 'block')
+    }
+    const alturaFLotante = this.dropdown?.offsetHeight ?? 0
+    const anchoFlotante = this.dropdown?.offsetWidth ?? 0
+    if (!noOcultar) {
+      this.renderer.setStyle(this.dropdown, 'display', 'none')
+      this.renderer.removeStyle(this.dropdown, 'visibility')
+    }
+    
+    if (!this.posicionado_por_salir_de_pantalla) {
+      switch (posicionAValorar) {
+        case 'up':
+          this.top_dropdown = posicionHost.top + scrollYAxis - alturaFLotante
+          this.left_dropdown = posicionHost.left + scrollXAxis
+          break;
+        case 'down':
+          this.top_dropdown = posicionHost.bottom
+          this.left_dropdown = posicionHost.left
+          break;
+        case 'end':
+          this.top_dropdown = posicionHost.top
+          this.left_dropdown = posicionHost.right + scrollXAxis
+          break;
+        case 'start':
+          this.top_dropdown = posicionHost.top
+          this.left_dropdown = posicionHost.left - anchoFlotante
+          break;
+        default:
+          this.top_dropdown = posicionHost.top + scrollYAxis - alturaFLotante
+          this.left_dropdown = posicionHost.left + scrollXAxis
+          break;
+      }
+    }
+    if (!!this.dropdown) {
+        try {
+          this.renderer.setStyle(this.dropdown, 'top', `${this.top_dropdown}px`)
+          this.renderer.setStyle(this.dropdown, 'left', `${this.left_dropdown}px`)
+          if (this.definir_scroll_maximo_automatico) {
+            this.renderer.setStyle(this.dropdown, 'max-height', `${alturaMaximaScroll}px`)
+            this.renderer.removeStyle(this.dropdown, 'overflow')
+            this.renderer.setStyle(this.dropdown, 'overflow-y', `auto`)
+            this.renderer.setStyle(this.dropdown, 'overflow-x', `hidden`)
+          }
+        } catch (err) {
+        }
+    }
+    this.detectar_cambios()
+  }
 
+  private relocalizar_por_salir_de_pantalla() {
+    setTimeout(() => {
+      try {
+
+        const rectFlotante = (<HTMLElement>this.dropdown).getBoundingClientRect()
+        const viewPortWidth = window.innerWidth
+        const viewPortHeight = window.innerHeight
+    
+        let posicionAValorar = this.posicion
+        let puntoOverflow!: 'up' | 'start' | 'end' | 'down'
+        if (rectFlotante.right > viewPortWidth) {
+          puntoOverflow = 'end'
+          this.left_dropdown -= (rectFlotante.right - viewPortWidth ) - 1
+          this.posicionado_por_salir_de_pantalla = true
+        }
+        if (rectFlotante.bottom > viewPortHeight) {
+          puntoOverflow = 'down'
+          this.top_dropdown -= rectFlotante.bottom - viewPortHeight
+          this.posicionado_por_salir_de_pantalla = true
+        }
+        if (rectFlotante.left < 0) {
+          puntoOverflow = 'start'
+          this.left_dropdown -= rectFlotante.left
+          this.posicionado_por_salir_de_pantalla = true
+        }
+        if (rectFlotante.top < 0) {
+          puntoOverflow = 'up'
+          this.top_dropdown -= rectFlotante.top
+          this.posicionado_por_salir_de_pantalla = true
+        }
+      
+        switch (posicionAValorar) {
+          case 'up':
+            if (puntoOverflow === 'up') {
+              this.posicion = 'down'
+              this.posicionar_dropdown()
+            } else {
+              this.renderer.setStyle(this.dropdown, 'top', `${this.top_dropdown}px`);
+              this.renderer.setStyle(this.dropdown, 'left', `${this.left_dropdown}px`);
+            }
+            break;
+          case 'down':
+            if (puntoOverflow === 'down') {
+              this.posicion = 'up'
+              this.posicionar_dropdown()
+            } else {
+              this.renderer.setStyle(this.dropdown, 'top', `${this.top_dropdown}px`);
+              this.renderer.setStyle(this.dropdown, 'left', `${this.left_dropdown}px`);
+            }
+            break;
+          case 'end':
+            this.renderer.setStyle(this.dropdown, 'top', `${this.top_dropdown}px`);
+            this.renderer.setStyle(this.dropdown, 'left', `${this.left_dropdown}px`);
+            break;
+          case 'start':
+            this.renderer.setStyle(this.dropdown, 'top', `${this.top_dropdown}px`);
+            this.renderer.setStyle(this.dropdown, 'left', `${this.left_dropdown}px`);
+            break;
+          default:
+            this.renderer.setStyle(this.dropdown, 'top', `${this.top_dropdown}px`);
+            this.renderer.setStyle(this.dropdown, 'left', `${this.left_dropdown}px`);
+            break;
+        }
+      } catch (err) {
+        // console.debug(`No se pudo reposicionar un flotante: ${err}`)
+      }
+    })
+  }
 
 
 }

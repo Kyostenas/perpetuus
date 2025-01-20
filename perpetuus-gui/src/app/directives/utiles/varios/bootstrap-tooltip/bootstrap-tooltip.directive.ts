@@ -34,7 +34,7 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
   //   #region INPUTS, OUTPUTS Y VARIABLES (INICIO)
   // (o-----------------------------------------------------------\/-----o)
   
-  @Input('bs-tooltip') contenido!: string
+  @Input('bs-tooltip') contenido?: string
   @Input('plantilla') plantilla!: TemplateRef<any>
   @Input('clase_tooltip') clase: 'tooltip-primary'
     | 'tooltip-secondary'
@@ -46,7 +46,7 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
     | 'tooltip-dark'
     | 'tooltip-black'
     | 'tooltip-white' = 'tooltip-black'
-  @Input('posicion') posicion: 'top' 
+  @Input('posicion_tooltip') posicion: 'top' 
     | 'left' 
     | 'right' 
     | 'bottom' = 'bottom'
@@ -63,6 +63,7 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
   // (o-----------------------------------------------------------\/-----o)
   
   construir_tooltip() {
+    if (!this.contenido || this.contenido?.length === 0) return
     if (!this.elemento_padre) {
       this.elemento_padre = this.el.nativeElement
     }
