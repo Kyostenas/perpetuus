@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.8](https://github.com/Kyostenas/perpetuus/compare/v0.3.7...v0.3.8) (2025-01-20)
+
+
+### Features
+
+* breadcrumbs, sistema sub-menus, scroll top y pag 404 ([#2](https://github.com/Kyostenas/perpetuus/issues/2)) ([aaf12dc](https://github.com/Kyostenas/perpetuus/commit/aaf12dcbc5bed7a37d6a7dbe4574d616b34cc46e))
+* directiva de dropdown funcional ([a289c26](https://github.com/Kyostenas/perpetuus/commit/a289c26cf569e2a939ca0b87a05d938af6309ba2))
+* directiva de tooltip ([9d77c9a](https://github.com/Kyostenas/perpetuus/commit/9d77c9a3685814ded77786dfebb626ba6ee28213))
+* **frontend:** angular 19 ([c2b6279](https://github.com/Kyostenas/perpetuus/commit/c2b62797ee96f623368444b7f2b97a3790868d12))
+* **frontend:** pipe dinamico para pasar otros pipes ([1555bc6](https://github.com/Kyostenas/perpetuus/commit/1555bc6ba2bd6a6a404cb1aaff6dd6352e06cfca))
+
+
+### Bug Fixes
+
+* **backend:** error en creacion de usuario ([112f095](https://github.com/Kyostenas/perpetuus/commit/112f0954d73b08bb7a66998c50d2f5581bcaaaa3))
+
 ### [0.3.7](https://github.com/Kyostenas/perpetuus/compare/v0.3.6...v0.3.7) (2024-12-30)
 
 
