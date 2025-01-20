@@ -1,0 +1,226 @@
+@if (!!datos_tabla) {
+
+    @switch (modo) {
+        @case ('tabla') {
+            <ng-container [ngTemplateOutlet]="modoTabla"></ng-container>
+        }
+        @case ('columnas') {
+            <ng-container [ngTemplateOutlet]="modoColumnas"></ng-container>
+        }
+        @default {
+            <ng-container [ngTemplateOutlet]="modoTabla"></ng-container>
+        }
+    }
+}
+@if (!datos_tabla) {
+    PLACEHOLDER TABLA
+}
+<ng-template
+    #modoTabla
+>
+    <div class="w-100 mb-2 p-2 bg-dark-subtle rounded">
+        BUSCADOR
+    </div>
+    <div class="w-100 d-flex mb-2 justify-content-between">
+        <div class="d-flex">
+            <!-- <div class="pe-2">
+                <div class="p-2 bg-dark-subtle rounded">
+                    FILTROS
+                </div>
+            </div> -->
+            <div class="pe-2">
+                <div class="pb-2 pt-2 h-100">
+                    @for (titulo of ordenes_columnas | keyvalue; track titulo.key) {
+                        <span 
+                            class="badge badge-sm badge-pill text-bg-primary me-1 border-hover border-hover-light" 
+                            tabindex="0"
+                            (click)="no_ordenar(titulo.key)"
+                            (keydown.enter)="no_ordenar(titulo.key)"
+                            bs-tooltip="
+                                Ordenado <strong class='text-primary'>{{
+                                    titulo.value?.orden === 1
+                                        ? 'descendente'
+                                        : 'ascendente'
+                                }}</strong>
+                                <br>
+                                <span class='text-warning-emphasis'>
+                                    Click o enter para eliminar        
+                                </span>
+                            
+                            "
+                        >
+                            {{ titulo.value?.titulo }}
+                            @switch (titulo.value?.orden) {
+                                @case (-1) {
+                                    <i class="bi bi-arrow-up"></i>
+                                }
+                                @case (1) {
+                                    <i class="bi bi-arrow-down"></i>
+                                }
+                                @default {
+                                    <i class="bi bi-arrow-right"></i>
+                                }
+                            }
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="d-flex">
+            <div class="me-2 p-2 bg-dark-subtle rounded">
+                PAGINACIÓN
+            </div>
+            <div class="p-2 bg-dark-subtle rounded">
+                LAYOUT
+            </div>
+        </div>
+    </div>
+    <table
+        class="table table-borderless table-hover"
+    >
+        <thead>
+            <tr>
+                @if (datos_tabla.mostrar_indice_fila) {
+                    <th scope="col" class="bg-dark-subtle">
+                        <button
+                            type="menu"
+                            class="btn pt-0 pb-0 ps-1 pe-1 bg-hover-primary shadow-hover-lg rounded"
+                            bs-tooltip="<span class='h6'>Índice de la fila</span>"
+                        >
+                            #
+                        </button>
+                    </th>
+                }
+                @for (columna of datos_tabla.columnas; track columna.titulo) {
+                    <th scope="col" class="bg-dark-subtle">
+                        <button
+                            type="menu"
+                            class="btn pt-0 pb-0 ps-1 pe-1 bg-hover-primary shadow-hover-lg rounded"
+                            [ngClass]="{
+                                'border border-primary-subtle text-hover-light': !!ordenes_columnas[columna.contenido.campo]
+                            }"
+                            bs-dropdown
+                            [posicion_dropdown]="'down'"
+                            [mostrar_dropdown_con_click]="true"
+                            [contexto_plantilla]="{
+                                tooltip:
+                                    columna.tooltip_encabezado?.contenido | pipe_dinamico
+                                        : columna.tooltip_encabezado?.pipe 
+                                        : columna.tooltip_encabezado?.pipe_args,
+                                campoColumna: columna.contenido.campo,
+                                tituloColumna: columna.titulo
+                            }"
+                            [plantilla]="opcionesDropdown"
+                            [ocultar_dropdown_con_click_interno]="true"
+                        >
+                            {{columna.titulo}}
+                            <span
+                                [ngClass]="{
+                                    'text-info-emphasis': !!ordenes_columnas[columna.contenido.campo]
+                                }"
+                            >
+                                @switch (ordenes_columnas[columna.contenido.campo]?.orden) {
+                                    @case (-1) {
+                                        <i class="bi bi-caret-up"></i>
+                                    }
+                                    @case (1) {
+                                        <i class="bi bi-caret-down"></i>
+                                    }
+                                    @default {
+                                        <i class="bi bi-caret-right"></i>
+                                    }
+                                }
+                            </span>
+                        </button>
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (doc_fila of datos_tabla.documentos; track doc_fila._id; let indice = $index) {
+                <tr tabindex="0">
+                    @if (datos_tabla.mostrar_indice_fila) {
+                        <th scope="row" class="">{{indice + 1}}</th>
+                    }
+                    @for (columna of datos_tabla.columnas; track columna.titulo) {
+                        <td class="">{{ doc_fila[columna.contenido.campo] }}</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="w-100 d-flex text-center">
+        <div class="mt-2 p-2 bg-dark-subtle rounded start-50 position-absolute">
+            PAGINADOR
+        </div>
+    </div>
+</ng-template>
+
+<ng-template
+    #modoColumnas
+>
+    MODO COLUMNAS
+</ng-template>
+
+<ng-template
+    #opcionesDropdown
+    let-tooltip="tooltip"
+    let-campoColumna="campoColumna"
+    let-tituloColumna="tituloColumna"
+>
+    @if (tooltip) {
+        {{ tooltip }}
+        <hr class="hr-completo">
+    }
+    <li 
+        tabindex="0" 
+        class="
+            d-flex 
+            w-100 
+            justify-content-between 
+            dropdown-item 
+            border-hover 
+            border-hover-primary
+            rounded
+        "
+        (click)="no_ordenar(campoColumna)"
+        (keydown.enter)="no_ordenar(campoColumna)"
+    >
+        No ordenar
+        <i class="bi bi-ban"></i>
+    </li>
+    <li 
+        tabindex="0" 
+        class="
+            d-flex 
+            w-100 
+            justify-content-between 
+            dropdown-item 
+            border-hover 
+            border-hover-primary
+            rounded
+        "
+        (click)="ordenar_ascendente(campoColumna, tituloColumna)"
+        (keydown.enter)="ordenar_ascendente(campoColumna, tituloColumna)"
+    >
+        Ordenar ascendente
+        <i class="bi bi-arrow-up"></i>
+    </li>
+    <li 
+        tabindex="0" 
+        class="
+            d-flex 
+            w-100 
+            justify-content-between 
+            dropdown-item 
+            border-hover 
+            border-hover-primary
+            rounded
+        "
+        (click)="ordenar_descendente(campoColumna, tituloColumna)"
+        (keydown.enter)="ordenar_descendente(campoColumna, tituloColumna)"
+    >
+        Ordenar descendente
+        <i class="bi bi-arrow-down"></i>
+    </li>
+</ng-template>
