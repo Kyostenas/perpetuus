@@ -1,4 +1,4 @@
-<div class="row gy-3 gx-3">
+<!-- <div class="row gy-3 gx-3">
     @for (usuario of usuarios; track usuario._id) {
         <div class="col-12">
             <div class="card">
@@ -10,4 +10,9 @@
             </div>
         </div>
     }
-</div>
+</div> -->
+
+<app-tabla-generica
+    [datos_tabla]="datos_tabla_generica"
+    (ordenes_columnas)="cambiar_ordenamiento($event)"
+></app-tabla-generica>

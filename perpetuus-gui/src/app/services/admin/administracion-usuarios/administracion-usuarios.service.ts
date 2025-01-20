@@ -38,7 +38,7 @@ export class AdministracionUsuariosService {
           titulo: 'Correcto',
           cuerpo_mensaje: resp.mensaje
         });
-        return resp.datos as UsuarioRecibir[]
+        return resp.datos.map((usuario: any) => new UsuarioRecibir(usuario))
       }),
       catchError(err => {
         this.notificaciones.crear_notificacion({
