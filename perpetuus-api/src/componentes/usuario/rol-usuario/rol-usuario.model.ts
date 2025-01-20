@@ -13,10 +13,12 @@ import { PERMISOS_PERPETUUS } from "../../../config/roles/permisos-api.config";
 // };
 
 type RolDocument = Document & {
+    _id: string;
     nombre: string;
     descripcion: string;
     permisos?: PERMISOS_PERPETUUS[];
     super_admin?: boolean;
+    __v?: number;
 };
 
 type RolInput = {

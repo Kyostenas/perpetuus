@@ -17,22 +17,20 @@ const rutas_exentas = [
 
 
 @Component({
-  standalone: true,
-  selector: 'app-root',
-  imports: [
-    CommonModule,
-    RouterModule,
-    ControlNotificacionesComponent,
-    ModalNormalComponent,
-  ],  
-  providers: [
-    // Configuraciones de idioma.
-    { provide: APP_BASE_HREF, useValue: '/' },
-    { provide: LOCALE_ID, useValue: 'es-MX' },
-  ],
-
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'app-root',
+    imports: [
+        CommonModule,
+        RouterModule,
+        ControlNotificacionesComponent,
+        ModalNormalComponent,
+    ],
+    providers: [
+        // Configuraciones de idioma.
+        { provide: APP_BASE_HREF, useValue: '/' },
+        { provide: LOCALE_ID, useValue: 'es-MX' },
+    ],
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
 

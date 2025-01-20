@@ -6,14 +6,13 @@ import { EspecificacionServicioNotificacion } from 'src/app/models/utiles/varios
 import { ControlNotificacionesService } from 'src/app/services/utiles/varios/control-notificaciones/control-notificaciones.service';
 
 @Component({
-  selector: 'app-control-notificaciones',
-  standalone: true,
-  imports: [
-    BootstrapShowAutoDirective,
-    BootstrapHideAutoDirective,
-  ],
-  templateUrl: './control-notificaciones.component.html',
-  styleUrl: './control-notificaciones.component.scss'
+    selector: 'app-control-notificaciones',
+    imports: [
+        BootstrapShowAutoDirective,
+        BootstrapHideAutoDirective,
+    ],
+    templateUrl: './control-notificaciones.component.html',
+    styleUrl: './control-notificaciones.component.scss'
 })
 export class ControlNotificacionesComponent implements OnInit, OnDestroy{
 

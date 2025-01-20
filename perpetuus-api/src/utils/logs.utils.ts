@@ -1,4 +1,4 @@
-// Kyostenas @ 2023
+// Kyostenas @ 2023-2025
 
 const reset = '\x1b[0m';
 const fore = {

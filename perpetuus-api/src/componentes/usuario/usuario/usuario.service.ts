@@ -107,8 +107,8 @@ async function quitar_rol_a_usuario(_id: string) {
 }
 
 async function crear_usuario_super_admin() {
-    const rol_super_admin = await Rol.find({ super_admin: true });
-    const no_existe_rol_super_admin = rol_super_admin.length === 0;
+    const rol_super_admin = await Rol.findOne({ super_admin: true }).lean();
+    const no_existe_rol_super_admin = !rol_super_admin;
     if (no_existe_rol_super_admin) {
         throw `No existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
     }
@@ -118,7 +118,7 @@ async function crear_usuario_super_admin() {
         throw `Ya existe el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`;
     }
 
-    const rol_a_usar = rol_super_admin[0];
+    const rol_a_usar = rol_super_admin;
     const nombre = NOMBRE_USUARIO_SUPER_ADMIN.split(' ')[0];
     const apellido = NOMBRE_USUARIO_SUPER_ADMIN.split(' ')[1];
     const contrasena_encriptada = bcrypt_hashsync(

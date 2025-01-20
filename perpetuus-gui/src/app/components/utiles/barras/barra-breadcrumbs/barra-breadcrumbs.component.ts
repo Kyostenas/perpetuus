@@ -1,24 +1,18 @@
-import { CommonModule, KeyValuePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { BootstrapDropdownDirective } from 'src/app/directives/utiles/varios/bootstrap-dropdown.directive';
 import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 import { ControlBreadcrumbsService } from 'src/app/services/utiles/estructurales/control-breadcrumbs/control-breadcrumbs.service';
-import { ObtenerListadoSubMenusDropDownBreadCrumbsPipe } from '../_pipes-para-barras/obtener-listado-sub-menus-drop-down-bread-crumbs/obtener-listado-sub-menus-drop-down-bread-crumbs.pipe';
 
 @Component({
-  selector: 'app-barra-breadcrumbs',
-  standalone: true,
-  imports: [
-    // KeyValuePipe,
-    CommonModule,
-    RouterModule,
-    BootstrapDropdownDirective,
-    ObtenerListadoSubMenusDropDownBreadCrumbsPipe,
-  ],
-  templateUrl: './barra-breadcrumbs.component.html',
-  styleUrl: './barra-breadcrumbs.component.scss'
+    selector: 'app-barra-breadcrumbs',
+    imports: [
+        CommonModule,
+        RouterModule,
+    ],
+    templateUrl: './barra-breadcrumbs.component.html',
+    styleUrl: './barra-breadcrumbs.component.scss'
 })
 export class BarraBreadcrumbsComponent implements OnInit, OnDestroy {
 

@@ -8,16 +8,15 @@ import { FragmentCallbackService } from 'src/app/services/utiles/estructurales/f
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
 
 @Component({
-  selector: 'app-barra-lateral-menu',
-  standalone: true,
-  imports: [
-    CommonModule,
-    BootstrapShowAutoDirective,
-    BootstrapHideAutoDirective,
-    RouterModule,
-  ],
-  templateUrl: './barra-lateral-menu.component.html',
-  styleUrl: './barra-lateral-menu.component.scss'
+    selector: 'app-barra-lateral-menu',
+    imports: [
+        CommonModule,
+        BootstrapShowAutoDirective,
+        BootstrapHideAutoDirective,
+        RouterModule,
+    ],
+    templateUrl: './barra-lateral-menu.component.html',
+    styleUrl: './barra-lateral-menu.component.scss'
 })
 export class BarraLateralMenuComponent implements OnInit {
 

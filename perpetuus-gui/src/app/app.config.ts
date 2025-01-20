@@ -4,8 +4,8 @@ import { APP_ROUTES } from "./app.routes";
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from "@angular/common/http";
 import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "src/environments/environment";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { BrowserModule } from "@angular/platform-browser";
+import { JsonAStringPipe } from "./pipes/utiles/json-a-string/json-a-string.pipe";
 
 
 
@@ -30,13 +30,12 @@ export const APP_CONFIG: ApplicationConfig = {
             //   // or after 30 seconds (whichever comes first).
             //   registrationStrategy: 'registerWhenStable:30000'
             // }),
-            NgbModule,
             BrowserModule,
         ]),
         provideHttpClient(
             withFetch(), 
             withInterceptorsFromDi(),
         ),
-        provideExperimentalZonelessChangeDetection(),
+        // provideExperimentalZonelessChangeDetection(),
     ],
 };
