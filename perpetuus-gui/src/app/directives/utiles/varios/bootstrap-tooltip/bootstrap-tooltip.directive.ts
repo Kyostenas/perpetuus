@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, ElementRef, EmbeddedViewRef, Input, OnDestroy, OnInit, Renderer2, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Directive, ElementRef, EmbeddedViewRef, HostListener, Input, OnDestroy, OnInit, Renderer2, TemplateRef } from '@angular/core';
 import { Tooltip } from 'bootstrap';
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
 
@@ -23,6 +23,9 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.id_enfocar_destroy) {
+      document.getElementById(this.id_enfocar_destroy)?.focus()
+    }
     this.destruir_tooltip() 
   }
   
@@ -34,7 +37,13 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
   //   #region INPUTS, OUTPUTS Y VARIABLES (INICIO)
   // (o-----------------------------------------------------------\/-----o)
   
-  @Input('bs-tooltip') contenido?: string
+  contenido?: string
+  @Input('bs-tooltip') set _contenido(value: string) {
+    this.contenido = value
+    if (this.tooltip) {
+      this.construir_tooltip()
+    }
+  }
   @Input('plantilla') plantilla!: TemplateRef<any>
   @Input('clase_tooltip') clase: 'tooltip-primary'
     | 'tooltip-secondary'
@@ -50,6 +59,8 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
     | 'left' 
     | 'right' 
     | 'bottom' = 'bottom'
+  @Input('ocultar_con_click') ocultar_con_click: boolean = false
+  @Input('id_elemento_a_enfocar_cuando_padre_destruido') id_enfocar_destroy!: string
 
   private elemento_padre!: HTMLElement
   private tooltip?: Tooltip
@@ -84,6 +95,35 @@ export class BootstrapTooltipDirective implements OnInit, OnDestroy {
   //   #endregion PROCESAMIENTO DEL TOOLTIP (FIN)
   // (o==================================================================o)
 
+  // (o==================================================================o)
+  //   #region EVENTOS (INICIO)
+  // (o-----------------------------------------------------------\/-----o)
+  
+  @HostListener('click')
+  on_click() {
+    if (this.ocultar_con_click) {
+      this.destruir_tooltip()
+    }
+  }
 
+  @HostListener('mouseenter')
+  on_mouse_enter() {
+    if (this.ocultar_con_click) {
+      if (!this.tooltip) {
+        this.construir_tooltip()
+      }
+    }
+  }
+
+  // @HostListener('mouseleave')
+  // on_mouse_leave() {
+  //   if (this.ocultar_con_click) {
+  //     this.destruir_tooltip()
+  //   }
+  // }
+  
+  // (o-----------------------------------------------------------/\-----o)
+  //   #endregion EVENTOS (FIN)
+  // (o==================================================================o)
   
 }

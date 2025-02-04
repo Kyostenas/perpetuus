@@ -1,8 +1,8 @@
 <nav style="--bs-breadcrumb-divider: '/';" aria-label="breadcrumb">
-    <ol class="breadcrumb">
+    <ol class="breadcrumb p-0 m-0 pb-2 pt-2 ps-3 pe-4 overflow-breadcrumbs">
         @for (menu of lista_menu_actuales; track menu.nivel)  {
             <li 
-                class="breadcrumb-item ms-0 me-0 ps-0 pe-0 mt-0"
+                class="breadcrumb-item"
                 [ngClass]="{
                     'active text-hover-secondary': menu.link === menu_actual.link,
                     'active text-hover-warning': !(menu.link === menu_actual.link)
@@ -17,7 +17,7 @@
                 " 
             >
                 <div class="d-flex">
-                    <span class="h5 me-1">
+                    <span class="me-2">
                         <i [class]="menu.simbolo"></i>
                         {{ menu.nombre }}
                         <br>

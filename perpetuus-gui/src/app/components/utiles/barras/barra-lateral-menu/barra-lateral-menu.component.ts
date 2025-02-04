@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, WritableSignal } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-hide-auto/bootstrap-hide-auto.directive';
-import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
+import { BootstrapTooltipDirective } from 'src/app/directives/utiles/varios/bootstrap-tooltip/bootstrap-tooltip.directive';
 import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
+import { DeteccionViewportService } from 'src/app/services/utiles/estructurales/deteccion-viewport/deteccion-viewport.service';
 import { FragmentCallbackService } from 'src/app/services/utiles/estructurales/fragment-callback/fragment-callback.service';
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
 
@@ -11,8 +11,7 @@ import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/uti
     selector: 'app-barra-lateral-menu',
     imports: [
         CommonModule,
-        BootstrapShowAutoDirective,
-        BootstrapHideAutoDirective,
+        BootstrapTooltipDirective,
         RouterModule,
     ],
     templateUrl: './barra-lateral-menu.component.html',
@@ -23,21 +22,15 @@ export class BarraLateralMenuComponent implements OnInit {
   constructor(
     private utiles: UtilidadesService,
     private fragmentos: FragmentCallbackService,
+    private viewport: DeteccionViewportService,
   ) {}
-
-  completo: boolean = true
-
-  toggle_menu_lateral() {
-    this.completo = !!!this.completo
-    this.utiles.guardar_local_storage('menu_abierto', this.completo)
-  }
 
   ngOnInit(): void {
     this.lista_menu = 
       this.utiles.consultar_local_storage('menus')
-    this.completo =
-      this.utiles.consultar_local_storage('menu_abierto')
   }
+
+  modo_viewport: WritableSignal<'movil' | 'escritorio'> = this.viewport.modo_viewport
 
   agregar_framento(fragmento: string) {
     this.fragmentos.agregar_fragmento(fragmento)

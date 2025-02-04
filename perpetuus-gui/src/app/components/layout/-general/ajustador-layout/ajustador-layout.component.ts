@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, WritableSignal } from '@angular/core';
 import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-hide-auto/bootstrap-hide-auto.directive';
 import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
+import { DeteccionViewportService } from 'src/app/services/utiles/estructurales/deteccion-viewport/deteccion-viewport.service';
 
 @Component({
     selector: 'app-ajustador-layout',
@@ -12,6 +13,10 @@ import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/boo
     styleUrl: './ajustador-layout.component.scss'
 })
 export class AjustadorLayoutComponent {
+  
+  constructor(
+    private viewport: DeteccionViewportService,
+  ) {}
 
   clases_display_sticky_barra_arriba = `
     d-none 
@@ -32,8 +37,8 @@ export class AjustadorLayoutComponent {
     sticky-bottom
     mt-5
   `
-
-
+  modo_viewport: WritableSignal<'movil' | 'escritorio'> = this.viewport.modo_viewport
+  
   // (o==================================================================o)
   //   #region BOTON SCROLL UP (INICIO)
   // (o-----------------------------------------------------------\/-----o)

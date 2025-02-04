@@ -237,6 +237,7 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
     this.renderer.addClass(this.dropdown, 'dropdown-personalizado')
     this.renderer.setStyle(this.dropdown, 'max-width', '15vw')
     this.renderer.setStyle(this.dropdown, 'word-wrap', 'normal')
+    this.renderer.setStyle(this.dropdown, 'overflow', 'visible')
     this.renderer.setStyle(this.dropdown, 'word-break', 'normal')
     this.renderer.setStyle(this.dropdown, 'text-wrap', 'wrap')
     this.renderer.addClass(this.dropdown, 'shadow')

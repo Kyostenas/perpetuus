@@ -13,19 +13,25 @@
         <ng-content select="[barra-superior]"></ng-content>
     </div> -->
     <!-- <div class=""> -->
-        <div class="d-flex">
-            <div>
-                <ng-content select="[barra-lateral-menu]"></ng-content>
+        @switch (modo_viewport()) {
+          @case ('escritorio') {
+              <div class="d-flex">
+                  <div>
+                      <ng-container [ngTemplateOutlet]="barraLateral"></ng-container>
+                  </div>
+                  <ng-container [ngTemplateOutlet]="paginaPrincipal"></ng-container>
+              </div>
+          }
+          @case ('movil') {
+            <ng-container [ngTemplateOutlet]="paginaPrincipal"></ng-container>
+            <div class="d-block d-sm-block sticky-bottom mt-5">
+                <ng-container [ngTemplateOutlet]="barraLateral"></ng-container>
             </div>
-            <div class="ms-1 mt-1 mb-4 me-1 container-fluid vstack gap-1">
-                <div class="">
-                    <ng-content select="[barra-breadcrumbs]"></ng-content>
-                </div>
-                <div class="">
-                    <ng-content select="[_router_outlet]"></ng-content>
-                </div>
-            </div>
-        </div>
+          }
+          @default {
+            
+          }
+        }
     <!-- </div> -->
     <!-- <div [class]="clases_display_sticky_barra_abajo">
         <ng-content select="[barra-superior-inferior]"></ng-content>
@@ -34,6 +40,7 @@
         <ng-content select="[barra-inferior]"></ng-content>
     </div>     -->
 </div>
+
 <button
     *ngIf="mostrar_boton_top"
     class="
@@ -55,3 +62,23 @@
 >
     <i class="bi bi-arrow-up"></i>
 </button>
+
+<ng-template
+    #barraLateral
+>
+    <ng-content select="[barra-lateral-menu]"></ng-content>
+</ng-template>
+
+<ng-template
+    #paginaPrincipal
+>
+    <div 
+        
+        class=" container-fluid vstack gap-3"
+    >
+        <div class="sticky-top backdrop-filter-blur rounded-bottom-3 bg-dark-transparent border-2 border-bottom border-secondary">
+            <ng-content select="[barra-breadcrumbs]"></ng-content>
+        </div>
+        <ng-content select="[_router_outlet]"></ng-content>
+    </div>
+</ng-template>
