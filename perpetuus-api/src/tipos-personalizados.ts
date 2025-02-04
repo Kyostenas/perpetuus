@@ -64,3 +64,14 @@ export type ValoresAnidadosRecursivosDeObjeto<T, tipo_valor> = T extends object
             : ValoresAnidadosRecursivosDeObjeto<V, tipo_valor>
         : never
     : never;
+
+export type Paginacion = {
+    limite: number,
+    desde: number,
+    orden: number,
+    campos_ordenamiento: {[type: string]: {
+        campo: string,
+        orden: 1 | -1,
+        titulo: string,
+    }}
+}
