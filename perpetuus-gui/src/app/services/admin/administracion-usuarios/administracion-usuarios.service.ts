@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ControlNotificacionesService } from '../../utiles/varios/control-notificaciones/control-notificaciones.service';
 import { UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
 import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
-import { map, catchError, throwError } from 'rxjs';
+import { map, catchError, throwError, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class AdministracionUsuariosService {
     return url;
   }
 
-  obtener_usuarios() {
+  obtener_usuarios(): Observable<UsuarioRecibir[]> {
     const url = this.obtener_url();
     return this.http.get(url, this.opciones).pipe(
       map((resp: any) => {
