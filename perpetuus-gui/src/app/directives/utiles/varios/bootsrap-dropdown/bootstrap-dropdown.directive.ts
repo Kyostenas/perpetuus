@@ -26,6 +26,11 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.id_enfoque_padre_destruido) {
+      document
+      .getElementById(this.id_enfoque_padre_destruido)
+      ?.focus()
+    }
     this.posicionado_por_salir_de_pantalla = false
     this.no_eliminar = false
     this.ocultar()
@@ -54,8 +59,13 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   @Input('posicion_dropdown') posicion: 'up' | 'start' | 'end' | 'down' = 'down'
   @Input('definir_scroll_maximo_automatico') definir_scroll_maximo_automatico = false
   @Input('ocultar_dropdown_con_click_interno') ocultar_con_click = false
+  @Input('clases_dropdown') clases_dropdown!: string
+  @Input('solo_ocultar_con_boton') solo_ocultar_con_boton: boolean = false
+  @Input('id_elemento_a_enfocar_cuando_padre_destruido') id_enfoque_padre_destruido!: string
   @Output('dropdown_destruido') emisor_dropdown_destruido: EventEmitter<void> = new EventEmitter()
   @Output('mostrando_dropdown') emisor_mostrando_dropdown: EventEmitter<boolean> = new EventEmitter()
+  @Output('id_dropdown') emisor_id_dropdown: EventEmitter<string> = new EventEmitter()
+  @Output('id_boton_cerrado') emisor_id_boton_cerrado: EventEmitter<string> = new EventEmitter()
 
   private elemento_padre!: HTMLElement
   private dropdown?: HTMLElement
@@ -65,6 +75,8 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   private left_dropdown = 0
   private posicionado_por_salir_de_pantalla = false
   private resize_observer?: ResizeObserver
+  private id_dropdown?: string
+  private id_boton_cerrado?: string
   
   // (o-----------------------------------------------------------/\-----o)
   //   #endregion INPUTS, OUTPUTS Y VARIABLES (FIN)
@@ -74,22 +86,39 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   //   #region DETECTORES DE EVENTOS (INICIO)
   // (o-----------------------------------------------------------\/-----o)
   
+  @HostListener('keydown.escape') 
+  on_escape() {
+    if (!this.solo_ocultar_con_boton) {
+      this.ocultar()
+    }
+  }
+
   @HostListener('mouseenter') 
-  onMouseEnter() {
+  on_mouse_enter() {
     if (!this.mostrar_con_click) {
       this.mostrar()
     }
   }
 
+  @HostListener('focus')
+  on_focus() {
+    this.on_mouse_enter()
+  }
+
+  @HostListener('blur')
+  on_blur() {
+    this.on_mouse_leave()
+  }
+  
   @HostListener('mouseleave') 
-  onMouseLeave() {
-    if (!this.mostrar_con_click) {
+  on_mouse_leave() {
+    if (!this.mostrar_con_click && !this.solo_ocultar_con_boton) {
       this.ocultar()
     }
   }
 
   @HostListener('click', ['$event'])
-  onClick(event: MouseEvent) {
+  on_click(event: Event) {
     if (this.mostrar_con_click) {
       const TARGET = event.target as HTMLElement
       const ESTA_DENTRO_DROPDOWN = this.control_dropdowns
@@ -100,9 +129,15 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
         this.mostrar()
       } else {
         if (
-          (!ESTA_DENTRO_DROPDOWN && ESTA_DENTRO_PADRE) 
-          || !ESTA_EN_ESTE_DROP_DOWN
-          || this.ocultar_con_click
+          (
+            (
+              !ESTA_DENTRO_DROPDOWN 
+              && ESTA_DENTRO_PADRE
+            ) 
+            || !ESTA_EN_ESTE_DROP_DOWN
+            || this.ocultar_con_click
+          )
+          && !this.solo_ocultar_con_boton
         ) {
           this.ocultar()
         }
@@ -111,29 +146,12 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   }
 
   @HostListener('enter', ['$event'])
-  onEnter(event: KeyboardEvent) {
-    if (this.mostrar_con_click) {
-      const TARGET = event.target as HTMLElement
-      const ESTA_DENTRO_DROPDOWN = this.control_dropdowns
-        .elemento_esta_dentro_de_dropdown(TARGET as Node)
-      const ESTA_DENTRO_PADRE = this.elemento_padre.contains(event.target as Node)
-      const ESTA_EN_ESTE_DROP_DOWN = this.dropdown?.contains(event.target as Node)
-      if (!this.se_esta_mostrando) {
-        this.mostrar()
-      } else {
-        if (
-          (!ESTA_DENTRO_DROPDOWN && ESTA_DENTRO_PADRE) 
-          || !ESTA_EN_ESTE_DROP_DOWN
-          || this.ocultar_con_click
-        ) {
-          this.ocultar()
-        }
-      }
-    }
+  on_enter(event: KeyboardEvent) {
+    this.on_click(event)
   }
 
   @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
+  on_document_click(event: MouseEvent) {
     if (!this.dropdown) return
     const TARGET = event.target as HTMLElement
     const ESTA_DENTRO_DROPDOWN = this.control_dropdowns
@@ -143,6 +161,23 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
     const NIVEL_PARENTESCO =  this.utiles.obtener_nivel_de_descendencia_entre_nodos_html(
       <HTMLElement>this.dropdown, event.target as HTMLElement
     )
+    if (TARGET.id !== this.id_dropdown && TARGET.id !== this.id_boton_cerrado) {
+      if (
+        this.solo_ocultar_con_boton 
+        && !TARGET.classList.contains('dropdown-personalizado')
+        && !TARGET.classList.contains('padre-dropdown')
+      ) {
+        return
+      }
+    } 
+    else {
+      if (TARGET.id === this.id_boton_cerrado) {
+        if (this.solo_ocultar_con_boton) {
+          this.ocultar()
+          return
+        }
+      }
+    }
     if (
       (
         this.se_esta_mostrando 
@@ -177,8 +212,13 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
     if (!this.elemento_padre) {
       this.elemento_padre = this.el.nativeElement
     }
+    this.renderer.addClass(this.elemento_padre, 'padre-dropdown')
     this.dropdown = this.renderer.createElement('ul')
-
+    this.id_dropdown = this.utiles.crear_bsonobj_id_para_variable()
+    this.id_boton_cerrado = this.utiles.crear_bsonobj_id_para_variable()
+    this.renderer.setProperty(this.dropdown, 'id', this.id_dropdown)
+    this.emisor_id_dropdown.emit(this.id_dropdown)
+    
     this.resize_observer = new ResizeObserver((entries) => {
       for (let entry of entries) {
         setTimeout(() => {
@@ -194,7 +234,11 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
     this.resize_observer.observe(<HTMLElement>this.dropdown)
     
     this.renderer.addClass(this.dropdown, 'dropdown-menu')
+    this.renderer.addClass(this.dropdown, 'dropdown-personalizado')
     this.renderer.setStyle(this.dropdown, 'max-width', '15vw')
+    this.renderer.setStyle(this.dropdown, 'word-wrap', 'normal')
+    this.renderer.setStyle(this.dropdown, 'word-break', 'normal')
+    this.renderer.setStyle(this.dropdown, 'text-wrap', 'wrap')
     this.renderer.addClass(this.dropdown, 'shadow')
     this.renderer.addClass(this.dropdown, 'border-hover-secondary')
     this.renderer.addClass(this.dropdown, 'shadow-hover-lg')
@@ -226,7 +270,35 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
         '<li><a class="dropdown-item rounded border-hover border-hover-primary"><i class="bi bi-ban"></i></a></li>'
       )
     }
+    if (this.mostrar_con_click && this.solo_ocultar_con_boton) {
+      const BOTON_CERRADO = this.renderer.createElement('li')
+      const HR_BOTON_CERRADO = this.renderer.createElement('hr')
+      this.renderer.addClass(HR_BOTON_CERRADO, 'hr-completo')
+      this.renderer.setProperty(
+        BOTON_CERRADO,
+        'innerHTML',
+        `
+            <a class="
+              dropdown-item 
+              rounded
+              bg-hover bg-hover-danger 
+            " tabindex="0" id="${this.id_boton_cerrado}">
+              <span class="h6">
+                <i class="bi bi-x-lg"></i>
+                CERRAR
+              </span>
+            </a>
+        `
+      )
+      this.renderer.appendChild(this.dropdown, HR_BOTON_CERRADO)
+      this.renderer.appendChild(this.dropdown, BOTON_CERRADO)
+    }
     this.aplicar_estilos_personalizados()
+    if (this.clases_dropdown) {
+      for (let clase of this.clases_dropdown.split(' ')) {
+        this.renderer.addClass(this.dropdown, clase)
+      }
+    }
     this.control_dropdowns.registrar_dropdown(<HTMLElement>this.dropdown)
     this.renderer.appendChild(this.elemento_padre, this.dropdown)
   }
@@ -264,6 +336,9 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
 
   ocultar() {
     if (!this.dropdown) return
+    if (this.utiles.obtener_indice_actual_enfoque_tab().indice_actual !== -1) {
+      this.elemento_padre.focus()
+    }
     this.se_esta_mostrando = false
     this.renderer.removeClass(this.dropdown, 'show');
     if (!this.no_eliminar) {
