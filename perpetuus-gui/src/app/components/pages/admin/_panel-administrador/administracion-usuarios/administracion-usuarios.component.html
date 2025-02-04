@@ -14,5 +14,7 @@
 
 <app-tabla-generica
     [datos_tabla]="datos_tabla_generica"
-    (ordenes_columnas)="cambiar_ordenamiento($event)"
+    [documentos]="usuarios() ?? []"
+    (paginacion)="cambiar_ordenamiento($event)"
+    (click_fila)="accion_click_fila($event)"
 ></app-tabla-generica>

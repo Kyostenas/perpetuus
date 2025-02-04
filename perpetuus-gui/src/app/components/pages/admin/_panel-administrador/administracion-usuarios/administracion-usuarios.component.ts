@@ -1,9 +1,9 @@
-import { CommonModule, LowerCasePipe, UpperCasePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { OPCIONES_TABLA_GENERICA, TablaGenericaComponent } from 'src/app/components/utiles/varios/tabla-generica/tabla-generica.component';
+import { CommonModule, UpperCasePipe } from '@angular/common';
+import { Component, OnInit, Signal } from '@angular/core';
+import { OPCIONES_FILA_TABLA_GENERICA, OPCIONES_TABLA_GENERICA, TablaGenericaComponent } from 'src/app/components/utiles/varios/tabla-generica/tabla-generica.component';
 import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
-import { JsonAStringPipe } from 'src/app/pipes/utiles/json-a-string/json-a-string.pipe';
 import { AdministracionUsuariosService } from 'src/app/services/admin/administracion-usuarios/administracion-usuarios.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'app-administracion-usuarios',
@@ -19,21 +19,22 @@ export class AdministracionUsuariosComponent implements OnInit {
 
   constructor(
     private usuario_service: AdministracionUsuariosService,
-  ) {}
+  ) {
+    this.usuarios = toSignal(this.usuario_service.obtener_usuarios()) 
+    // effect(() => {
+    //   this.usuarios()
+    // })
+  }
 
   // (o==================================================================o)
   //   #region CARGA INICIAL (INICIO)
   // (o-----------------------------------------------------------\/-----o)
   
   ngOnInit(): void {
-    this.usuario_service.obtener_usuarios()
-    .subscribe((usuarios) => {
-        this.usuarios = usuarios
-        this.crear_datos_tabla()
-      })
+    this.crear_datos_tabla()
   }
   
-  usuarios!: UsuarioRecibir[]
+  usuarios!: Signal<UsuarioRecibir[] | undefined>
   
   // (o-----------------------------------------------------------/\-----o)
   //   #endregion CARGA INICIAL (FIN)
@@ -86,14 +87,20 @@ export class AdministracionUsuariosComponent implements OnInit {
           },
         },
       ],
-      documentos: this.usuarios,
       mostrar_indice_fila: true,
-      mostrar_ordenadores: true,
+      // mostrar_paginador: false,
+      // mostrar_boton_layout: false,
+      // mostrar_buscador: false,
+      // mostrar_ordenadores: false,
     }
   }
 
   cambiar_ordenamiento(ordenadores: any) {
-    console.log(ordenadores)
+    // console.log(ordenadores)
+  }
+
+  accion_click_fila(datos: OPCIONES_FILA_TABLA_GENERICA) {
+    // console.log(datos)
   }
   
   // (o-----------------------------------------------------------/\-----o)
