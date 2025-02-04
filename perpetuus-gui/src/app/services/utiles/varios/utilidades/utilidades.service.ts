@@ -401,5 +401,54 @@ export class UtilidadesService {
         return level
     }
 
+    /**
+     * Enfoca el siguiente elemento dependiendo del indice de enfoque
+     * actual, relacionado al enfoque de tabulador.
+     * 
+     * @param evento Un evento de presion de tecla
+     */
+    focus_siguiente_tab(
+        evento: KeyboardEvent
+    ) {
+
+        const {indice_actual, elementos_enfocables} = this.obtener_indice_actual_enfoque_tab()
+        const siguiente = (indice_actual + 1) % elementos_enfocables.length;
+        elementos_enfocables[siguiente].focus();
+        evento.preventDefault();
+    }
+
+    /**
+     * Enfoca el previo elemento dependiendo del indice de enfoque
+     * actual, relacionado al enfoque de tabulador.
+     * 
+     * @param evento Un evento de presion de tecla
+     */
+    focus_anterior_tab(
+        evento: KeyboardEvent
+    ) {
+        const {indice_actual, elementos_enfocables} = this.obtener_indice_actual_enfoque_tab()
+        const anterior =
+            (indice_actual - 1 + elementos_enfocables.length) %
+            elementos_enfocables.length;
+        elementos_enfocables[anterior].focus();
+        evento.preventDefault();
+    }
+     
+    /**
+     * Obtiene todos los elementos HTML que sean enfocables, basandose
+     * en la propiedad tabindex.
+     */
+    obtener_elementos_enfocables_html() {
+        return Array.from(document.querySelectorAll('[tabindex]')) as HTMLElement[]
+    }
+
+    obtener_indice_actual_enfoque_tab() {
+        const elementos_enfocables = this.obtener_elementos_enfocables_html();
+        if (elementos_enfocables.length === 0) return {indice_actual: -1, elementos_enfocables}
+        const indice_actual = elementos_enfocables.indexOf(
+            document.activeElement as HTMLElement
+        );
+        return {indice_actual, elementos_enfocables}
+    }
 
 }
