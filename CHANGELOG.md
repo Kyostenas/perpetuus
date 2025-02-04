@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.11](https://github.com/Kyostenas/perpetuus/compare/v0.3.10...v0.3.11) (2025-02-04)
+
+
+### Features
+
+* componente de paginacion ([a3cff21](https://github.com/Kyostenas/perpetuus/commit/a3cff2192623f93fe3bc01c3fafda9a2f1fea6ce))
+* **frontend:** capacidades de accesebilidad para flechas ([acc7522](https://github.com/Kyostenas/perpetuus/commit/acc75229053cc22f4b6e367cef54fd2494db8bfa))
+* **frontend:** directiva de dropdown incluye control de teclas y enfoque ([2491676](https://github.com/Kyostenas/perpetuus/commit/24916761ed89b0daf790e469b389ecf6985b24c4))
+* **frontend:** mejores de accesibilidad y responsividad ([9a61230](https://github.com/Kyostenas/perpetuus/commit/9a61230658e40cad711927aef2e57ee9ab40a8f2))
+* **frontend:** nuevas capacidades responsivas, de interaccion y de accesibilidad en la tabla generica ([bdb8fa2](https://github.com/Kyostenas/perpetuus/commit/bdb8fa2f06285ecc058bcc059850809a3a2bca02))
+* **frontend:** servicio de control de queries de url ([7c764a9](https://github.com/Kyostenas/perpetuus/commit/7c764a9ec13a76d842ac04d009272940736a0eef))
+
 ### [0.3.10](https://github.com/Kyostenas/perpetuus/compare/v0.3.9...v0.3.10) (2025-01-20)
 
 ### [0.3.9](https://github.com/Kyostenas/perpetuus/compare/v0.3.8...v0.3.9) (2025-01-20)

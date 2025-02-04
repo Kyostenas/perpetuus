@@ -1,6 +1,6 @@
 {
   "name": "perpetuus",
-  "version": "0.3.10",
+  "version": "0.3.11",
   "description": "Aplicacion modular multi-proposito",
   "scripts": {
     "build-upload": "npm-run-all _release _build_gui build-upload-docker",
