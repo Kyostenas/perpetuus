@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, effect, OnChanges, OnDestroy, OnInit, signal, SimpleChanges, WritableSignal } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-hide-auto/bootstrap-hide-auto.directive';
 import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
@@ -14,29 +14,24 @@ import { ControlNotificacionesService } from 'src/app/services/utiles/varios/con
     templateUrl: './control-notificaciones.component.html',
     styleUrl: './control-notificaciones.component.scss'
 })
-export class ControlNotificacionesComponent implements OnInit, OnDestroy{
+export class ControlNotificacionesComponent{
 
   constructor(
     public controlNotifs: ControlNotificacionesService,
-  ) {}
+  ) {
+    effect((onCleanup) => {
+      const ESTADO_NOTIFS = this.controlNotifs.estado_notifiaciones()
+      this.notificaciones.update(() => ESTADO_NOTIFS)
+      onCleanup(() => {
 
-  notificaciones!: EspecificacionServicioNotificacion
-  private subscripcionNotificaciones!: Subscription
-
-  ngOnDestroy(): void {
-    this.subscripcionNotificaciones.unsubscribe()
-  }
-  
-  ngOnInit(): void {
-    this.subscripcionNotificaciones = 
-      this.controlNotifs.estado_notificaciones$.subscribe({
-        next: (notificaciones) => {
-          this.notificaciones = notificaciones
-        },
-        error: (error) => {
-
-        }
       })
+    })
   }
+
+  notificaciones: WritableSignal<EspecificacionServicioNotificacion> = signal({
+    alert: [],
+    modal: [],
+    toast: [],
+  })
 
 }
