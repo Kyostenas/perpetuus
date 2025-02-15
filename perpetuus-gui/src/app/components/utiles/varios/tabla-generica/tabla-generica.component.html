@@ -64,7 +64,8 @@
                 @if (datos_tabla().mostrar_paginador) {
                     <div class="me-2">
                         <app-paginador-generico
-                        
+                            [paginacion]="detallePaginacion()"
+                            (paginacion_modificada)="resultado_paginacion_paginador($event)"
                         ></app-paginador-generico>
                     </div>
                 }
@@ -74,7 +75,7 @@
                             <button
                                 tabindex="0"
                                 type="button" 
-                                class="btn btn-primary me-1"
+                                class="btn btn-sm btn-primary me-1"
                                 bs-tooltip="Mostrar como columnas"
                                 (click)="definir_modo('columnas')"
                             >
@@ -86,7 +87,7 @@
                                 <button 
                                     tabindex="0"
                                     type="button" 
-                                    class="btn btn-primary me-1"
+                                    class="btn btn-sm btn-primary me-1"
                                     bs-tooltip="Mostrar como tabla"
                                     (click)="definir_modo('tabla')"
                                 >
@@ -112,7 +113,8 @@
         <div class="w-100 d-flex justify-content-center">
             <div class="">
                 <app-paginador-generico
-                
+                    [paginacion]="detallePaginacion()"
+                    (paginacion_modificada)="resultado_paginacion_paginador($event)"
                 ></app-paginador-generico>
             </div>
         </div>

@@ -38,6 +38,8 @@ export type ValoresAnidadosRecursivosDeObjeto<T, tipo_valor> = T extends object
 export type Paginacion = {
     limite: number,
     desde: number,
+    pagina_actual: number,
+    total_elementos: number,
     campos_ordenamiento: {[type: string]: {
         campo: string,
         titulo: string,

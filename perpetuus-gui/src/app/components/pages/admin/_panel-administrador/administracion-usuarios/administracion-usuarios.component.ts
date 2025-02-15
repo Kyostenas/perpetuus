@@ -95,8 +95,8 @@ export class AdministracionUsuariosComponent implements OnInit {
     }
   }
 
-  cambiar_ordenamiento(ordenadores: any) {
-    // console.log(ordenadores)
+  cambiar_ordenamiento(paginacion: any) {
+    console.log(paginacion)
   }
 
   accion_click_fila(datos: OPCIONES_FILA_TABLA_GENERICA) {

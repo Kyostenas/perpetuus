@@ -28,6 +28,8 @@ export class AdministracionUsuariosService {
     return url;
   }
 
+  total_usuarios: number = 0
+
   obtener_usuarios(): Observable<UsuarioRecibir[]> {
     const url = this.obtener_url();
     return this.http.get(url, this.opciones).pipe(

@@ -1,4 +1,4 @@
-import { computed, Injectable, Signal } from '@angular/core';
+import { computed, effect, Injectable, Signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Paginacion } from 'src/app/utiles/tipos-personalizados';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -13,22 +13,26 @@ export class ControlQueriesUrlService {
     private route: ActivatedRoute,
   ) {
     this.query_string = toSignal(this.route.queryParams, {initialValue: {}}) as Signal<QUERY_PARAMS_GENERAL | undefined>
+    effect(() => {
+      // console.log(this.query_string())
+      this.query_actual = computed(() => {
+        try {
+          let objeto_final: {[type: string]: any} = {}
+          for (let [nombre, valor_string] of Object.entries(
+            this.query_string() as QUERY_PARAMS_GENERAL
+          )) {
+            objeto_final[nombre] = JSON.parse(valor_string)
+          }
+          return objeto_final as QUERY_PARAMS_GENERAL
+        } catch {
+          return {} as QUERY_PARAMS_GENERAL;
+        }
+      })
+    })
   }
 
   private query_string!: Signal<QUERY_PARAMS_GENERAL | undefined>
-  query_actual: Signal<QUERY_PARAMS_GENERAL> = computed(() => {
-    try {
-      let objeto_final: {[type: string]: any} = {}
-      for (let [nombre, valor_string] of Object.entries(
-        this.query_string() as QUERY_PARAMS_GENERAL
-      )) {
-        objeto_final[nombre] = JSON.parse(valor_string)
-      }
-      return objeto_final as QUERY_PARAMS_GENERAL
-    } catch {
-      return {} as QUERY_PARAMS_GENERAL;
-    }
-  })
+  query_actual!: Signal<QUERY_PARAMS_GENERAL> 
 
   queries = {
     paginacion: this.preparar_query<Paginacion>('paginacion'),
