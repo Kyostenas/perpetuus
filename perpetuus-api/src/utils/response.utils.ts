@@ -278,4 +278,10 @@ export interface DatosResponse {
      * Objeto cualesquiera del error.
      */  
     error?: any;
+    /**
+     * ## total
+     * Si los datos son un arreglo, poner aqui la cantidad de
+     * elementos de la consulta total sin paginarse.
+     */
+    total?: number;
 };
