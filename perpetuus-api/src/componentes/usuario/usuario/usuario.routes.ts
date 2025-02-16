@@ -27,12 +27,12 @@ const RUTA_USUARIO = () => {
             return await controlador_usuario.obtener_usuario_id(req, res) 
         }
     );
-    router.get('/termino/:termino', 
-        tiene_permiso(PERMISOS.USUARIO.OBTENER),
-        async (req: _Request, res: Response) => { 
-            return await controlador_usuario.obtener_usuario_termino(req, res) 
-        }
-    );
+    // router.get('/termino/:termino', 
+    //     tiene_permiso(PERMISOS.USUARIO.OBTENER),
+    //     async (req: _Request, res: Response) => { 
+    //         return await controlador_usuario.obtener_usuario_termino(req, res) 
+    //     }
+    // );
     router.put('/', 
         tiene_permiso(PERMISOS.USUARIO.MODIFICAR),
         async (req: _Request, res: Response) => { 

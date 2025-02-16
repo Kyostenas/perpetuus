@@ -8,6 +8,7 @@ import { validar_existencia_de_campos } from '../../../utils/validaciones.utils'
 import { NOMBRE_ROL_SUPER_ADMIN, NOMBRE_USUARIO_SUPER_ADMIN } from '../../../utils/constantes.utils';
 import { Rol } from '../rol-usuario/rol-usuario.model';
 import { _Request } from '../../../tipos-personalizados';
+import { obtener_paginacion } from '../../../utils/busqueda-paginacion.utiles';
 
 
 
@@ -68,21 +69,23 @@ async function crear_usuario(req: _Request, res: Response) {
 
 async function obtener_usuarios_todo(req: _Request, res: Response) {
     try {
-        const usuarios = await servicio_usuario
-            .obtener_usuarios_todo()
+        const PAGINACION = obtener_paginacion(req)
+        const RESPUESTA = await servicio_usuario
+            .obtener_usuarios_todo(PAGINACION)
         return new Resp(
             res, __filename,
             {
-                mensaje: 'Se obtuvieron todos los usuarios',
-                datos: usuarios,
+                mensaje: 'Se obtuvieron los usuarios',
+                datos: RESPUESTA.resultado,
+                total: RESPUESTA.total
             },
         )._200_ok();
     } catch (err) {
         return new Resp(
             res, __filename, 
             { 
-                mensaje: 'Error al obtener todos los usuarios', 
-                error: err 
+                mensaje: 'Error al obtener los usuarios', 
+                error: err,
             }
         )._422_unprocessable();
     }
@@ -126,43 +129,43 @@ async function obtener_usuario_id(req: _Request, res: Response) {
     }
 }
 
-async function obtener_usuario_termino(req: _Request, res: Response) {
-    try {
-        const { termino } = req.params;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['termino'],
-            req.params
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }              
-        const usuario = await servicio_usuario.obtener_usuario_termino(termino)
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No se encontró un usuario relacionado a ese término', 
-                }
-            )._404_not_found();
-        }
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Usuario obtenido usando un término',
-                datos: usuario,
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al obtener un usuario por término', 
-                error: err 
-            }
-        )._422_unprocessable();        
-    }
-}
+// async function obtener_usuario_termino(req: _Request, res: Response) {
+//     try {
+//         const { termino } = req.params;
+//         const { valido, mensaje } = validar_existencia_de_campos(
+//             ['termino'],
+//             req.params
+//         );
+//         if (!valido) {
+//             return new Resp(res, __filename, { mensaje })
+//                 ._422_unprocessable();
+//         }              
+//         const usuario = await servicio_usuario.obtener_usuario_termino(termino)
+//         if (!usuario) {
+//             return new Resp(
+//                 res, __filename, 
+//                 { 
+//                     mensaje: 'No se encontró un usuario relacionado a ese término', 
+//                 }
+//             )._404_not_found();
+//         }
+//         return new Resp(
+//             res, __filename,
+//             {
+//                 mensaje: 'Usuario obtenido usando un término',
+//                 datos: usuario,
+//             },
+//         )._200_ok();
+//     } catch (err) {
+//         return new Resp(
+//             res, __filename, 
+//             { 
+//                 mensaje: 'Error al obtener un usuario por término', 
+//                 error: err 
+//             }
+//         )._422_unprocessable();        
+//     }
+// }
 
 async function modificar_usuario(req: _Request, res: Response) {
     try {
@@ -409,7 +412,7 @@ const controlador_usuario = {
     crear_usuario, 
     obtener_usuarios_todo,
     obtener_usuario_id,
-    obtener_usuario_termino,
+    // obtener_usuario_termino,
     modificar_usuario,
     eliminar_usuario_id,
 
