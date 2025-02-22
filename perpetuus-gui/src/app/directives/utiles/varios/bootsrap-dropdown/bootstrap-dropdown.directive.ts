@@ -26,11 +26,11 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.id_enfoque_padre_destruido) {
-      document
-      .getElementById(this.id_enfoque_padre_destruido)
-      ?.focus()
-    }
+    // if (this.id_enfoque_padre_destruido) {
+    //   document
+    //   .getElementById(this.id_enfoque_padre_destruido)
+    //   ?.focus()
+    // }
     this.posicionado_por_salir_de_pantalla = false
     this.no_eliminar = false
     this.ocultar()
@@ -337,9 +337,9 @@ export class BootstrapDropdownDirective implements OnInit, OnDestroy {
 
   ocultar() {
     if (!this.dropdown) return
-    if (this.utiles.obtener_indice_actual_enfoque_tab().indice_actual !== -1) {
-      this.elemento_padre.focus()
-    }
+    // if (this.utiles.obtener_indice_actual_enfoque_tab().indice_actual !== -1) {
+    //   this.elemento_padre.focus()
+    // }
     this.se_esta_mostrando = false
     this.renderer.removeClass(this.dropdown, 'show');
     if (!this.no_eliminar) {

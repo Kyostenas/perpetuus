@@ -175,17 +175,17 @@ export class AppComponent implements OnInit, OnDestroy {
     //   #region CONTROL TECLAS (INICIO)
     // (o-----------------------------------------------------------\/-----o)
 
-    @HostListener('window:keydown.shift.k')
+    @HostListener('window:keydown.alt.k')
     abrir_buscador_teclado() {
         this.fragment_service.agregar_fragmento('busqueda-global');
     }
 
-    @HostListener('window:keydown.shift.u')
+    @HostListener('window:keydown.alt.u')
     abrir_perfil_usuario_teclado() {
         this.fragment_service.agregar_fragmento('perfil-usuario');
     }
 
-    @HostListener('window:keydown.shift.n')
+    @HostListener('window:keydown.alt.n')
     abrir_notificaciones_usuario_teclado() {
         this.fragment_service.agregar_fragmento('notificaciones-usuario');
     }
