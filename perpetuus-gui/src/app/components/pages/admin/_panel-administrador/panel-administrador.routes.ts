@@ -37,6 +37,6 @@ export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
             loadChildren: () => import('./_almacenes/administracion-almacenes.routes')
                 .then(rutas => rutas.ADMINSITRACION_ALMACENES_ROUTES)
         },
-        { path: '**', component: PaginaNoEncontrada404Component }
+        { path: '**', redirectTo: '../' }
     ],
 }];

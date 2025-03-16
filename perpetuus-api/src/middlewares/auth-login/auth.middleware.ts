@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 
 import { Resp } from '../../utils/response.utils';
 
-import { Usuario } from '../../componentes/usuario/usuario/usuario.model';
-import { _Request } from '../../tipos-personalizados';
+import { USER_MODEL } from '../../componentes/usuario/usuario/usuario.model';
 
 
 function problemas_usuario(res: Response, problemas: string[]) {
@@ -12,15 +11,15 @@ function problemas_usuario(res: Response, problemas: string[]) {
         {
             mensaje: `Error: ${problemas.join(', ')}`
         }
-    )._400_bad_request();
+    )._400_badRequest();
 }
 
-async function usuario_correo_duplicado (req: _Request, res: Response, next: any) {
+async function usuario_correo_duplicado (req: Request, res: Response, next: any) {
     try {
         let problemas: string[] = [];
 
         // Usuario
-        let usuario_nombre_usuario = await Usuario.find({ 
+        let usuario_nombre_usuario = await USER_MODEL.find({ 
             nombre_usuario: req.body.nombre_usuario
         });
         if (usuario_nombre_usuario.length > 0) {
@@ -29,7 +28,7 @@ async function usuario_correo_duplicado (req: _Request, res: Response, next: any
 
         // Correo
         if (req.body.correo) {
-            let usuario_correo = await Usuario.find({
+            let usuario_correo = await USER_MODEL.find({
                 correo: req.body.correo
             });
             if (usuario_correo.length > 0) {
@@ -39,7 +38,7 @@ async function usuario_correo_duplicado (req: _Request, res: Response, next: any
 
         // Numero celular
         if (req.body.numero_celular) {
-            let usuario_numero_celular = await Usuario.find({
+            let usuario_numero_celular = await USER_MODEL.find({
                 $and: [
                     { numero_celular: req.body.numero_celular },
                     { numero_celular: { $exists: true }}

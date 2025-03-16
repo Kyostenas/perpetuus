@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
 
-import { Usuario } from './usuario.model';
+import { USER_MODEL } from './usuario.model';
 
 import { servicio_usuario } from './usuario.service';
 import { Resp } from '../../../utils/response.utils';
 import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
 import { NOMBRE_ROL_SUPER_ADMIN, NOMBRE_USUARIO_SUPER_ADMIN } from '../../../utils/constantes.utils';
-import { Rol } from '../rol-usuario/rol-usuario.model';
-import { _Request } from '../../../tipos-personalizados';
+import { Rol, ROL_MODEL } from '../rol-usuario/rol-usuario.model';
 import { obtener_paginacion } from '../../../utils/busqueda-paginacion.utiles';
-
+import { DocumentType } from '@typegoose/typegoose';
 
 
 // (o==================================================================o)
@@ -17,7 +16,7 @@ import { obtener_paginacion } from '../../../utils/busqueda-paginacion.utiles';
 //   para los usuarios
 // (o-----------------------------------------------------------\/-----o)
 
-async function crear_usuario(req: _Request, res: Response) {
+async function crear_usuario(req: Request, res: Response) {
     try {
         const { 
             nombres, 
@@ -67,7 +66,7 @@ async function crear_usuario(req: _Request, res: Response) {
     }
 }
 
-async function obtener_usuarios_todo(req: _Request, res: Response) {
+async function obtener_usuarios_todo(req: Request, res: Response) {
     try {
         const PAGINACION = obtener_paginacion(req)
         const RESPUESTA = await servicio_usuario
@@ -91,7 +90,7 @@ async function obtener_usuarios_todo(req: _Request, res: Response) {
     }
 }
 
-async function obtener_usuario_id(req: _Request, res: Response) {
+async function obtener_usuario_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -129,7 +128,7 @@ async function obtener_usuario_id(req: _Request, res: Response) {
     }
 }
 
-// async function obtener_usuario_termino(req: _Request, res: Response) {
+// async function obtener_usuario_termino(req: Request, res: Response) {
 //     try {
 //         const { termino } = req.params;
 //         const { valido, mensaje } = validar_existencia_de_campos(
@@ -167,7 +166,7 @@ async function obtener_usuario_id(req: _Request, res: Response) {
 //     }
 // }
 
-async function modificar_usuario(req: _Request, res: Response) {
+async function modificar_usuario(req: Request, res: Response) {
     try {
         const { nombres, apellidos, correo, numero_celular, _id } = req.body
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -178,7 +177,10 @@ async function modificar_usuario(req: _Request, res: Response) {
             return new Resp(res, __filename, { mensaje })
                 ._422_unprocessable();
         }            
-        const usuario = await Usuario.findById(_id);
+        const usuario = await USER_MODEL
+            .findById(_id)
+            .populate<{rol: DocumentType<Rol>}>('rol')
+            .lean();
         if (!usuario) {
             return new Resp(
                 res, __filename, 
@@ -219,7 +221,7 @@ async function modificar_usuario(req: _Request, res: Response) {
     }
 }
 
-async function eliminar_usuario_id(req: _Request, res: Response) {
+async function eliminar_usuario_id(req: Request, res: Response) {
     try {
         const { id } = req.params;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -230,7 +232,10 @@ async function eliminar_usuario_id(req: _Request, res: Response) {
             return new Resp(res, __filename, { mensaje })
                 ._422_unprocessable();
         }            
-        const usuario = await Usuario.findById(id);
+        const usuario = await USER_MODEL
+            .findById(id)
+            .populate<{rol: DocumentType<Rol>}>('rol')
+            .lean();
         if (!usuario) {
             return new Resp(
                 res, __filename, 
@@ -276,7 +281,7 @@ async function eliminar_usuario_id(req: _Request, res: Response) {
 //   cualquier otra cosa que no caiga en el CRUD convencional
 // (o-----------------------------------------------------------\/-----o)
 
-async function cambiar_rol_a_usuario(req: _Request, res: Response) {
+async function cambiar_rol_a_usuario(req: Request, res: Response) {
     try {
         const { rol, _id } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -287,8 +292,11 @@ async function cambiar_rol_a_usuario(req: _Request, res: Response) {
             return new Resp(res, __filename, { mensaje })
                 ._422_unprocessable();
         }
-        const usuario = await Usuario.findById(_id);
-        const rol_usuario = await Rol.findById(rol)
+        const usuario = await USER_MODEL
+            .findById(_id)
+            .populate<{rol: DocumentType<Rol>}>('rol')
+            .lean();
+        const rol_usuario = await ROL_MODEL.findById(rol).lean()
         if (!usuario) {
             return new Resp(
                 res, __filename, 
@@ -332,7 +340,7 @@ async function cambiar_rol_a_usuario(req: _Request, res: Response) {
     }
 }
 
-async function quitar_rol_a_usuario(req: _Request, res: Response) {
+async function quitar_rol_a_usuario(req: Request, res: Response) {
     try {
         const { _id } = req.body;
         const { valido, mensaje } = validar_existencia_de_campos(
@@ -343,7 +351,10 @@ async function quitar_rol_a_usuario(req: _Request, res: Response) {
             return new Resp(res, __filename, { mensaje })
                 ._422_unprocessable();
         }
-        const usuario = await Usuario.findById(_id);
+        const usuario = await USER_MODEL
+            .findById(_id)
+            .populate<{rol: DocumentType<Rol>}>('rol')
+            .lean();
         if (!usuario) {
             return new Resp(
                 res, __filename, 
@@ -379,7 +390,7 @@ async function quitar_rol_a_usuario(req: _Request, res: Response) {
     }
 }
 
-async function crear_usuario_super_admin(req: _Request, res: Response) {
+async function crear_usuario_super_admin(req: Request, res: Response) {
     try {
         await servicio_usuario
             .crear_usuario_super_admin();

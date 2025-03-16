@@ -2,7 +2,6 @@ import { ValoresAnidadosRecursivosDeObjeto } from '../utiles/tipos-personalizado
 
 export const PERMISOS_DISPONIBLES = {
     SUPER_ADMIN: 'SUPER_ADMIN',
-    _ADMIN: 'MENU.ADMIN',
     MENU: {
         _ADMIN: 'MENU.ADMIN',
         ADMIN: {

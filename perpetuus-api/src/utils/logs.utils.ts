@@ -441,7 +441,7 @@ export const syslog = (modulo: Module) => {
         ok: async (...contenido: any) => {
             crear_log(print_sys_reg, TIPOS_LOG.ok, undefined, ...contenido);
         },
-        __request: async (request: string, ...contenido: any) => {
+        _Request: async (request: string, ...contenido: any) => {
             crear_log(print_req_log, TIPOS_LOG.request, request, ...contenido);            
         },
     }

@@ -31,8 +31,8 @@ export class AdministracionUsuariosComponent implements OnInit {
     constructor(private usuario_service: AdministracionUsuariosService) {
         // this.usuarios =
         effect(() => {
-            this.paginacion()
-            console.log('PUES ASI NO')
+            // this.paginacion()
+            // console.log('PUES ASI NO')
             // this.usuarios = toSignal(
             //     this.usuario_service.obtener_usuarios(this.paginacion())
             // );
@@ -120,7 +120,6 @@ export class AdministracionUsuariosComponent implements OnInit {
     cambiar_ordenamiento(paginacion: Paginacion) {
         try {
             this.paginacion.update((value) => paginacion);
-            console.log(this.paginacion())
         } catch (err) {
             console.log(err)
             this.paginacion = signal(paginacion)

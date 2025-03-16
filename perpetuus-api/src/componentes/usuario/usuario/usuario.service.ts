@@ -11,14 +11,12 @@ import {
 } from '../../../utils/constantes.utils';
 
 import {
-    Usuario,
-    UsuarioInput,
-    UsuarioDocument,
+    USER_MODEL,
+    User,
 } from '../usuario/usuario.model';
-import { Rol } from '../rol-usuario/rol-usuario.model';
-import { AUTH_SECRET } from '../../../config/env/env.config';
-import { Paginacion } from '../../../tipos-personalizados';
+import { ROL_MODEL } from '../rol-usuario/rol-usuario.model';
 import { generar_criterios_sort } from '../../../utils/busqueda-paginacion.utiles';
+import { Types } from 'mongoose';
 
 // (o==================================================================o)
 //   CRUD BASICO (INICIO)
@@ -32,12 +30,13 @@ async function crear_usuario(
     contrasena: string,
     correo: string,
     numero_celular?: string,
+    user_id?: string,
 ) {
     if (nombre_usuario === NOMBRE_USUARIO_SUPER_ADMIN) {
         throw 'Esta prohibido usar ese nombre de usuario';
     }
     const contrasena_encriptada = bcrypt_hashsync(contrasena, 12);
-    const usuario_input: UsuarioInput = {
+    const usuario_input: User = {
         nombres,
         apellidos,
         nombre_usuario,
@@ -48,9 +47,13 @@ async function crear_usuario(
     syslog.debug(
         `USUARIO INPUT: ${JSON.stringify(usuario_input, undefined, 2)}`,
     );
-    let nuevo_usuario = new Usuario(usuario_input);
+    let nuevo_usuario = new USER_MODEL(usuario_input);
     syslog.debug(`USUARIO CREADO: ${nuevo_usuario}`);
-    await Usuario.create(nuevo_usuario);
+    nuevo_usuario.metadata = {
+        user_id,
+        description: 'usuario creado'
+    }
+    await nuevo_usuario.save();
 }
 
 async function obtener_usuarios_todo(paginacion: Paginacion) {
@@ -61,8 +64,8 @@ async function obtener_usuarios_todo(paginacion: Paginacion) {
     const DESDE = Number(paginacion.desde);
     const LIMITE = Number(paginacion.limite);
     let query_filtros = {};
-    let total = await Usuario.countDocuments(query_filtros);
-    const resultado = await Usuario.find(query_filtros, PROJECTION)
+    let total = await USER_MODEL.countDocuments(query_filtros);
+    const resultado = await USER_MODEL.find(query_filtros, PROJECTION)
         .sort(CRITERIOS_SORT)
         .skip(DESDE)
         .limit(LIMITE)
@@ -73,7 +76,7 @@ async function obtener_usuarios_todo(paginacion: Paginacion) {
 
 async function obtener_usuario_id(id: string) {
     syslog.debug(`ID USUARIO: ${id}`);
-    const usuario = await Usuario.findById(id).select(
+    const usuario = await USER_MODEL.findById(id).select(
         '-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn',
     );
     syslog.debug(`USUARIO OBTENIDO POR ID ${usuario}`);
@@ -95,9 +98,10 @@ async function modificar_usuario(
     apellidos: string,
     correo?: string,
     numero_celular?: string,
+    user_id?: string,
 ) {
     syslog.debug(`ID USUARIO: ${id}`);
-    const rol = await Usuario.findOneAndUpdate(
+    const rol = await USER_MODEL.findOneAndUpdate(
         { _id: id },
         {
             nombres,
@@ -105,16 +109,22 @@ async function modificar_usuario(
             correo,
             numero_celular,
         },
+        {
+            metadata: {
+                user_id,
+                description: 'usuario modificado'
+            }
+        }
     );
     syslog.debug(`USUARIO MODIFICADO: `, JSON.stringify(rol));
 }
 
 async function eliminar_usuario_id(
     id: string,
-    usuario_comprobar: UsuarioDocument,
+    usuario_comprobar: User,
 ) {
     syslog.debug(`ID ROL: ${id}`);
-    await Usuario.findOneAndDelete({ _id: id });
+    await USER_MODEL.findOneAndDelete({ _id: id });
     syslog.warning(`ROL ELIMINADO: `, usuario_comprobar?.nombre_usuario);
 }
 
@@ -122,21 +132,37 @@ async function eliminar_usuario_id(
 //   CRUD BASICO (FIN)
 // (o==================================================================o)
 
-async function cambiar_rol_a_usuario(_id: string, rol: string) {
-    await Usuario.findOneAndUpdate({ _id }, { $set: { rol } });
+async function cambiar_rol_a_usuario(_id: string, rol: string, user_id?: string) {
+    const ROL = await ROL_MODEL.findOne({_id: rol}).lean()
+    await USER_MODEL.findOneAndUpdate(
+        { _id }, 
+        { $set: { rol } },
+        { metadata: {
+            user_id,
+            description: 'rol de usuario modificado',
+            large_description: `el nuevo rol del usuario es: ${ROL?.nombre}`
+        }}
+    );
 }
 
-async function quitar_rol_a_usuario(_id: string) {
-    await Usuario.findOneAndUpdate({ _id }, { $unset: { rol: true } });
+async function quitar_rol_a_usuario(_id: string, user_id?: string) {
+    await USER_MODEL.findOneAndUpdate(
+        { _id }, 
+        { $unset: { rol: true } },
+        { metadata: {
+            user_id,
+            description: 'rol de usuario removido'
+        }}
+    );
 }
 
 async function crear_usuario_super_admin() {
-    const rol_super_admin = await Rol.findOne({ super_admin: true }).lean();
+    const rol_super_admin = await ROL_MODEL.findOne({ super_admin: true }).lean();
     const no_existe_rol_super_admin = !rol_super_admin;
     if (no_existe_rol_super_admin) {
         throw `No existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
     }
-    const usuario_super_admin = await Usuario.find({
+    const usuario_super_admin = await USER_MODEL.find({
         nombre_usuario: NOMBRE_USUARIO_SUPER_ADMIN,
     });
     let ya_existe_usuario_super_admin = usuario_super_admin.length > 0;
@@ -151,15 +177,20 @@ async function crear_usuario_super_admin() {
         CONTRASENA_SUPER_ADMIN_TEMPORAL,
         12,
     );
-    const usuario_input: UsuarioInput = {
+    const usuario_input: User = {
         nombres: nombre,
         apellidos: apellido,
         nombre_usuario: NOMBRE_USUARIO_SUPER_ADMIN,
         contrasena: contrasena_encriptada,
         correo: CORREO_SUPER_ADMIN_TEMPORAL,
-        rol: rol_a_usar._id,
+        rol: new Types.ObjectId(rol_a_usar._id.toString()),
     };
-    await Usuario.create(usuario_input);
+    const NEW_USER = new USER_MODEL(usuario_input)
+    NEW_USER.metadata = {
+        description: 'Se creó el usuario super administrador',
+        large_description: 'Este usuario solo se puede crear externamente, por lo que no especifica qué usuario lo creó'
+    }
+    await NEW_USER.save();
 }
 
 const servicio_usuario = {

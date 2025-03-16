@@ -1,7 +1,9 @@
 // import { syslog as _syslog } from '../../utils/logs.utils';
 // const syslog = _syslog(module)
 import { PERMISOS_DISPONIBLES, PERMISOS_MENU_PERPETUUS, PERMISOS_PERPETUUS } from '../../config/roles/permisos-api.config';
-import {  UsuarioDocument } from '../usuario/usuario/usuario.model';
+import { Rol } from '../usuario/rol-usuario/rol-usuario.model';
+import { User, USER_MODEL } from '../usuario/usuario/usuario.model';
+import { DocumentType } from '@typegoose/typegoose';
 
 // (o==================================================================o)
 //   #region OBTENCIOIN DE LOS MENUS (INICIO)
@@ -16,13 +18,18 @@ import {  UsuarioDocument } from '../usuario/usuario/usuario.model';
  * @param [id_usuario] El id del usuario que esta haciendo login
  * @param [menus] Los menus a evaluar. Esto es para la recursion.
  */
-function obtener_menus(usuario: UsuarioDocument, menus: DESCRIPCION_MENU[]) {
+async function obtener_menus(id_usuario: any, menus: DESCRIPCION_MENU[]) {
+    const usuario = await USER_MODEL
+        .findById(id_usuario)
+        .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn')
+        .populate<{rol: DocumentType<Rol>}>('rol')
+        .lean();
     let menus_enviar: DESCRIPCION_MENU[] = []
-    const PERMISOS_USUARIO: PERMISOS_PERPETUUS[] = usuario?.rol?.permisos || []
+    const PERMISOS_USUARIO: PERMISOS_PERPETUUS[] = usuario?.rol?.permisos ?? []
     for (let iMenu = 0; iMenu < menus.length; iMenu++) {
         let UN_MENU = menus[iMenu];
         if (!!UN_MENU.sub_menus) {
-            const SUB_MENUS = obtener_menus(usuario, UN_MENU.sub_menus)
+            const SUB_MENUS = await obtener_menus(usuario, UN_MENU.sub_menus)
             if (SUB_MENUS.length === 0) {
                 UN_MENU.sub_menus = undefined
             } else {

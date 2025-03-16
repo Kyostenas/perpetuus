@@ -1,6 +1,6 @@
-import { _Request, Paginacion } from '../tipos-personalizados';
+import { Request } from 'express';
 
-export function obtener_paginacion(request: _Request): Paginacion {
+export function obtener_paginacion(request: Request): Paginacion {
     if (!!request.query['paginacion']) {
         return JSON.parse(<string>request.query['paginacion']) as Paginacion;
     } else {
@@ -32,5 +32,5 @@ export function generar_criterios_sort(
         PROJECTION.score = { $meta: 'textScore' };
     }
 
-    return {CRITERIOS_SORT, PROJECTION };
+    return { CRITERIOS_SORT, PROJECTION };
 }

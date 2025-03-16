@@ -139,7 +139,7 @@ export class Resp {
      * El servidor no puede o no va a procesar la solicitud por algo que se percibe
      * como un **error de cliente**.
      */        
-    _400_bad_request() {
+    _400_badRequest() {
         return this.respuesta_general(400, `BAD REQUEST`, true)
     }
     

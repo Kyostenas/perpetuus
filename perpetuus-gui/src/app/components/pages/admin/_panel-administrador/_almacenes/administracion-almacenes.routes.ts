@@ -17,7 +17,7 @@ export const ADMINSITRACION_ALMACENES_ROUTES: Routes = [
                 loadComponent: () => import('./administracion-articulos/administracion-articulos.component')
                     .then(x => x.AdministracionArticulosComponent),
             },
-            { path: '**', component: PaginaNoEncontrada404Component }
+            { path: '**', redirectTo: '../' }
         ],
     }
 ]

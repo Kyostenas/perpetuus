@@ -1,6 +1,5 @@
-import { Router, Response } from 'express';
+import { Router, Response, Request } from 'express';
 import { controlador_usuario } from './usuario.controller';
-import { _Request } from '../../../tipos-personalizados';
 import { tiene_permiso, PERMISOS } from '../../../middlewares/permisos/contiene-el-permiso.middleware';
 
 
@@ -11,37 +10,37 @@ const RUTA_USUARIO = () => {
     
     router.post('/',
         tiene_permiso(PERMISOS.USUARIO.CREAR),
-        async (req: _Request, res: Response) => {
+        async (req: Request, res: Response) => {
             return await controlador_usuario.crear_usuario(req, res) 
         }
     );
     router.get('/', 
         tiene_permiso(PERMISOS.USUARIO.OBTENER),
-        async (req: _Request, res: Response) => { 
+        async (req: Request, res: Response) => { 
             return await controlador_usuario.obtener_usuarios_todo(req, res)
         }
     );
     router.get('/id/:id', 
         tiene_permiso(PERMISOS.USUARIO.OBTENER),
-        async (req: _Request, res: Response) => { 
+        async (req: Request, res: Response) => { 
             return await controlador_usuario.obtener_usuario_id(req, res) 
         }
     );
     // router.get('/termino/:termino', 
     //     tiene_permiso(PERMISOS.USUARIO.OBTENER),
-    //     async (req: _Request, res: Response) => { 
+    //     async (req: Request, res: Response) => { 
     //         return await controlador_usuario.obtener_usuario_termino(req, res) 
     //     }
     // );
     router.put('/', 
         tiene_permiso(PERMISOS.USUARIO.MODIFICAR),
-        async (req: _Request, res: Response) => { 
+        async (req: Request, res: Response) => { 
             return await controlador_usuario.modificar_usuario(req, res) 
         }
     );
     router.delete('/id/:id', 
         tiene_permiso(PERMISOS.USUARIO.ELIMINAR),
-        async (req: _Request, res: Response) => { 
+        async (req: Request, res: Response) => { 
             return await controlador_usuario.eliminar_usuario_id(req, res) 
         }
     );
@@ -52,17 +51,17 @@ const RUTA_USUARIO = () => {
     // ROL
     router.put('/rol', 
         tiene_permiso(PERMISOS.USUARIO.ROL.AGREGAR),
-        async (req: _Request, res: Response) => { 
+        async (req: Request, res: Response) => { 
         return await controlador_usuario.cambiar_rol_a_usuario(req, res) 
     });
     router.delete('/rol', 
         tiene_permiso(PERMISOS.USUARIO.ROL.ELIMINAR),
-        async (req: _Request, res: Response) => { 
+        async (req: Request, res: Response) => { 
         return await controlador_usuario.quitar_rol_a_usuario(req, res) 
     });
     
     // SUPER ADMIN
-    // router.post('/super-admin', async (req: _Request, res: Response) => { 
+    // router.post('/super-admin', async (req: Request, res: Response) => { 
     //     return await controlador_usuario.crear_usuario_super_admin(req, res) }); 
 
 

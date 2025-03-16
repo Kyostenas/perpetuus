@@ -28,7 +28,7 @@ export const NOMBRES_MESES = {
     10: { largo: 'octubre', corto: 'oct' },
     11: { largo: 'noviembre', corto: 'nov' },
     12: { largo: 'diciembre', corto: 'dic' },
-}
+};
 export const NOMBRES_DIAS = {
     1: { largo: 'domingo', corto: 'dom' },
     2: { largo: 'lunes', corto: 'lun' },
@@ -37,36 +37,36 @@ export const NOMBRES_DIAS = {
     5: { largo: 'jueves', corto: 'jue' },
     6: { largo: 'viernes', corto: 'vie' },
     7: { largo: 'sábado', corto: 'sáb' },
-}
-export const ZONA_HORARIO_MEXICO = 'America/Mexico_City'
-export const ZONA_HORARIA_MEXICO_UTC = 'GMT-06:00'
-export const LOCALES_MEXICO = 'en-MX'
+};
+export const ZONA_HORARIO_MEXICO = 'America/Mexico_City';
+export const ZONA_HORARIA_MEXICO_UTC = 'GMT-06:00';
+export const LOCALES_MEXICO = 'en-MX';
 
-export const MILISEGUNDOS_SEGUNDO = 1000
-export const MILISEGUNDOS_MINUTO = MILISEGUNDOS_SEGUNDO * 60
-export const MILISEGUNDOS_HORA = MILISEGUNDOS_MINUTO * 60
-export const MILISEGUNDOS_DIA = MILISEGUNDOS_HORA * 24
-export const MILISEGUNDOS_SEMANA = MILISEGUNDOS_DIA * 7
-export const MILISEGUNDOS_MES30 = MILISEGUNDOS_DIA * 30
-export const MILISEGUNDOS_MES31 = MILISEGUNDOS_DIA * 31
-export const MILISEGUNDOS_MES28 = MILISEGUNDOS_DIA * 28
-export const MILISEGUNDOS_MES29 = MILISEGUNDOS_DIA * 29
-export const MILISEGUNDOS_ANIO = MILISEGUNDOS_DIA * 365
-export const MILISEGUNDOS_ANIOBIS = MILISEGUNDOS_DIA * 366
+export const MILISEGUNDOS_SEGUNDO = 1000;
+export const MILISEGUNDOS_MINUTO = MILISEGUNDOS_SEGUNDO * 60;
+export const MILISEGUNDOS_HORA = MILISEGUNDOS_MINUTO * 60;
+export const MILISEGUNDOS_DIA = MILISEGUNDOS_HORA * 24;
+export const MILISEGUNDOS_SEMANA = MILISEGUNDOS_DIA * 7;
+export const MILISEGUNDOS_MES30 = MILISEGUNDOS_DIA * 30;
+export const MILISEGUNDOS_MES31 = MILISEGUNDOS_DIA * 31;
+export const MILISEGUNDOS_MES28 = MILISEGUNDOS_DIA * 28;
+export const MILISEGUNDOS_MES29 = MILISEGUNDOS_DIA * 29;
+export const MILISEGUNDOS_ANIO = MILISEGUNDOS_DIA * 365;
+export const MILISEGUNDOS_ANIOBIS = MILISEGUNDOS_DIA * 366;
 
-export const SEGUNDOS_MINUTO = 60
-export const SEGUNDOS_HORA = SEGUNDOS_MINUTO * 60
-export const SEGUNDOS_DIA = SEGUNDOS_HORA * 24
-export const SEGUNDOS_SEMANA = SEGUNDOS_DIA * 7
-export const SEGUNDOS_MES30 = SEGUNDOS_DIA * 30
-export const SEGUNDOS_MES31 = SEGUNDOS_DIA * 31
-export const SEGUNDOS_MES28 = SEGUNDOS_DIA * 28
-export const SEGUNDOS_MES29 = SEGUNDOS_DIA * 29
-export const SEGUNDOS_ANIO = SEGUNDOS_DIA * 365
-export const SEGUNDOS_ANIOBIS = SEGUNDOS_DIA * 366
+export const SEGUNDOS_MINUTO = 60;
+export const SEGUNDOS_HORA = SEGUNDOS_MINUTO * 60;
+export const SEGUNDOS_DIA = SEGUNDOS_HORA * 24;
+export const SEGUNDOS_SEMANA = SEGUNDOS_DIA * 7;
+export const SEGUNDOS_MES30 = SEGUNDOS_DIA * 30;
+export const SEGUNDOS_MES31 = SEGUNDOS_DIA * 31;
+export const SEGUNDOS_MES28 = SEGUNDOS_DIA * 28;
+export const SEGUNDOS_MES29 = SEGUNDOS_DIA * 29;
+export const SEGUNDOS_ANIO = SEGUNDOS_DIA * 365;
+export const SEGUNDOS_ANIOBIS = SEGUNDOS_DIA * 366;
 
-export const NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE = 'usuario'
-export const NOMBRE_CAMPO_ROL_LOCAL_STORAGE = 'rol_usuario'
+export const NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE = 'usuario';
+export const NOMBRE_CAMPO_ROL_LOCAL_STORAGE = 'rol_usuario';
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion FECHA Y TIEMPO (FIN)
@@ -76,8 +76,8 @@ export const NOMBRE_CAMPO_ROL_LOCAL_STORAGE = 'rol_usuario'
 //   #region TIPOS BOOTSTRAP (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-
-export type COLORES_BS_FONDO = 'bg-primary'
+export type COLORES_BS_FONDO =
+    | 'bg-primary'
     | 'bg-primary-subtle'
     | 'bg-secondary'
     | 'bg-secondary-subtle'
@@ -98,9 +98,10 @@ export type COLORES_BS_FONDO = 'bg-primary'
     | 'bg-body'
     | 'bg-black'
     | 'bg-white'
-    | 'bg-transparent'
+    | 'bg-transparent';
 
-export type COLROES_BS_BORDES = 'border-primary'
+export type COLROES_BS_BORDES =
+    | 'border-primary'
     | 'border-primary'
     | 'border-secondary'
     | 'border-secondary'
@@ -117,9 +118,10 @@ export type COLROES_BS_BORDES = 'border-primary'
     | 'border-dark'
     | 'border-dark'
     | 'border-black'
-    | 'border-white'
+    | 'border-white';
 
-export type COLORES_BS_TEXTO = 'text-primary'
+export type COLORES_BS_TEXTO =
+    | 'text-primary'
     | 'text-primary-emphasis'
     | 'text-secondary'
     | 'text-secondary-emphasis'
@@ -142,9 +144,10 @@ export type COLORES_BS_TEXTO = 'text-primary'
     | 'text-black'
     | 'text-white'
     | 'text-black-50'
-    | 'text-white-50'
+    | 'text-white-50';
 
-export type POSICIONES_BS = 'top_left'
+export type POSICIONES_BS =
+    | 'top_left'
     | 'top_center'
     | 'top_right'
     | 'middle_left'
@@ -152,16 +155,17 @@ export type POSICIONES_BS = 'top_left'
     | 'middle_right'
     | 'bottom_left'
     | 'bottom_center'
-    | 'bottom_right'
+    | 'bottom_right';
 
-export type COLORES_BS_ALERT = 'alert-primary'
+export type COLORES_BS_ALERT =
+    | 'alert-primary'
     | 'alert-secondary'
     | 'alert-success'
     | 'alert-danger'
     | 'alert-warning'
     | 'alert-info'
     | 'alert-light'
-    | 'alert-dark'
+    | 'alert-dark';
 
 export const POSICIONES_BS_A_CLASES = {
     top_left: 'top-0 start-0',
@@ -173,7 +177,7 @@ export const POSICIONES_BS_A_CLASES = {
     bottom_left: 'bottom-0 start-0',
     bottom_center: 'bottom-0 start-50 translate-middle-x',
     bottom_right: 'bottom-0 end-0',
-}
+};
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion TIPOS BOOTSTRAP (FIN)
@@ -183,23 +187,20 @@ export const POSICIONES_BS_A_CLASES = {
 //   #region VALIDACIONES (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-export const REGEX_VALIDACION_CORREO = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g
+export const REGEX_VALIDACION_CORREO =
+    /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/g;
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion VALIDACIONES (FIN)
 // (o==================================================================o)
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class UtilidadesService {
+    constructor() {}
 
-    constructor() { }
-
-    preparar_url_conexion_api(
-        ruta: string[],
-        parametros?: any,
-    ) {
+    preparar_url_conexion_api(ruta: string[], parametros?: any) {
         const RUTA_FORMADA = ['', ...ruta].join('/');
         const URL_FORMADA = URL_API.concat(RUTA_FORMADA);
         console.warn(URL_FORMADA);
@@ -212,14 +213,14 @@ export class UtilidadesService {
 
     consultar_local_storage(nombre_item: string): any {
         try {
-            return JSON.parse(<string>localStorage.getItem(nombre_item))
+            return JSON.parse(<string>localStorage.getItem(nombre_item));
         } catch {
-            return {}
+            return {};
         }
     }
 
     guardar_local_storage(nombre_item: string, valor: any) {
-        localStorage.setItem(nombre_item, JSON.stringify(valor))
+        localStorage.setItem(nombre_item, JSON.stringify(valor));
     }
 
     /**
@@ -245,21 +246,21 @@ export class UtilidadesService {
      * @returns El objeto que contiene a los demas objetos.
      */
     convertir_arreglo_objetos_a_objeto(arreglo: {}[], campoContenedor: string) {
-        if (!arreglo) return {}
-        let objetoDeObjetos: { [type: string]: any } = {}
+        if (!arreglo) return {};
+        let objetoDeObjetos: { [type: string]: any } = {};
         arreglo.forEach((unObjeto: { [type: string]: any }) => {
-            let valorCampoContenedor = unObjeto[campoContenedor]
+            let valorCampoContenedor = unObjeto[campoContenedor];
             if (valorCampoContenedor) {
-                objetoDeObjetos[valorCampoContenedor.toString()] = unObjeto
+                objetoDeObjetos[valorCampoContenedor.toString()] = unObjeto;
             }
-        })
-        return objetoDeObjetos
+        });
+        return objetoDeObjetos;
     }
 
     /**
      * Permite seleccionar un campo a cualquier profundidad de cualquier
      * objeto, incluso si hay arreglos implicados.
-     * 
+     *
      * Ejemplo:
      * ```
      * const OBJETO = {
@@ -288,13 +289,13 @@ export class UtilidadesService {
      *                         { jeje1: 'a', jeje2: 'b' },
      *                         { jeje1: 'c', jeje2: 'd' },
      *                         { jeje1: 'e', jeje2: 'f' },
-     *                     ],                    
+     *                     ],
      *                 },
      *             ]
      *         }
      *     }
      * };
-     * 
+     *
      * const SELECCION = seleccionarCampoCualquierNivelProfundo(
      *     OBJETO, 'campo1.campo2.campo4.ah_mira3.jeje1', '.'
      * );
@@ -303,9 +304,9 @@ export class UtilidadesService {
      * ```
      * Tiene el siguiente resultado:
      * ```
-     * ["si1", "si2", "si3", "", "a", "c", "e"] 
+     * ["si1", "si2", "si3", "", "a", "c", "e"]
      * ```
-     * 
+     *
      * @param objeto El objeto que tendra uno de sus campos seleccionados.
      * @param campo La ruta del campo a seleccionar, puede contener varios campos.
      * @param separador La separacion que se uso en el argumento "campo" para dividir los subcampos.
@@ -317,42 +318,51 @@ export class UtilidadesService {
         campo: string,
         separador: string,
         opciones?: {
-            reemplazoValorIndefinido?: any,
-            valorError?: any,
-            aplanarSubArreglos?: boolean,
+            reemplazoValorIndefinido?: any;
+            valorError?: any;
+            aplanarSubArreglos?: boolean;
         }
     ): any {
-        if (!opciones) opciones = {}
-        opciones.reemplazoValorIndefinido = opciones.reemplazoValorIndefinido ?? ''
-        opciones.valorError = opciones.valorError ?? undefined
-        opciones.aplanarSubArreglos = opciones.aplanarSubArreglos ?? true
+        if (!opciones) opciones = {};
+        opciones.reemplazoValorIndefinido =
+            opciones.reemplazoValorIndefinido ?? '';
+        opciones.valorError = opciones.valorError ?? undefined;
+        opciones.aplanarSubArreglos = opciones.aplanarSubArreglos ?? true;
         try {
             let ruta = campo.split(separador);
             let objetoActual: any = objeto;
             for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
                 const pasoRuta = ruta[iRuta];
-                const esArreglo = this.revisar_tipo(objetoActual, 'Array')
+                const esArreglo = this.revisar_tipo(objetoActual, 'Array');
                 if (esArreglo) {
-                    let objetoActualTemporal = objetoActual.map((unSubObjeto: any) => {
-                        return this.seleccionar_campo_cualquier_nivel_profundo(
-                            unSubObjeto, pasoRuta, ' ', opciones
-                        );
-                    });
+                    let objetoActualTemporal = objetoActual.map(
+                        (unSubObjeto: any) => {
+                            return this.seleccionar_campo_cualquier_nivel_profundo(
+                                unSubObjeto,
+                                pasoRuta,
+                                ' ',
+                                opciones
+                            );
+                        }
+                    );
                     if (!opciones.aplanarSubArreglos) {
                         objetoActual = objetoActualTemporal;
                     } else {
                         let aplanado: any[] = [];
                         objetoActualTemporal.forEach((objeto: any) => {
-                            const esArreglo = this.revisar_tipo(objeto, 'Array');
+                            const esArreglo = this.revisar_tipo(
+                                objeto,
+                                'Array'
+                            );
                             if (esArreglo) aplanado.push(...objeto);
                             else aplanado.push(objeto);
-                        })
+                        });
                         objetoActual = aplanado;
                     }
                 } else {
                     objetoActual = objetoActual[pasoRuta];
                 }
-            };
+            }
             if (objetoActual === undefined || objetoActual === null) {
                 return opciones.reemplazoValorIndefinido;
             } else {
@@ -362,7 +372,6 @@ export class UtilidadesService {
             return opciones.valorError;
         }
     }
-
 
     /**
      * # Detectar dispositivo
@@ -375,43 +384,46 @@ export class UtilidadesService {
      *
      */
     detectar_dispositivo() {
-        return this.detectar_pantalla_menor_igual_a_992px()
+        return this.detectar_pantalla_menor_igual_a_992px();
     }
 
     detectar_pantalla_menor_igual_a_992px() {
-        if (window.innerWidth < 992) return true
-        else return false
+        if (window.innerWidth < 992) return true;
+        else return false;
     }
 
     revisar_tipo(objeto: any, tipoAChecar: string) {
-        return Object.prototype.toString.call(objeto) == `[object ${tipoAChecar}]`
+        return (
+            Object.prototype.toString.call(objeto) == `[object ${tipoAChecar}]`
+        );
     }
 
-    obtener_nivel_de_descendencia_entre_nodos_html(parent: HTMLElement, child: HTMLElement): number {
-        let current = child
-        let level = 0
+    obtener_nivel_de_descendencia_entre_nodos_html(
+        parent: HTMLElement,
+        child: HTMLElement
+    ): number {
+        let current = child;
+        let level = 0;
 
         while (current && current !== parent) {
-            current = current.parentElement as HTMLElement
-            level++
+            current = current.parentElement as HTMLElement;
+            level++;
 
-            if (!current) return -1
+            if (!current) return -1;
         }
 
-        return level
+        return level;
     }
 
     /**
      * Enfoca el siguiente elemento dependiendo del indice de enfoque
      * actual, relacionado al enfoque de tabulador.
-     * 
+     *
      * @param evento Un evento de presion de tecla
      */
-    focus_siguiente_tab(
-        evento: KeyboardEvent
-    ) {
-
-        const {indice_actual, elementos_enfocables} = this.obtener_indice_actual_enfoque_tab()
+    focus_siguiente_tab(evento: KeyboardEvent) {
+        const { indice_actual, elementos_enfocables } =
+            this.obtener_indice_actual_enfoque_tab();
         const siguiente = (indice_actual + 1) % elementos_enfocables.length;
         elementos_enfocables[siguiente].focus();
         evento.preventDefault();
@@ -420,35 +432,48 @@ export class UtilidadesService {
     /**
      * Enfoca el previo elemento dependiendo del indice de enfoque
      * actual, relacionado al enfoque de tabulador.
-     * 
+     *
      * @param evento Un evento de presion de tecla
      */
-    focus_anterior_tab(
-        evento: KeyboardEvent
-    ) {
-        const {indice_actual, elementos_enfocables} = this.obtener_indice_actual_enfoque_tab()
+    focus_anterior_tab(evento: KeyboardEvent) {
+        const { indice_actual, elementos_enfocables } =
+            this.obtener_indice_actual_enfoque_tab();
         const anterior =
             (indice_actual - 1 + elementos_enfocables.length) %
             elementos_enfocables.length;
         elementos_enfocables[anterior].focus();
         evento.preventDefault();
     }
-     
+
     /**
      * Obtiene todos los elementos HTML que sean enfocables, basandose
      * en la propiedad tabindex.
      */
     obtener_elementos_enfocables_html() {
-        return Array.from(document.querySelectorAll('[tabindex]')) as HTMLElement[]
+        return Array.from(
+            document.querySelectorAll('[tabindex]')
+        ) as HTMLElement[];
     }
 
     obtener_indice_actual_enfoque_tab() {
         const elementos_enfocables = this.obtener_elementos_enfocables_html();
-        if (elementos_enfocables.length === 0) return {indice_actual: -1, elementos_enfocables}
+        if (elementos_enfocables.length === 0)
+            return { indice_actual: -1, elementos_enfocables };
         const indice_actual = elementos_enfocables.indexOf(
             document.activeElement as HTMLElement
         );
-        return {indice_actual, elementos_enfocables}
+        return { indice_actual, elementos_enfocables };
     }
 
+    arreglo_valores_profundos(objeto: any): any[] {
+        const ES_OBJETO = this.revisar_tipo(objeto, 'Object');
+        if (ES_OBJETO) {
+            const VALUES = Object.values(objeto)
+                .map((valor: any) => this.arreglo_valores_profundos(valor))
+                .flat(1);
+            return VALUES;
+        } else {
+            return objeto;
+        }
+    }
 }

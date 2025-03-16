@@ -3,15 +3,16 @@ import { verify as jwt_verify } from 'jsonwebtoken';
 import { Resp } from '../../utils/response.utils';
 import { controlador_auth } from '../../componentes/auth-login/auth.controller'
 import { AUTH_SECRET } from '../../config/env/env.config';
-import { _Request } from '../../tipos-personalizados';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { desencriptar_jwt } from '../../utils/jwt.utils';
 
 const URLS_EXCENTAS = [
-    '/api/v1/auth/signin'    
+    '/api/auth/signin',    
+    // '/api/roles/super-admin',
+    // '/api/usuarios/super-admin',
 ];
 
-export function verificar_jwt(req: _Request, res: Response, next: any) {
+export function verificar_jwt(req: Request, res: Response, next: any) {
     if (!URLS_EXCENTAS.includes(req.url)) {
         let token = desencriptar_jwt('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.'
             .concat(req.cookies['perpetuus-session'])).token;

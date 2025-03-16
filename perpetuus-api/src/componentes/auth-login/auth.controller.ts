@@ -5,22 +5,23 @@ import { Resp } from '../../utils/response.utils';
 import { controlador_usuario } from '../usuario/usuario/usuario.controller';
 import { servicio_auth } from './auth.service';
 
-import { Usuario, UsuarioDocument } from '../usuario/usuario/usuario.model';
-import { _Request } from '../../tipos-personalizados';
+import { USER_MODEL, User } from '../usuario/usuario/usuario.model';
 import { MENUS, obtener_menus } from '../menu/menu.service';
+import { Rol } from '../usuario/rol-usuario/rol-usuario.model';
+import { DocumentType } from '@typegoose/typegoose';
 
 
 
-async function registrar_usuario(req: _Request, res: Response) {
+async function registrar_usuario(req: Request, res: Response) {
     controlador_usuario.crear_usuario(req, res);
 }
 
-async function iniciar_sesion(req: _Request, res: Response) {
+async function iniciar_sesion(req: Request, res: Response) {
     try {
-        const usuario = await Usuario.findOne({
+        const USUARIO = await USER_MODEL.findOne({
             nombre_usuario: req.body.nombre_usuario
         });
-        if (!usuario) {
+        if (!USUARIO) {
             return new Resp(
                 res, __filename, 
                 { mensaje: 'Usuario o contraseña incorrectos' }
@@ -30,7 +31,7 @@ async function iniciar_sesion(req: _Request, res: Response) {
         const {
             contrasena_valida,
             token_generado,
-        } = servicio_auth.generar_token_inicio_sesion(usuario, req.body.contrasena);
+        } = servicio_auth.generar_token_inicio_sesion(USUARIO, req.body.contrasena);
         if (!contrasena_valida) {
             return new Resp(
                 res, __filename, 
@@ -38,24 +39,30 @@ async function iniciar_sesion(req: _Request, res: Response) {
             )._401_unauthorized();             
         } else {
             // Crear refresh token
-            await servicio_auth.crear_refresh_token(usuario);
+            await servicio_auth.crear_refresh_token(USUARIO);
         }
 
         // Agregar token a la sesion
         if (!req.session) throw 'No hay sesión'
         req.session.token = token_generado;
 
-        let usuario_enviar = await Usuario
-            .findById(usuario._id)
+        const usuario_enviar = await USER_MODEL
+            .findById(USUARIO._id)
             .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn')
+            .populate<{rol: DocumentType<Rol>}>('rol')
             .lean();
-        let menu_usuario = obtener_menus(
-            usuario_enviar as UsuarioDocument,
+        // let usuario_enviar = await USER_MODEL
+        //     .findOne({_id: USUARIO._id})
+            
+        //     .populate<{rol: DocumentType<Rol>}('rol')
+        //     .lean();
+        let menu_usuario = await obtener_menus(
+            usuario_enviar?._id,
             MENUS
         )
-        delete usuario.rol?.permisos
-        delete usuario.rol?.__v
-        let nombre_completo = `${usuario.nombres} ${usuario.apellidos}`
+        // delete USUARIO.rol?.permisos
+        // delete USUARIO.rol?.__v
+        let nombre_completo = `${USUARIO.nombres} ${USUARIO.apellidos}`
         return new Resp(
             res, __filename, 
             { 
@@ -77,9 +84,9 @@ async function iniciar_sesion(req: _Request, res: Response) {
     }
 }
 
-async function refrescar_inicio_sesion(req: _Request, res: Response) {
+async function refrescar_inicio_sesion(req: Request, res: Response) {
     try {
-        const usuario = await Usuario.findOne({
+        const usuario = await USER_MODEL.findOne({
             nombre_usuario: req.usuario?._id
         });
         const refresh_token = String(req.params.rfrsh_tkn)
@@ -125,7 +132,7 @@ async function refrescar_inicio_sesion(req: _Request, res: Response) {
     }
 }
 
-async function cerrar_sesion(req: _Request, res: Response, mensaje = 'Hasta pronto...') {
+async function cerrar_sesion(req: Request, res: Response, mensaje = 'Hasta pronto...') {
     try {
         res.clearCookie('perpetuus-session')
         res.clearCookie('perpetuus-session.sig')
@@ -147,7 +154,7 @@ async function cerrar_sesion(req: _Request, res: Response, mensaje = 'Hasta pron
     }
 }
 
-async function validar_sesion(req: _Request, res: Response) {
+async function validar_sesion(req: Request, res: Response) {
     try {
         const { 
             sesion_valida
