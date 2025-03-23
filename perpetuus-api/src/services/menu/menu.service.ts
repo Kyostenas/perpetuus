@@ -1,8 +1,6 @@
-// import { syslog as _syslog } from '../../utils/logs.utils';
-// const syslog = _syslog(module)
+import { Rol } from '../../componentes/usuario/rol-usuario/rol-usuario.model';
+import { USER_MODEL } from '../../componentes/usuario/usuario/usuario.model';
 import { PERMISOS_DISPONIBLES, PERMISOS_MENU_PERPETUUS, PERMISOS_PERPETUUS } from '../../config/roles/permisos-api.config';
-import { Rol } from '../usuario/rol-usuario/rol-usuario.model';
-import { USER_MODEL } from '../usuario/usuario/usuario.model';
 import { DocumentType } from '@typegoose/typegoose';
 
 // (o==================================================================o)
