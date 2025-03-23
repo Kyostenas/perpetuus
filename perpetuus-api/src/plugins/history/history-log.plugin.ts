@@ -172,7 +172,7 @@ async function generate_history_log<T>(
         if (movements_done.length > 0 || doc.isNew) {
             const registroHistorial = new HISTORY_LOG_MODEL({
                 user: metadata.user_id,
-                collection: nombreColeccion,
+                collection_name: nombreColeccion,
                 modified_document_id: doc._id,
                 log_type: doc.isNew ? 'CREADO' : 'MODIFICADO',
                 movements: movements_done,

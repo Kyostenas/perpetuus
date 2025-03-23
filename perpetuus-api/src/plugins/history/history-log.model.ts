@@ -79,7 +79,7 @@ class HistoryLog implements DocumentoGenerico {
     @prop({
         required: [true, 'Se requiere el nombre de la colección'],
     })
-    public collection!: string
+    public collection_name!: string
 
     @prop({
         required: [true, 'El id del documento modificado es obligatorio'],
