@@ -6,11 +6,11 @@
 import { Schema } from 'mongoose';
 import {
     getModelForClass,
+    Index,
     modelOptions,
     plugin,
     post,
     prop,
-    Ref,
 } from '@typegoose/typegoose';
 
 /* UTILIDADES */
@@ -18,8 +18,7 @@ import { ACCIONES_MONGOOSE } from '../../utils/constantes.utils';
 import { create_text_search_field } from '../../middlewares/text-search/text-search.middleware';
 
 /* OTROS MODELOS */
-import { auto_increment } from '../../plugins/auto-increment/auto-increment.plugin';
-import { User } from '../usuario/usuario/usuario.model';
+import { auto_increment } from '../auto-increment/auto-increment.plugin';
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion IMPORTACIONES (FIN)
@@ -44,6 +43,7 @@ import { User } from '../usuario/usuario/usuario.model';
         HISTORY_LOG_MODEL,
     );
 })
+@Index({text_search_value: 'text'}, {name: 'text_search_value'})
 @modelOptions({
     schemaOptions: {
         collection: 'history_log',

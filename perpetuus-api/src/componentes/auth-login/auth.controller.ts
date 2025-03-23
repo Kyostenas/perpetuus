@@ -5,8 +5,8 @@ import { Resp } from '../../utils/response.utils';
 import { controlador_usuario } from '../usuario/usuario/usuario.controller';
 import { servicio_auth } from './auth.service';
 
-import { USER_MODEL, User } from '../usuario/usuario/usuario.model';
-import { MENUS, obtener_menus } from '../menu/menu.service';
+import { USER_MODEL } from '../usuario/usuario/usuario.model';
+import { MENUS, obtener_menus } from '../../services/menu/menu.service';
 import { Rol } from '../usuario/rol-usuario/rol-usuario.model';
 import { DocumentType } from '@typegoose/typegoose';
 

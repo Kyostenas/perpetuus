@@ -2,7 +2,7 @@
 // const syslog = _syslog(module)
 import { PERMISOS_DISPONIBLES, PERMISOS_MENU_PERPETUUS, PERMISOS_PERPETUUS } from '../../config/roles/permisos-api.config';
 import { Rol } from '../usuario/rol-usuario/rol-usuario.model';
-import { User, USER_MODEL } from '../usuario/usuario/usuario.model';
+import { USER_MODEL } from '../usuario/usuario/usuario.model';
 import { DocumentType } from '@typegoose/typegoose';
 
 // (o==================================================================o)

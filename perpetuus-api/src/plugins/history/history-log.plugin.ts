@@ -2,7 +2,7 @@ import { DocumentType, plugin } from '@typegoose/typegoose';
 import { Schema, Types } from 'mongoose';
 import mongoose, { CallbackError } from 'mongoose';
 import { detailedDiff } from 'deep-object-diff';
-import { HISTORY_LOG_MODEL } from '../../componentes/history/history-log.model';
+import { HISTORY_LOG_MODEL } from './history-log.model';
 import {
     revisarTipo,
     seleccionarCampoCualquierNivelProfundo,

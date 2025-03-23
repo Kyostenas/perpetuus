@@ -39,7 +39,7 @@ const RUTA_USUARIO = () => {
         }
     );
     router.delete('/id/:id', 
-        tiene_permiso(PERMISOS.USUARIO.ELIMINAR),
+        tiene_permiso(PERMISOS.USUARIO.ACTIVAR_DESACTIVAR),
         async (req: Request, res: Response) => { 
             return await controlador_usuario.eliminar_usuario_id(req, res) 
         }

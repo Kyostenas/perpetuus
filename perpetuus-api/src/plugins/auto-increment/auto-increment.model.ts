@@ -4,7 +4,7 @@
 
 /* IMPORTACIONES EXTERNAS */
 import { Schema } from "mongoose";
-import { getModelForClass, modelOptions, plugin, post, pre, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion IMPORTACIONES (FIN)
