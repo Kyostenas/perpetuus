@@ -7,6 +7,7 @@ import { Schema } from 'mongoose';
 const ObjectId = Schema.Types.ObjectId;
 import {
     getModelForClass,
+    Index,
     modelOptions,
     plugin,
     post,
@@ -48,6 +49,7 @@ import hystory_log_plugin from '../../../plugins/history/history-log.plugin';
         USER_MODEL,
     );
 })
+@Index({text_search_value: 'text'}, {name: 'text_search_value'})
 @modelOptions({
     schemaOptions: {
         collection: 'users',

@@ -4,7 +4,7 @@
 
 /* IMPORTACIONES EXTERNAS */
 import { Schema } from "mongoose";
-import { getModelForClass, modelOptions, plugin, post, pre, prop } from "@typegoose/typegoose";
+import { getModelForClass, Index, modelOptions, plugin, post, prop } from "@typegoose/typegoose";
 
 /* UTILIDADES */
 import { create_text_search_field } from '../../../middlewares/text-search/text-search.middleware';
@@ -41,6 +41,7 @@ import hystory_log_plugin from "../../../plugins/history/history-log.plugin";
         ROL_MODEL,
     );
 })
+@Index({text_search_value: 'text'}, {name: 'text_search_value'})
 @modelOptions({
     schemaOptions: {
         collection: 'roles',
@@ -101,14 +102,6 @@ const TEXT_SEARCH_FIELDS = [
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion BUSQUEDA (FIN)
-// (o==================================================================o)
-
-// (o==================================================================o)
-//   #region HISTORIAL (INICIO)
-// (o-----------------------------------------------------------\/-----o)
-
-// (o-----------------------------------------------------------/\-----o)
-//   #endregion HISTORIAL (FIN)
 // (o==================================================================o)
 
 // (o==================================================================o)
