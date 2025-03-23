@@ -69,8 +69,8 @@ const RUTA_ROL = () => {
     );
     
     // SUPER ADMIN
-    router.post('/super-admin', async (req: Request, res: Response) => { 
-        return await new RolController().creat_superadmin_rol(req, res) }); 
+    // router.post('/super-admin', async (req: Request, res: Response) => { 
+    //     return await new RolController().creat_superadmin_rol(req, res) }); 
 
 
     return router
