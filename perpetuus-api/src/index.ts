@@ -15,10 +15,9 @@ import cookie_session from 'cookie-session';
 import cookieParser from 'cookie-parser';
 import { Resp } from './utils/response.utils';
 import { URI_DB, PORT, COOKIE_SECRET, URL_GUI } from './config/env/env.config';
-import { RUTA_ROL } from './componentes/usuario/rol-usuario/rol-usuario.routes';
-import { RUTA_USUARIO } from './componentes/usuario/usuario/usuario.routes';
 import { RUTA_AUTH } from './componentes/auth-login/auth.routes';
 import { verificar_jwt } from './middlewares/auth-login/jwt.middleware';
+import { ROUTES_v1 } from './routes-v1';
 
 // (o==================================================================o)
 //   SERVIDOR EXPRESS (INICIO)
@@ -47,7 +46,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// LOGS REQUESTS
+// REQUEST LOGS
 app.use((req: Request, res: Response, next: any) => {
     let req_any = <any>req;
     let usuario = req_any?.usuario?.nombre_usuario;
@@ -90,7 +89,8 @@ app.get('/api', async (req: Request, res: Response): Promise<Response> => {
 });
 
 // RUTAS DE INICIO DE SESION, CREACION DE TOKEN
-// Y TOKEN DE REFRESCADO
+// Y TOKEN DE REFRESCADO.
+// Deben ir antes de la verificacion del token.
 app.use('/api/auth', RUTA_AUTH());
 
 // VERIFICACION DE TOKEN
@@ -101,20 +101,12 @@ app.use((req: Request, res: Response, next: any) => {
     verificar_jwt(req, res, next);
 });
 
-app.use('/api/roles', RUTA_ROL());
-app.use('/api/usuarios', RUTA_USUARIO());
+// MARK: RUTAS APLICACION
+app.use('/api', ROUTES_v1());
 
 // (o-----------------------------------------( MANEJO DE ERRORES ))
 
 app.use(function (err: any, req: Request, res: Response, next: any) {
-    // console.log('SI LLEGA??')
-    // console.log(err)
-    // const ERRORES = [
-    //   //Cuando el token no trae un usuario
-    //   "user_object_not_found",
-    //   //No autorizado
-    //   "permission_denied",
-    // ]
     if (err.code === 'user_object_not_found') {
         return new Resp(res, __filename, {
             mensaje: `Token no válido.`,
