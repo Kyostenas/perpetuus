@@ -61,8 +61,8 @@ const RUTA_USUARIO = () => {
     });
     
     // SUPER ADMIN
-    router.post('/super-admin', async (req: Request, res: Response) => { 
-        return await new UserController().create_super_admin(req, res) }); 
+    // router.post('/super-admin', async (req: Request, res: Response) => { 
+    //     return await new UserController().create_super_admin(req, res) }); 
 
 
     return router
