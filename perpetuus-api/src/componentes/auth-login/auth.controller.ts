@@ -2,18 +2,18 @@ import { Request, Response } from 'express';
 
 import { Resp } from '../../utils/response.utils';
 
-import { controlador_usuario } from '../usuario/usuario/usuario.controller';
 import { servicio_auth } from './auth.service';
 
 import { USER_MODEL } from '../usuario/usuario/usuario.model';
 import { MENUS, obtener_menus } from '../../services/menu/menu.service';
 import { Rol } from '../usuario/rol-usuario/rol-usuario.model';
 import { DocumentType } from '@typegoose/typegoose';
+import { UserController } from '../usuario/usuario/usuario.controller';
 
 
 
 async function registrar_usuario(req: Request, res: Response) {
-    controlador_usuario.crear_usuario(req, res);
+    new UserController().create(req, res);
 }
 
 async function iniciar_sesion(req: Request, res: Response) {

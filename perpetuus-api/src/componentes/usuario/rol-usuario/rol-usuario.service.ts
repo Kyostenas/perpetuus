@@ -5,10 +5,14 @@ import { PERMISOS_DISPONIBLES } from '../../../config/roles/permisos-api.config'
 import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
 import { CRUD_Service } from '../../../abstract-classes/crud/crud-service.abstract';
 import { DocumentType } from '@typegoose/typegoose';
-import { BeAnObject } from '@typegoose/typegoose/lib/types';
+import { BeAnObject, ReturnModelType } from '@typegoose/typegoose/lib/types';
 
 export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
-    async create({
+    getmodel(): ReturnModelType<typeof Rol, BeAnObject> {
+        return ROL_MODEL;
+    }
+
+    create = async ({
         nombre,
         descripcion,
         user_id,
@@ -16,9 +20,9 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         nombre: string;
         descripcion: string;
         user_id: string;
-    }): Promise<DocumentType<Rol, BeAnObject>> {
+    }): Promise<DocumentType<Rol, BeAnObject>> => {
         const rol_input: Rol = { nombre, description: descripcion };
-        const ROL_NUEVO = new ROL_MODEL(rol_input);
+        const ROL_NUEVO = new (this.getmodel())(rol_input);
         ROL_NUEVO.metadata = {
             user_id,
             description: 'rol creado',
@@ -26,24 +30,34 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         return await ROL_NUEVO.save();
     }
 
-    async read(): Promise<DocumentType<Rol, BeAnObject>[]> {
-        const roles = await ROL_MODEL.find()
+    read = async ({ pagination }: { pagination: Paginacion }): Promise<{
+        result: DocumentType<Rol, BeAnObject>[] | Rol[];
+        total: number;
+        pagination: Paginacion;
+    }> => {
+        const roles = this.getmodel()
+            .find()
             .sort('-creadetedAt')
-            .select('-__v');
-        return roles.filter((rol) => !rol.super_admin);
+            .select('-__v')
+            .lean();
+        return {
+            result: roles.filter((rol: Rol) => !rol.super_admin),
+            total: 0,
+            pagination,
+        };
     }
 
-    async read_by_sequence({
+    read_by_sequence = async ({
         sequence,
     }: {
         sequence: number;
-    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> {
-        const ROL = await this.model.findOne({ sequence }).lean();
+    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> => {
+        const ROL = await this.getmodel().findOne({ sequence }).lean();
         if (!ROL) throw new Error(`No se encontró el rol #${sequence}`);
         return ROL;
     }
 
-    async update({
+    update = async ({
         sequence,
         nombre,
         descripcion,
@@ -53,8 +67,8 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         nombre: string;
         descripcion: string;
         user_id: string;
-    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> {
-        await ROL_MODEL.findOneAndUpdate(
+    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> => {
+        this.getmodel().findOneAndUpdate(
             { sequence },
             { nombre, descripcion },
             {
@@ -67,14 +81,14 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         );
         return await this.read_by_sequence({ sequence });
     }
-    async activate({
+    activate = async ({
         sequence,
-        user_id
+        user_id,
     }: {
         sequence: number;
         user_id: string;
-    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> {
-        await ROL_MODEL.findOneAndUpdate(
+    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> => {
+        this.getmodel().findOneAndUpdate(
             { sequence },
             { is_active: true },
             {
@@ -87,20 +101,20 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         );
         return await this.read_by_sequence({ sequence });
     }
-    async deactivate({
+    deactivate = async ({
         sequence,
-        user_id
+        user_id,
     }: {
         sequence: number;
         user_id: string;
-    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> {
-        await ROL_MODEL.findOneAndUpdate(
+    }): Promise<DocumentType<Rol, BeAnObject> | Rol | null> => {
+        this.getmodel().findOneAndUpdate(
             { sequence },
             { is_active: false },
             {
                 metadata: {
                     user_id,
-                    description: 'rol desactivado',
+                    description: 'Rol desactivado',
                 },
                 lean: true,
             },
@@ -111,19 +125,19 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
     private mensaje_permiso_ya_existe(permiso: string) {
         return `Permiso "${permiso}" ya existe`;
     }
-    
+
     private mensaje_permiso_no_existe(permiso: string) {
         return `Permiso "${permiso}" no existe`;
     }
 
-    async crear_permisos_en_rol(
+    crear_permisos_en_rol = async (
         permissions: string[],
         rol: Rol,
         user_id?: string,
     ): Promise<{
         mensaje_res: string;
         advertencias: string[] | undefined;
-    }> {
+    }> => {
         let creados = 0;
         let existentes = 0;
         let advertencia_pedazos = [];
@@ -131,13 +145,16 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         let permisos_para_agregar = [];
         let nombres_existentes: String[] = [];
         if (permisos_existentes) {
-            nombres_existentes = permisos_existentes.map((un_perm: any) => un_perm);
+            nombres_existentes = permisos_existentes.map(
+                (un_perm: any) => un_perm,
+            );
         }
         for (let i_perm = 0; i_perm < permissions.length; i_perm++) {
             const un_permiso_nuevo = permissions[i_perm];
             if (nombres_existentes.includes(un_permiso_nuevo)) {
                 existentes += 1;
-                let advertencia = this.mensaje_permiso_ya_existe(un_permiso_nuevo);
+                let advertencia =
+                    this.mensaje_permiso_ya_existe(un_permiso_nuevo);
                 syslog.warning(advertencia);
                 advertencia_pedazos.push(advertencia);
             } else {
@@ -150,7 +167,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
                 ...(rol.permisos ? rol.permisos : []),
                 ...permisos_para_agregar,
             ];
-            await ROL_MODEL.findOneAndUpdate(
+            this.getmodel().findOneAndUpdate(
                 { _id: rol._id },
                 {
                     permisos: permisos_totales,
@@ -175,15 +192,15 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             advertencias,
         };
     }
-    
-    async eliminar_permisos_en_rol(
+
+    eliminar_permisos_en_rol = async (
         permisos_a_eliminar: string[],
         rol: Rol,
         user_id?: string,
     ): Promise<{
         mensaje_res: string;
         advertencias: string[] | undefined;
-    }> {
+    }> => {
         let eliminados = 0;
         let conservados = 0;
         let advertencia_pedazos = [];
@@ -191,9 +208,15 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         let nombres_existentes: String[] = [];
         if (permisos_existentes) {
             let permisos_para_conservar = permisos_existentes;
-            nombres_existentes = permisos_existentes.map((un_perm: any) => un_perm);
+            nombres_existentes = permisos_existentes.map(
+                (un_perm: any) => un_perm,
+            );
             conservados = nombres_existentes.length;
-            for (let i_perm = 0; i_perm < permisos_a_eliminar.length; i_perm++) {
+            for (
+                let i_perm = 0;
+                i_perm < permisos_a_eliminar.length;
+                i_perm++
+            ) {
                 const un_permiso_a_eliminar = permisos_a_eliminar[i_perm];
                 if (nombres_existentes.includes(un_permiso_a_eliminar)) {
                     conservados -= 1;
@@ -211,7 +234,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             }
             if (eliminados > 0) {
                 let permisos_totales = Object.values(permisos_para_conservar);
-                await ROL_MODEL.findOneAndUpdate(
+                this.getmodel().findOneAndUpdate(
                     { _id: rol._id },
                     {
                         permisos: permisos_totales,
@@ -237,12 +260,12 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             advertencias,
         };
     }
-    
-    async crear_rol_super_admin(): Promise<DocumentType<Rol, BeAnObject>> {
-        let rol_super_admin = await ROL_MODEL.find({ super_admin: true });
+
+    crear_rol_super_admin = async (): Promise<DocumentType<Rol, BeAnObject>> => {
+        let rol_super_admin = this.getmodel().find({ super_admin: true });
         let ya_existe = rol_super_admin.length > 0;
         if (ya_existe) throw `Ya existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
-    
+
         let rol_input: Rol = {
             nombre: NOMBRE_ROL_SUPER_ADMIN,
             super_admin: true,
@@ -250,7 +273,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
                 ' con sus capacidades y sub-capacidades.',
             ),
         };
-        const NUEVO_ROL = new ROL_MODEL(rol_input);
+        const NUEVO_ROL = new (this.getmodel())(rol_input);
         NUEVO_ROL.metadata = {
             description: 'rol de super administrador creado',
             large_description:
@@ -258,10 +281,8 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         };
         return await NUEVO_ROL.save();
     }
-    
+
     async obtener_permisos_disponibles() {
         return PERMISOS_DISPONIBLES;
     }
 }
-
-

@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
-import { Model } from 'mongoose';
 import { validar_existencia_de_campos } from '../../utils/validaciones.utils';
 import { Resp } from '../../utils/response.utils';
+import { obtener_paginacion } from '../../utils/busqueda-paginacion.utiles';
 
-export abstract class CRUD_Controller<T> {
+export abstract class CRUD_Controller<UsedModel> {
     async try_operation({
         res,
+        req,
         body,
         operation,
         res_message,
@@ -16,7 +17,8 @@ export abstract class CRUD_Controller<T> {
         fields_to_validate,
     }: {
         res: Response;
-        body?: any;
+        req: Request;
+        body?: {[type: string]: any};
         operation: Function;
         res_message: string;
         err_message: string;
@@ -37,16 +39,29 @@ export abstract class CRUD_Controller<T> {
                     })._422_unprocessable();
                 }
             }
-            const result = !!body ? await operation(body) : await operation();
+            const pagination = obtener_paginacion(req)
+            body = {...body, pagination}
+            const result = !!body 
+                ? await operation(body) 
+                : await operation();
             if (is_creation && (!result)) {
                 return new Resp(res, filename, {
                     mensaje: not_found_message ?? 'No encontrado'
                 })._404_not_found()
             }
-            const RESP = new Resp(res, filename, {
-                mensaje: res_message,
-                datos: result,
-            });
+            const RESP = (
+                result.result && result.total && result.pagination
+                    ? new Resp(res, filename, {
+                        mensaje: res_message,
+                        datos: result.result,
+                        total: result.total,
+                        pagination: result.pagination,
+                    })
+                    : new Resp(res, filename, {
+                        mensaje: res_message,
+                        datos: result,
+                    })
+            );
             if (is_creation) {
                 return RESP._201_created();
             } else {
@@ -60,7 +75,7 @@ export abstract class CRUD_Controller<T> {
         }
     }
      
-    model = <T>Model;
+    abstract getmodel(): UsedModel;
 
     abstract create(
         req: Request,

@@ -284,4 +284,5 @@ export interface DatosResponse {
      * elementos de la consulta total sin paginarse.
      */
     total?: number;
+    pagination?: Paginacion;
 };
