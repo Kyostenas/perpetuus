@@ -121,6 +121,10 @@ app.use(function (err: any, req: Request, res: Response, next: any) {
             error: err,
         })._403_forbidden();
     }
+    return new Resp(res, __filename, {
+        mensaje: err.message,
+        error: err
+    })._500_internal_server_error()
 });
 
 // (o-----------------------------------------( CONECCION MONGODB ))
