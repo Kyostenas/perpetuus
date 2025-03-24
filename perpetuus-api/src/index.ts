@@ -78,12 +78,6 @@ app.use((req: Request, res: Response, next: any) => {
 
 // (o-----------------------------------------( RUTAS ))
 
-app.all('*', (req: Request, res: Response, next: any) => {
-    var fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-    syslog.debug('FULL URL: ' + fullUrl);
-    next();
-});
-
 app.get('/api', async (req: Request, res: Response): Promise<Response> => {
     return new Resp(res, __filename, { mensaje: 'API Funcionando' })._200_ok();
 });
@@ -106,7 +100,20 @@ app.use('/api', ROUTES_v1());
 
 // (o-----------------------------------------( MANEJO DE ERRORES ))
 
+
+app.all('*', (req: Request, res: Response, next: any) => {
+    const err = new Error(`no existe la ruta (${req.method}) ${req.originalUrl}`)
+    err.cause = 'ruta no encontrada'
+    next(err);
+});
+
 app.use(function (err: any, req: Request, res: Response, next: any) {
+    if (err.cause === 'ruta no encontrada') {
+        return new Resp(res, __filename, {
+            mensaje: err.message,
+            error: err,
+        })._404_not_found();
+    }
     if (err.code === 'user_object_not_found') {
         return new Resp(res, __filename, {
             mensaje: `Token no válido.`,
