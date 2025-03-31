@@ -41,7 +41,7 @@ async function crear_refresh_token(usuario: User) {
     let hoy = new Date();
     // 10 dias de validez para el refresh token
     let validez = new Date(hoy.setDate(hoy.getDate() + 10));
-    let modificado = await USER_MODEL.findOneAndUpdate(
+    let modificado = await USER_MODEL.updateOne(
         { _id: usuario._id },
         { $set: { 
             rfrsh_tkn: refresh_token_generado,
@@ -49,6 +49,7 @@ async function crear_refresh_token(usuario: User) {
         }},
         { useFindAndModify: false, new: true }
     );
+    return modificado
 }
 
 async function refrescar_token_inicio_sesion(usuario: User, refresh_token: string) {

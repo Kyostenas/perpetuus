@@ -9,6 +9,7 @@ import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
 import { CRUD_Controller } from '../../../abstract-classes/crud/crud-controller.abstract';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { BeAnObject } from '@typegoose/typegoose/lib/types';
+import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
 
 export class RolController extends CRUD_Controller<typeof ROL_MODEL> {
     getmodel(): ReturnModelType<typeof Rol, BeAnObject> {
@@ -157,19 +158,20 @@ export class RolController extends CRUD_Controller<typeof ROL_MODEL> {
         req: Request,
         res: Response,
     ): Promise<Response<any, Record<string, any>>> => {
-        const rol = this.read_by_sequence(req, res);
+        validar_existencia_de_campos(['sequence'], req.params)
+        const rol = await new RolService().read_by_sequence({sequence: Number(req.params.sequence)});
         const BODY = {
             ...req.body,
             ...req.params,
             user_id: req.usuario?._id,
             rol,
         };
-        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
-        if (!!SUPER_ADMIN) {
-            return new Resp(res, __filename, {
-                mensaje: `No se puede modificar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`,
-            })._403_forbidden();
-        }
+        // const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        // if (!!SUPER_ADMIN) {
+        //     return new Resp(res, __filename, {
+        //         mensaje: `No se puede modificar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`,
+        //     })._403_forbidden();
+        // }
         return this.try_operation({
             res,
             req,
@@ -188,19 +190,20 @@ export class RolController extends CRUD_Controller<typeof ROL_MODEL> {
         req: Request,
         res: Response,
     ): Promise<Response<any, Record<string, any>>> => {
-        const rol = this.read_by_sequence(req, res);
+        validar_existencia_de_campos(['sequence'], req.params)
+        const rol = new RolService().read_by_sequence({sequence: Number(req.params.sequence)});
         const BODY = {
             ...req.body,
             ...req.params,
             user_id: req.usuario?._id,
             rol,
         };
-        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
-        if (!!SUPER_ADMIN) {
-            return new Resp(res, __filename, {
-                mensaje: `No se puede modificar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`,
-            })._403_forbidden();
-        }
+        // const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        // if (!!SUPER_ADMIN) {
+        //     return new Resp(res, __filename, {
+        //         mensaje: `No se puede modificar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`,
+        //     })._403_forbidden();
+        // }
         return this.try_operation({
             res,
             req,

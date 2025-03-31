@@ -112,4 +112,15 @@ declare module 'mongoose' {
             large_description?: string;
         };
     }
+
+    export interface Query {
+        /**
+         * A custom field to store the state of a document prior
+         * to its modification.
+         * 
+         * To be used with a pre hook to pass information to a post
+         * hook.
+         */
+        _original_document?: any
+    }
 }

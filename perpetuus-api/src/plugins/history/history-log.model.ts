@@ -28,22 +28,14 @@ import { auto_increment } from '../auto-increment/auto-increment.plugin';
 //   #region ESQUEMA (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-@plugin(auto_increment, {field: 'sequence'})
+@plugin(auto_increment, { field: 'sequence' })
 @post<HistoryLog>(ACCIONES_MONGOOSE.SAVE, (rol) => {
-    create_text_search_field(
-        rol,
-        TEXT_SEARCH_FIELDS,
-        HISTORY_LOG_MODEL,
-    );
+    create_text_search_field(rol, TEXT_SEARCH_FIELDS, HISTORY_LOG_MODEL);
 })
 @post<HistoryLog>(ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE, (rol) => {
-    create_text_search_field(
-        rol,
-        TEXT_SEARCH_FIELDS,
-        HISTORY_LOG_MODEL,
-    );
+    create_text_search_field(rol, TEXT_SEARCH_FIELDS, HISTORY_LOG_MODEL);
 })
-@Index({text_search_value: 'text'}, {name: 'text_search_value'})
+@Index({ text_search_value: 'text' }, { name: 'text_search_value' })
 @modelOptions({
     schemaOptions: {
         collection: 'history_log',
@@ -51,9 +43,8 @@ import { auto_increment } from '../auto-increment/auto-increment.plugin';
     },
 })
 class HistoryLog implements DocumentoGenerico {
+    _id?: string | Schema.Types.ObjectId;
 
-    _id?: string | Schema.Types.ObjectId
-    
     @prop()
     public sequence?: number;
 
@@ -68,23 +59,23 @@ class HistoryLog implements DocumentoGenerico {
     @prop()
     public text_search_value?: string;
 
-    @prop({ default: true})
+    @prop({ default: true })
     public is_active?: boolean;
 
     @prop({
         // required: [true, 'Se requiere el usuario que hace el movimiento'],
     })
-    public user!: string
+    public user!: string;
 
     @prop({
         required: [true, 'Se requiere el nombre de la colección'],
     })
-    public collection_name!: string
+    public collection_name!: string;
 
     @prop({
         required: [true, 'El id del documento modificado es obligatorio'],
     })
-    public modified_document_id!: string
+    public modified_document_id!: string;
 
     @prop({
         required: [true, 'El tipo de registro es necesario'],
@@ -93,15 +84,20 @@ class HistoryLog implements DocumentoGenerico {
             message: 'El tipo de registro "{VALUE}" no existe',
         },
     })
-    public log_type!: string
+    public log_type!: string;
 
     @prop({
-        required: [true, 'Se requiere el tipo de operación']
+        required: [true, 'Se requiere el tipo de operación'],
     })
-    public operation_type!: string
+    public operation_type!: string;
 
-    @prop({_id: false, default: []})
+    @prop({ _id: false, default: [] })
     public movements: Movement[] = [];
+
+    @prop({
+        required: [true, 'Se requiere el delta (los cambios hechos)'],
+    })
+    public delta!: any;
 
     @prop()
     public large_description?: string;
@@ -111,22 +107,22 @@ class Movement {
     @prop({
         required: [true, 'Se requiere el nombre del campo del movimiento'],
     })
-    public field_name!: string
+    public path!: string;
 
     @prop()
-    public previous_value!: any
+    public from!: string;
 
-    @prop({required: [true, 'No se puede crear un movimiento sin el valor nuevo']})
-    public new_value: any | undefined
+    @prop({ required: [true, 'No se puede crear un movimiento sin su valor'] })
+    public value: any;
 
     @prop({
         required: [true, 'El tipo de movimiento es obligatorio'],
         enum: {
-            values: ['crear', 'eliminar', 'editar'],
-            message: 'El tipo de movimiento "{VALUE}" no existe',
+            values: ['replace', 'remove', 'add', 'move'],
+            message: 'El tipo de operación "{VALUE}" no existe',
         },
     })
-    public movement_type!: string
+    public op!: string;
 }
 
 // (o-----------------------------------------------------------/\-----o)
@@ -144,7 +140,7 @@ const TEXT_SEARCH_FIELDS = [
     'user.apellidos',
     'user.nombre_usuario',
     'collection',
-    'operation_type'
+    'operation_type',
 ];
 
 // (o-----------------------------------------------------------/\-----o)

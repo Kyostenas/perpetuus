@@ -28,9 +28,13 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             description: 'rol creado',
         };
         return await ROL_NUEVO.save();
-    }
+    };
 
-    read = async ({ pagination }: { pagination: Paginacion }): Promise<{
+    read = async ({
+        pagination,
+    }: {
+        pagination: Paginacion;
+    }): Promise<{
         result: DocumentType<Rol, BeAnObject>[] | Rol[];
         total: number;
         pagination: Paginacion;
@@ -45,7 +49,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             total: 0,
             pagination,
         };
-    }
+    };
 
     read_by_sequence = async ({
         sequence,
@@ -55,7 +59,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         const ROL = await this.getmodel().findOne({ sequence }).lean();
         if (!ROL) throw new Error(`No se encontró el rol #${sequence}`);
         return ROL;
-    }
+    };
 
     update = async ({
         sequence,
@@ -80,7 +84,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
+    };
     activate = async ({
         sequence,
         user_id,
@@ -100,7 +104,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
+    };
     deactivate = async ({
         sequence,
         user_id,
@@ -120,7 +124,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
+    };
 
     private mensaje_permiso_ya_existe(permiso: string) {
         return `Permiso "${permiso}" ya existe`;
@@ -130,11 +134,15 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         return `Permiso "${permiso}" no existe`;
     }
 
-    crear_permisos_en_rol = async (
-        permissions: string[],
-        rol: Rol,
-        user_id?: string,
-    ): Promise<{
+    crear_permisos_en_rol = async ({
+        permissions,
+        rol,
+        user_id,
+    }: {
+        permissions: string[];
+        rol: Rol;
+        user_id?: string;
+    }): Promise<{
         mensaje_res: string;
         advertencias: string[] | undefined;
     }> => {
@@ -167,7 +175,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
                 ...(rol.permisos ? rol.permisos : []),
                 ...permisos_para_agregar,
             ];
-            this.getmodel().findOneAndUpdate(
+            await this.getmodel().findOneAndUpdate(
                 { _id: rol._id },
                 {
                     permisos: permisos_totales,
@@ -191,7 +199,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             mensaje_res: `${creados} Permisos creados. ${existentes} Ya existen.`,
             advertencias,
         };
-    }
+    };
 
     eliminar_permisos_en_rol = async (
         permisos_a_eliminar: string[],
@@ -259,9 +267,11 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
             mensaje_res: `${eliminados} Permisos eliminados. ${conservados} Se conservaron.`,
             advertencias,
         };
-    }
+    };
 
-    crear_rol_super_admin = async (): Promise<DocumentType<Rol, BeAnObject>> => {
+    crear_rol_super_admin = async (): Promise<
+        DocumentType<Rol, BeAnObject>
+    > => {
         let rol_super_admin = this.getmodel().find({ super_admin: true });
         let ya_existe = rol_super_admin.length > 0;
         if (ya_existe) throw `Ya existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
@@ -280,7 +290,7 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
                 'este rol solo se puede crear con una ruta que no valida usuario, por lo que no se registra que usuario lo crea',
         };
         return await NUEVO_ROL.save();
-    }
+    };
 
     async obtener_permisos_disponibles() {
         return PERMISOS_DISPONIBLES;

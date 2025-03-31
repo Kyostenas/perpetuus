@@ -49,19 +49,19 @@ const RUTA_ROL = () => {
     // (o-----------------------------------------( ACCIONES EXTRA ))
         
     // PERMISOS
-    router.put('/permisos', 
-        tiene_permiso(PERMISOS.ROL.PERMISO.AGREGAR),
-        async (req: Request, res: Response) => { 
-            return await new RolController().add_permissions_to_rol(req, res)
-        }
-    );
     router.get('/permisos', 
         tiene_permiso(PERMISOS.ROL.PERMISO.OBTENER),
         async (req: Request, res: Response) => { 
             return await new RolController().get_permissions(req, res)
         }
     );
-    router.put('/permisos', 
+    router.put('/permisos/sequence/:sequence', 
+        tiene_permiso(PERMISOS.ROL.PERMISO.AGREGAR),
+        async (req: Request, res: Response) => { 
+            return await new RolController().add_permissions_to_rol(req, res)
+        }
+    );
+    router.put('/permisos/sequence/:sequence', 
         tiene_permiso(PERMISOS.ROL.PERMISO.ELIMINAR),
         async (req: Request, res: Response) => { 
             return await new RolController().remove_permissions_from_rol(req, res)
@@ -69,8 +69,8 @@ const RUTA_ROL = () => {
     );
     
     // SUPER ADMIN
-    // router.post('/super-admin', async (req: Request, res: Response) => { 
-    //     return await new RolController().creat_superadmin_rol(req, res) }); 
+    router.post('/super-admin', async (req: Request, res: Response) => { 
+        return await new RolController().creat_superadmin_rol(req, res) }); 
 
 
     return router

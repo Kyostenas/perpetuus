@@ -34,22 +34,14 @@ import hystory_log_plugin from '../../../plugins/history/history-log.plugin';
 // (o-----------------------------------------------------------\/-----o)
 
 @plugin(hystory_log_plugin, {})
-@plugin(auto_increment, {field: 'sequence'})
+@plugin(auto_increment, { field: 'sequence' })
 @post<User>(ACCIONES_MONGOOSE.SAVE, (rol) => {
-    create_text_search_field(
-        rol,
-        TEXT_SEARCH_FIELDS,
-        USER_MODEL,
-    );
+    create_text_search_field(rol, TEXT_SEARCH_FIELDS, USER_MODEL);
 })
 @post<User>(ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE, (rol) => {
-    create_text_search_field(
-        rol,
-        TEXT_SEARCH_FIELDS,
-        USER_MODEL,
-    );
+    create_text_search_field(rol, TEXT_SEARCH_FIELDS, USER_MODEL);
 })
-@Index({text_search_value: 'text'}, {name: 'text_search_value'})
+@Index({ text_search_value: 'text' }, { name: 'text_search_value' })
 @modelOptions({
     schemaOptions: {
         collection: 'users',
@@ -57,9 +49,8 @@ import hystory_log_plugin from '../../../plugins/history/history-log.plugin';
     },
 })
 class User implements DocumentoGenerico {
-
     _id?: string | Schema.Types.ObjectId | undefined;
-    
+
     @prop({ unique: true })
     public sequence?: number;
 
@@ -71,7 +62,6 @@ class User implements DocumentoGenerico {
 
     @prop({ default: true })
     public is_active?: boolean;
-    
 
     @prop({ required: [true, 'Se requiere el nombre del usuario'] })
     public nombres!: string;
