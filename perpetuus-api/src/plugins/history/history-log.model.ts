@@ -9,16 +9,19 @@ import {
     Index,
     modelOptions,
     plugin,
-    post,
     prop,
+    Ref,
 } from '@typegoose/typegoose';
 
 /* UTILIDADES */
+import { auto_increment } from '../auto-increment/auto-increment.plugin';
+import text_search_index, {
+    TextSearchIndexOptions,
+} from '../text-search-index/text-search-index.plugin';
 import { ACCIONES_MONGOOSE } from '../../utils/constantes.utils';
-import { create_text_search_field } from '../../middlewares/text-search/text-search.middleware';
 
 /* OTROS MODELOS */
-import { auto_increment } from '../auto-increment/auto-increment.plugin';
+import { User } from '../../componentes/usuario/usuario/usuario.model';
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion IMPORTACIONES (FIN)
@@ -28,14 +31,30 @@ import { auto_increment } from '../auto-increment/auto-increment.plugin';
 //   #region ESQUEMA (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-@plugin(auto_increment, { field: 'sequence' })
-@post<HistoryLog>(ACCIONES_MONGOOSE.SAVE, (rol) => {
-    create_text_search_field(rol, TEXT_SEARCH_FIELDS, HISTORY_LOG_MODEL);
-})
-@post<HistoryLog>(ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE, (rol) => {
-    create_text_search_field(rol, TEXT_SEARCH_FIELDS, HISTORY_LOG_MODEL);
-})
-@Index({ text_search_value: 'text' }, { name: 'text_search_value' })
+// const TEXT_SEARCH_FIELDS = [
+//     'sequence',
+//     'description',
+//     'user.nombres',
+//     'user.apellidos',
+//     'user.nombre_usuario',
+//     'collection',
+//     'operation_type',
+// ];
+
+// const PATHS_TO_POPULATE: TextSearchIndexOptions['paths_to_populate'] = [
+//     {
+//         path: 'user',
+//     },
+// ];
+
+@plugin(auto_increment<typeof HISTORY_LOG_MODEL>, { field: 'sequence' })
+// @plugin(text_search_index<typeof HISTORY_LOG_MODEL>, {
+//     fields: TEXT_SEARCH_FIELDS,
+//     paths_to_populate: PATHS_TO_POPULATE,
+// })
+@Index({user: 1}, {name: 'user'})
+@Index({collection_name: 1}, {name: 'collection_name'})
+@Index({modified_document_id: 1}, {name: 'modified_document_id'})
 @modelOptions({
     schemaOptions: {
         collection: 'history_log',
@@ -45,7 +64,7 @@ import { auto_increment } from '../auto-increment/auto-increment.plugin';
 class HistoryLog implements DocumentoGenerico {
     _id?: string | Schema.Types.ObjectId;
 
-    @prop()
+    @prop({unique: true})
     public sequence?: number;
 
     @prop({
@@ -63,9 +82,9 @@ class HistoryLog implements DocumentoGenerico {
     public is_active?: boolean;
 
     @prop({
-        // required: [true, 'Se requiere el usuario que hace el movimiento'],
+        ref: () => User
     })
-    public user!: string;
+    public user?: Ref<User>;
 
     @prop({
         required: [true, 'Se requiere el nombre de la colección'],
@@ -78,15 +97,10 @@ class HistoryLog implements DocumentoGenerico {
     public modified_document_id!: string;
 
     @prop({
-        required: [true, 'El tipo de registro es necesario'],
         enum: {
-            values: ['CREADO', 'MODIFICADO'],
-            message: 'El tipo de registro "{VALUE}" no existe',
+            values: Object.values(ACCIONES_MONGOOSE),
+            message: 'La operación "{VALUE}" no existe'
         },
-    })
-    public log_type!: string;
-
-    @prop({
         required: [true, 'Se requiere el tipo de operación'],
     })
     public operation_type!: string;
@@ -127,32 +141,6 @@ class Movement {
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion ESQUEMA (FIN)
-// (o==================================================================o)
-
-// (o==================================================================o)
-//   #region BUSQUEDA (INICIO)
-// (o-----------------------------------------------------------\/-----o)
-
-const TEXT_SEARCH_FIELDS = [
-    'sequence',
-    'description',
-    'user.nombres',
-    'user.apellidos',
-    'user.nombre_usuario',
-    'collection',
-    'operation_type',
-];
-
-// (o-----------------------------------------------------------/\-----o)
-//   #endregion BUSQUEDA (FIN)
-// (o==================================================================o)
-
-// (o==================================================================o)
-//   #region HISTORIAL (INICIO)
-// (o-----------------------------------------------------------\/-----o)
-
-// (o-----------------------------------------------------------/\-----o)
-//   #endregion HISTORIAL (FIN)
 // (o==================================================================o)
 
 // (o==================================================================o)

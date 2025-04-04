@@ -7,23 +7,20 @@ import { Schema } from 'mongoose';
 const ObjectId = Schema.Types.ObjectId;
 import {
     getModelForClass,
-    Index,
     modelOptions,
     plugin,
-    post,
     prop,
     Ref,
 } from '@typegoose/typegoose';
 
 /* UTILIDADES */
 import { validar_correo } from '../../../utils/validaciones.utils';
-import { ACCIONES_MONGOOSE } from '../../../utils/constantes.utils';
-import { create_text_search_field } from '../../../middlewares/text-search/text-search.middleware';
+import { auto_increment } from '../../../plugins/auto-increment/auto-increment.plugin';
+import hystory_log_plugin from '../../../plugins/history/history-log.plugin';
+import text_search_index from '../../../plugins/text-search-index/text-search-index.plugin';
 
 /* OTROS MODELOS */
 import { Rol } from '../rol-usuario/rol-usuario.model';
-import { auto_increment } from '../../../plugins/auto-increment/auto-increment.plugin';
-import hystory_log_plugin from '../../../plugins/history/history-log.plugin';
 
 // (o-----------------------------------------------------------/\-----o)
 //   #endregion IMPORTACIONES (FIN)
@@ -33,15 +30,19 @@ import hystory_log_plugin from '../../../plugins/history/history-log.plugin';
 //   #region ESQUEMA (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-@plugin(hystory_log_plugin, {})
-@plugin(auto_increment, { field: 'sequence' })
-@post<User>(ACCIONES_MONGOOSE.SAVE, (rol) => {
-    create_text_search_field(rol, TEXT_SEARCH_FIELDS, USER_MODEL);
-})
-@post<User>(ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE, (rol) => {
-    create_text_search_field(rol, TEXT_SEARCH_FIELDS, USER_MODEL);
-})
-@Index({ text_search_value: 'text' }, { name: 'text_search_value' })
+const TEXT_SEARCH_FIELDS = [
+    'description',
+    'sequence',
+    'nombres',
+    'apellidos',
+    'nombre_usuario',
+    'correo',
+    'numero_celular',
+];
+
+@plugin(auto_increment<typeof USER_MODEL>, { field: 'sequence' })
+@plugin(hystory_log_plugin<typeof USER_MODEL>, {})
+@plugin(text_search_index<typeof USER_MODEL>, { fields: TEXT_SEARCH_FIELDS })
 @modelOptions({
     schemaOptions: {
         collection: 'users',
@@ -110,34 +111,10 @@ class User implements DocumentoGenerico {
 // (o==================================================================o)
 
 // (o==================================================================o)
-//   #region BUSQUEDA (INICIO)
-// (o-----------------------------------------------------------\/-----o)
-
-const TEXT_SEARCH_FIELDS = [
-    'description',
-    'sequence',
-    'nombres',
-    'apellidos',
-    'nombre_usuario',
-    'correo',
-    'numero_celular',
-];
-
-// (o-----------------------------------------------------------/\-----o)
-//   #endregion BUSQUEDA (FIN)
-// (o==================================================================o)
-
-// (o==================================================================o)
-//   #region HISTORIAL (INICIO)
-// (o-----------------------------------------------------------\/-----o)
-
-// (o-----------------------------------------------------------/\-----o)
-//   #endregion HISTORIAL (FIN)
-// (o==================================================================o)
-
-// (o==================================================================o)
 //   #region EXPORTACIONES (INICIO)
 // (o-----------------------------------------------------------\/-----o)
+
+console.log('USER MODEL: ', User)
 
 const USER_MODEL = getModelForClass(User);
 export { USER_MODEL, User };

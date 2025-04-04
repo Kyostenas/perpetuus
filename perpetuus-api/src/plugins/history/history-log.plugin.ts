@@ -4,15 +4,15 @@ import mongoose, { CallbackError } from 'mongoose';
 import { HISTORY_LOG_MODEL } from './history-log.model';
 import { ACCIONES_MONGOOSE } from '../../utils/constantes.utils';
 import { syslog as _syslog } from '../../utils/logs.utils';
-const syslog = _syslog(module)
-import jsonpatch from 'jsondiffpatch/formatters/jsonpatch'
-import * as jsondiffpatch from 'jsondiffpatch'
+const syslog = _syslog(module);
+import jsonpatch from 'jsondiffpatch/formatters/jsonpatch';
+import * as jsondiffpatch from 'jsondiffpatch';
 const JSONDIFFPATCH_INSTANCE = jsondiffpatch.create({
     arrays: {
         detectMove: true,
-        includeValueOnMove: true
+        includeValueOnMove: true,
     },
-})
+});
 
 // (o==================================================================o)
 //   #region VARIABLES (INICIO)
@@ -38,15 +38,29 @@ function hystory_log_plugin<T>(
     schema: Schema<T>,
     options: HistoryLogOptions = {},
 ) {
+    /* Store the state of the document before it's modified */
     schema.pre(
         ACCIONES_MONGOOSE.SAVE,
         async function (
             this: DocumentType<T>,
             next: (err?: CallbackError) => void,
         ) {
-            const metadata = this.metadata ?? { description: '' };
+            this.original_document = this;
+            try {
+                next();
+            } catch {}
+        },
+    );
+    /* Trigger history log */
+    schema.post(
+        ACCIONES_MONGOOSE.SAVE,
+        async function (
+            doc: DocumentType<T>,
+            next: (err?: CallbackError) => void,
+        ) {
+            const metadata = doc.metadata ?? { description: '' };
             generate_history_log(
-                this,
+                doc,
                 undefined,
                 schema,
                 options,
@@ -54,9 +68,11 @@ function hystory_log_plugin<T>(
                 metadata,
                 next,
             );
+            try {
+                next();
+            } catch {}
         },
     );
-
     /* Store the state of the document before it's modified */
     schema.pre(
         ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE,
@@ -93,6 +109,9 @@ function hystory_log_plugin<T>(
                 metadata,
                 next,
             );
+            try {
+                next();
+            } catch {}
         },
     );
 }
@@ -119,38 +138,31 @@ async function generate_history_log<T>(
 ) {
     try {
         const doc = document;
-        const ES_NUEVO = doc.isNew;
         const collection_name = document.collection.name;
-        let previous_doc = null
+        let previous_doc = null;
         if (!!query) {
-            previous_doc = query._original_document
+            previous_doc = query._original_document;
         } else {
             previous_doc = JSON.parse(
                 JSON.stringify(
-                    ES_NUEVO
+                    operation_type === 'save'
                         ? {}
-                        : await doc.collection.findOne({
-                              _id: new Types.ObjectId(<string>doc._id),
-                          }),
+                        : doc.original_document
                 ),
             );
         }
         const new_doc = JSON.parse(JSON.stringify(doc));
-        const DELTA = JSONDIFFPATCH_INSTANCE.diff(
-            previous_doc, 
-            new_doc
-        )
-        const JSON_PATCH = new jsonpatch().format(DELTA)
+        const DELTA = JSONDIFFPATCH_INSTANCE.diff(previous_doc, new_doc);
+        const JSON_PATCH = new jsonpatch().format(DELTA);
         const registroHistorial = new HISTORY_LOG_MODEL({
-            user: metadata.user_id,
             collection_name: collection_name,
             modified_document_id: doc._id,
-            log_type: ES_NUEVO ? 'CREADO' : 'MODIFICADO',
             delta: DELTA,
             movements: JSON_PATCH,
             operation_type,
             description: metadata.description,
             large_description: metadata.large_description,
+            user: new mongoose.Types.ObjectId(metadata.user_id),
         });
         await registroHistorial.save();
         try {
@@ -164,7 +176,7 @@ async function generate_history_log<T>(
                 ),
             );
         } catch (_err) {
-            syslog.error(`Primero hubo un error: ${err}\nLuego otro: ${err}`)
+            syslog.error(`Primero hubo un error: ${err}\nLuego otro: ${err}`);
         }
     }
 }

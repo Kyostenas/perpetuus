@@ -1,4 +1,9 @@
 // (o-----------------------------------------( IMPORTACIONES ))
+
+/* LEAVE THIS AS IT IS */
+import MODEL_IMPORTS_BARREL from './model-barrel';
+MODEL_IMPORTS_BARREL
+
 import 'reflect-metadata';
 import mongoose from 'mongoose';
 mongoose.set('strictQuery', false);

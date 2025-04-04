@@ -104,6 +104,7 @@ declare module 'mongoose' {
             description: string;
             large_description?: string;
         };
+        original_document?: Document
     }
     export interface QueryOptions {
         metadata?: {
