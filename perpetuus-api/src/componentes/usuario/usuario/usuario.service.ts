@@ -12,6 +12,7 @@ import { Types } from 'mongoose';
 import { CRUD_Service } from '../../../abstract-classes/crud/crud-service.abstract';
 import { DocumentType } from '@typegoose/typegoose';
 import { BeAnObject, ReturnModelType } from '@typegoose/typegoose/lib/types';
+import DBReadingService from '../../../services/db-reading/db-reading.service';
 
 export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
     public getmodel(): ReturnModelType<typeof User, BeAnObject> {
@@ -57,29 +58,43 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
             description: 'Usuario creado',
         };
         return await nuevo_usuario.save();
-    }
-    read = async ({ pagination }: { pagination: Paginacion }): Promise<{
+    };
+    read = async ({
+        pagination,
+        term,
+    }: {
+        pagination: Paginacion;
+        term: string;
+    }): Promise<{
         result: DocumentType<User, BeAnObject>[] | User[];
         total: number;
         pagination: Paginacion;
     }> => {
-        const { CRITERIOS_SORT, PROJECTION } = generar_criterios_sort(
+        const DB_READING_SERVICE = new DBReadingService({
             pagination,
-            false,
-        );
-        const DESDE = Number(pagination.desde);
-        const LIMITE = Number(pagination.limite);
-        let query_filtros = {};
-        let total = await this.getmodel().countDocuments(query_filtros);
-        const resultado = await this.getmodel()
-            .find(query_filtros, PROJECTION)
-            .sort(CRITERIOS_SORT)
-            .skip(DESDE)
-            .limit(LIMITE)
-            .select('-__v -contrasena -rfrsh_tkn_validity -rfrsh_tkn')
-            .lean();
-        return { result: resultado, total, pagination };
-    }
+            model: this.getmodel(),
+            term,
+            projection: {
+                __v: 0,
+                contrasena: 0,
+                rfrsh_tkn_validity: 0,
+                rfrsh_tkn: 0,
+                text_search_value: 0,
+            },
+            paths_to_populate: [
+                {
+                    path: 'rol',
+                    select: '-text_search_value -__v -permisos'
+                }
+            ]
+        });
+        const RESULT = await DB_READING_SERVICE.smart_read();
+        return {
+            result: RESULT.result,
+            total: RESULT.total,
+            pagination: RESULT.pagination,
+        };
+    };
     read_by_sequence = async ({
         sequence,
     }: {
@@ -88,7 +103,7 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
         const USER = await this.getmodel().findOne({ sequence }).lean();
         if (!USER) throw new Error(`No se encontró el usuario #${sequence}`);
         return USER;
-    }
+    };
     update = async ({
         id,
         nombres,
@@ -120,7 +135,7 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
             },
         );
         return rol;
-    }
+    };
     activate = async ({
         sequence,
         user_id,
@@ -140,7 +155,7 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
+    };
     deactivate = async ({
         sequence,
         user_id,
@@ -160,7 +175,7 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
+    };
 
     // (o-----------------------------------------------------------/\-----o)
     //   #endregion CRUD
@@ -192,7 +207,7 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
+    };
 
     remove_rol_from_user = async ({
         sequence,
@@ -212,8 +227,8 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
             },
         );
         return await this.read_by_sequence({ sequence });
-    }
-     
+    };
+
     create_super_admin = async (): Promise<
         User | DocumentType<User, BeAnObject> | null
     > => {
@@ -224,10 +239,12 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
         if (no_existe_rol_super_admin) {
             throw `No existe el rol ${NOMBRE_ROL_SUPER_ADMIN}`;
         }
-        const usuario_super_admin = await this.getmodel().findOne({
-            nombre_usuario: NOMBRE_USUARIO_SUPER_ADMIN,
-        }).lean();
-        console.log(usuario_super_admin)
+        const usuario_super_admin = await this.getmodel()
+            .findOne({
+                nombre_usuario: NOMBRE_USUARIO_SUPER_ADMIN,
+            })
+            .lean();
+        console.log(usuario_super_admin);
         let ya_existe_usuario_super_admin = !!usuario_super_admin;
         if (ya_existe_usuario_super_admin) {
             throw `Ya existe el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`;
@@ -255,7 +272,7 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
                 'Este usuario solo se puede crear externamente, por lo que no especifica qué usuario lo creó',
         };
         return await NEW_USER.save();
-    }
+    };
 
     // (o-----------------------------------------------------------/\-----o)
     //   #endregion EXTRA-ACTIONS

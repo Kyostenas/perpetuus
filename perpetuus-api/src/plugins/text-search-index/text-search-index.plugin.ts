@@ -134,11 +134,7 @@ export async function create_text_search_field(
 
 export interface TextSearchIndexOptions {
     fields: string[];
-    paths_to_populate?: {
-        path: string;
-        model?: string;
-        populate?: TextSearchIndexOptions['paths_to_populate'];
-    }[];
+    paths_to_populate?: PathsToPopulate[];
 }
 
 export default text_search_index;

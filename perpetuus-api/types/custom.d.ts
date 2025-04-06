@@ -44,6 +44,7 @@ declare global {
         limite: number;
         desde: number;
         pagina_actual: number;
+        total_de_paginas: number;
         total_elementos: number;
         campos_ordenamiento: {
             [type: string]: {
@@ -66,6 +67,13 @@ declare global {
         user_id?: string | Types.ObjectId;
         description: string;
         large_description?: string;
+    }
+
+    export type PathsToPopulate = {
+        path: string;
+        model?: string;
+        select?: string;
+        populate?: PathsToPopulate;
     }
 }
 

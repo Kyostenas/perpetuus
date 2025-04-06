@@ -8,7 +8,8 @@ export function obtener_paginacion(request: Request): Paginacion {
             campos_ordenamiento: {},
             desde: 0,
             limite: 5,
-            pagina_actual: 1,
+            pagina_actual: 0,
+            total_de_paginas: 0,
             total_elementos: 0,
         };
         return PAGINACION;

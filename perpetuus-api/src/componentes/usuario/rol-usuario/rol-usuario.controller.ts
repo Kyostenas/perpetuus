@@ -41,9 +41,11 @@ export class RolController extends CRUD_Controller<typeof ROL_MODEL> {
         req: Request,
         res: Response,
     ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = req.query
         return this.try_operation({
             res,
             req,
+            body: BODY,
             operation: new RolService().read,
             res_message: 'Se obtuvieron todos los roles',
             err_message: 'Error al crear rol',

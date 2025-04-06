@@ -6,6 +6,7 @@ import { NOMBRE_ROL_SUPER_ADMIN } from '../../../utils/constantes.utils';
 import { CRUD_Service } from '../../../abstract-classes/crud/crud-service.abstract';
 import { DocumentType } from '@typegoose/typegoose';
 import { BeAnObject, ReturnModelType } from '@typegoose/typegoose/lib/types';
+import DBReadingService from '../../../services/db-reading/db-reading.service';
 
 export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
     getmodel(): ReturnModelType<typeof Rol, BeAnObject> {
@@ -32,22 +33,27 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
 
     read = async ({
         pagination,
+        term,
     }: {
         pagination: Paginacion;
+        term: string,
     }): Promise<{
         result: DocumentType<Rol, BeAnObject>[] | Rol[];
         total: number;
         pagination: Paginacion;
     }> => {
-        const roles = this.getmodel()
-            .find()
-            .sort('-creadetedAt')
-            .select('-__v')
-            .lean();
+        const DB_READING_SERVICE = new DBReadingService(
+            {
+                pagination,
+                model: this.getmodel(),
+                term
+            }
+        )
+        const RESULT = await DB_READING_SERVICE.smart_read()
         return {
-            result: roles.filter((rol: Rol) => !rol.super_admin),
-            total: 0,
-            pagination,
+            result: RESULT.result,
+            total: RESULT.total,
+            pagination: RESULT.pagination,
         };
     };
 
