@@ -3,10 +3,11 @@ import {
     Component,
     effect,
     OnInit,
-    signal,
     Signal,
+    signal,
     WritableSignal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
     OPCIONES_FILA_TABLA_GENERICA,
     OPCIONES_TABLA_GENERICA,
@@ -14,20 +15,19 @@ import {
 } from 'src/app/components/utiles/varios/tabla-generica/tabla-generica.component';
 import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { AdministracionUsuariosService } from 'src/app/services/admin/administracion-usuarios/administracion-usuarios.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Paginacion } from 'src/app/utiles/tipos-personalizados';
 
 @Component({
-    selector: 'app-administracion-usuarios',
-    imports: [
-        // JsonAStringPipe,
-        TablaGenericaComponent,
-        CommonModule,
-    ],
-    templateUrl: './administracion-usuarios.component.html',
-    styleUrl: './administracion-usuarios.component.scss',
+    selector: 'app-user-administration-form',
+    imports: [TablaGenericaComponent, CommonModule],
+    templateUrl: './user-administration-form.component.html',
+    styleUrl: './user-administration-form.component.scss',
 })
-export class AdministracionUsuariosComponent implements OnInit {
+export class UserAdministrationFormComponent implements OnInit {
+    // (o==================================================================o)
+    //   #region INIT
+    // (o-----------------------------------------------------------\/-----o)
+
     constructor(private usuario_service: AdministracionUsuariosService) {
         // this.usuarios =
         effect(() => {
@@ -42,28 +42,31 @@ export class AdministracionUsuariosComponent implements OnInit {
         // })
     }
 
-    // (o==================================================================o)
-    //   #region CARGA INICIAL (INICIO)
-    // (o-----------------------------------------------------------\/-----o)
-
     ngOnInit(): void {
         this.crear_datos_tabla();
     }
 
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion INIT
+    // (o==================================================================o)
+
+    // (o==================================================================o)
+    //   #region VARIABLES
+    // (o-----------------------------------------------------------\/-----o)
+
     usuarios: Signal<UsuarioRecibir[] | undefined> = toSignal(
         this.usuario_service.obtener_usuarios()
     );
+    datos_tabla_generica!: OPCIONES_TABLA_GENERICA<UsuarioRecibir>;
+    paginacion!: WritableSignal<Paginacion>;
 
     // (o-----------------------------------------------------------/\-----o)
-    //   #endregion CARGA INICIAL (FIN)
+    //   #endregion VARIABLES
     // (o==================================================================o)
 
     // (o==================================================================o)
-    //   #region TABLA GENERICA (INICIO)
+    //   #region GENERIC TABLE
     // (o-----------------------------------------------------------\/-----o)
-
-    datos_tabla_generica!: OPCIONES_TABLA_GENERICA;
-    paginacion!: WritableSignal<Paginacion>;
 
     crear_datos_tabla() {
         this.datos_tabla_generica = {
@@ -71,7 +74,7 @@ export class AdministracionUsuariosComponent implements OnInit {
                 {
                     titulo: 'NOMBRE',
                     contenido: {
-                        campo: 'nombre_completo',
+                        campo: 'rol.super_admin',
                     },
                     tooltip_encabezado: {
                         contenido: 'El nombre real del usuario',
@@ -121,12 +124,12 @@ export class AdministracionUsuariosComponent implements OnInit {
         try {
             this.paginacion.update((value) => paginacion);
         } catch (err) {
-            console.log(err)
-            this.paginacion = signal(paginacion)
+            console.log(err);
+            this.paginacion = signal(paginacion);
         }
-        // this.usuarios = toSignal(
-        //     this.usuario_service.obtener_usuarios(paginacion)
-        // );
+        this.usuarios = toSignal(
+            this.usuario_service.obtener_usuarios(paginacion)
+        );
     }
 
     accion_click_fila(datos: OPCIONES_FILA_TABLA_GENERICA) {
@@ -134,6 +137,6 @@ export class AdministracionUsuariosComponent implements OnInit {
     }
 
     // (o-----------------------------------------------------------/\-----o)
-    //   #endregion TABLA GENERICA (FIN)
+    //   #endregion GENERIC TABLE
     // (o==================================================================o)
 }

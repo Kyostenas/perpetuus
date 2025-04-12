@@ -1,6 +1,4 @@
 import { Routes } from "@angular/router";
-import { PaginaNoEncontrada404Component } from "../../general/pagina-no-encontrada-404/pagina-no-encontrada-404.component";
-
 
 export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
     path: '',
@@ -14,8 +12,8 @@ export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
         },
         {
             path: 'usuarios',
-            loadComponent: () => import('./administracion-usuarios/administracion-usuarios.component')
-                .then(x => x.AdministracionUsuariosComponent),
+            loadComponent: () => import('./usuarios/user-administration-list/user-administration-list.component')
+                .then(x => x.UserAdministrationListComponent),
         },
         {
             path: 'parametros',

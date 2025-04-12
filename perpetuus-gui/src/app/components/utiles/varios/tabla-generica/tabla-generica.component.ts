@@ -5,13 +5,11 @@ import {
     computed,
     effect,
     EventEmitter,
-    HostListener,
     Input,
     OnDestroy,
     OnInit,
     Output,
     Pipe,
-    Signal,
     signal,
     TemplateRef,
     WritableSignal,
@@ -22,7 +20,7 @@ import { PipeDinamicoPipe } from 'src/app/pipes/utiles/pipe-dinamico/pipe-dinami
 import { ControlQueriesUrlService } from 'src/app/services/utiles/estructurales/control-queries-url/control-queries-url.service';
 import { DeteccionViewportService } from 'src/app/services/utiles/estructurales/deteccion-viewport/deteccion-viewport.service';
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
-import { Paginacion } from 'src/app/utiles/tipos-personalizados';
+import { DeepKeys, Paginacion } from 'src/app/utiles/tipos-personalizados';
 import { PaginadorGenericoComponent } from '../paginador-generico/paginador-generico.component';
 
 @Component({
@@ -61,6 +59,7 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
                 desde: 0,
                 pagina_actual: 1,
                 total_elementos: 0,
+                total_de_paginas: 0,
                 campos_ordenamiento: {},
             };
             this.detallePaginacion.update((value) => QUERY_DEFECTO);
@@ -86,13 +85,13 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
 
     // (o-----------------------------------------( INPUTS Y OUTPUTS ))
 
-    datos_tabla: WritableSignal<OPCIONES_TABLA_GENERICA> = signal({
+    datos_tabla: WritableSignal<OPCIONES_TABLA_GENERICA<any>> = signal({
         columnas: [],
         documentos: [],
     });
     columnas_computed = computed(() => this.datos_tabla().columnas);
     @Input('datos_tabla')
-    set _datos_tabla(datos: OPCIONES_TABLA_GENERICA) {
+    set _datos_tabla(datos: OPCIONES_TABLA_GENERICA<any>) {
         this.sobreescribir_valores_por_defecto(datos);
         this.datos_tabla.update((current_value) => ({
             ...current_value,
@@ -120,6 +119,7 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
         limite: 5,
         pagina_actual: 1,
         total_elementos: 0,
+        total_de_paginas: 0,
         campos_ordenamiento: {},
     });
 
@@ -205,7 +205,7 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
     //   #region VALORES POR DEFECTO (INICIO)
     // (o-----------------------------------------------------------\/-----o)
 
-    sobreescribir_valores_por_defecto(datos: OPCIONES_TABLA_GENERICA) {
+    sobreescribir_valores_por_defecto(datos: OPCIONES_TABLA_GENERICA<any>) {
         this.si_no_existe(datos, 'mostrar_boton_seleccion', false);
         this.si_no_existe(datos, 'mostrar_boton_copia_portapapeles', true);
         this.si_no_existe(datos, 'mostrar_boton_descarga_excel', true);
@@ -233,11 +233,11 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
 
 export interface CLICK_FILA_TABLA_GENERICA {}
 
-export interface COLUMNA_TABLA_GENERICA {
+export interface COLUMNA_TABLA_GENERICA<OBJETO> {
     alineacion?: 'izquierda' | 'centro' | 'derecha';
     tooltip_encabezado?: TOOLTIP_TABLA_GENERICA;
     evitar_deteccion_de_click?: boolean;
-    contenido: CONTENIDO_TABLA_GENERICA;
+    contenido: CONTENIDO_TABLA_GENERICA<OBJETO>;
     titulo: string;
 }
 
@@ -249,13 +249,13 @@ export interface TOOLTIP_TABLA_GENERICA {
     template_tooltip?: TemplateRef<any>;
 }
 
-export interface CONTENIDO_TABLA_GENERICA {
+export interface CONTENIDO_TABLA_GENERICA<OBJETO> {
     callback_clase?: any;
     template?: TemplateRef<any>;
     callback?: any;
     pipe?: Pipe;
     pipe_args?: any[];
-    campo: string;
+    campo: DeepKeys<OBJETO>;
     tooltip?: TOOLTIP_TABLA_GENERICA;
 }
 
@@ -264,7 +264,7 @@ export interface OPCIONES_FILA_TABLA_GENERICA {
     documento: any;
 }
 
-export interface OPCIONES_TABLA_GENERICA {
+export interface OPCIONES_TABLA_GENERICA<OBJETO> {
     opciones_fila?: OPCIONES_FILA_TABLA_GENERICA;
     titulo?: string;
     sub_titulo?: string;
@@ -278,5 +278,5 @@ export interface OPCIONES_TABLA_GENERICA {
     mostrar_boton_layout?: boolean;
     mostrar_indice_fila?: boolean;
     mostrar_ordenadores?: boolean;
-    columnas: COLUMNA_TABLA_GENERICA[];
+    columnas: COLUMNA_TABLA_GENERICA<OBJETO>[];
 }

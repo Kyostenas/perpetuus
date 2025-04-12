@@ -1,5 +1,5 @@
 import { PERMISOS_MENU_PERPETUUS } from "src/app/config/permisos-gui.config";
-import { RolUsuario } from "./rol-usuario.model";
+import { RolUsuarioRecibir } from "./rol-usuario.model";
 
 export class UsuarioEnviar {
     constructor(
@@ -13,18 +13,24 @@ export class UsuarioEnviar {
 }
 
 export class UsuarioRecibir {
-    _id!: string
-    nombres?: string
-    apellidos?: string
-    nombre_usuario?: string
-    correo?: string
-    numero_celular?: string
-    rol?: RolUsuario
-    createdAt?: Date
-    updatedAt?: Date
+    public _id!: string
+    public sequence?: number
+    public description?: string
+    public is_active?: boolean
+    public nombres?: string
+    public apellidos?: string
+    public nombre_usuario?: string
+    public correo?: string
+    public numero_celular?: string
+    public rol?: RolUsuarioRecibir
+    public createdAt?: Date
+    public updatedAt?: Date
 
     constructor(datos: DATOS_USUARIO_RECIBIR) {
         this._id = datos._id
+        this.sequence = datos.sequence
+        this.description = datos.description
+        this.is_active = datos.is_active
         this.nombres = datos.nombres
         this.apellidos = datos.apellidos
         this.nombre_usuario = datos.nombre_usuario
@@ -69,12 +75,15 @@ export interface DESCRIPCION_MENU {
 
 interface DATOS_USUARIO_RECIBIR {
     _id: string,
+    sequence?: number,
+    description?: string,
+    is_active?: boolean,
     nombres?: string,
     apellidos?: string,
     nombre_usuario?: string,
     correo?: string,
     numero_celular?: string,
-    rol?: RolUsuario,
+    rol?: RolUsuarioRecibir,
     createdAt?: Date,
     updatedAt?: Date,
 }
