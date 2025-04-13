@@ -18,11 +18,11 @@ export const INICIO_ROUTES: Routes = [{
             loadComponent: () => import('./signin/signin.component')
                 .then(x => x.SigninComponent),
         },
-        {
-            path: 'signup',
-            loadComponent: () => import('./signup/signup.component')
-                .then(x => x.SignupComponent),
-        },
+        // {
+        //     path: 'signup',
+        //     loadComponent: () => import('./signup/signup.component')
+        //         .then(x => x.SignupComponent),
+        // },
         { path: '**', component: PaginaNoEncontrada404Component },
     ]
 }];
