@@ -1,1 +1,6 @@
-<p>user-administration-list works!</p>
+<app-tabla-generica
+    [datos_tabla]="datos_tabla_generica"
+    [documentos]="usuarios() ?? []"
+    (paginacion)="cambiar_ordenamiento($event)"
+    (click_fila)="accion_click_fila($event)"
+></app-tabla-generica>
