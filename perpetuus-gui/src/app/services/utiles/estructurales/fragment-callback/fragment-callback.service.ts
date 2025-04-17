@@ -1,64 +1,104 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { DeepValues } from 'src/app/utiles/tipos-personalizados';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root',
 })
 export class FragmentCallbackService {
+    constructor(private router: Router) {}
 
-  constructor(
-    private router: Router
-  ) { }
+    private callbacks: {
+        [key: string]: {
+            aparicion_fragmento: () => void;
+            eliminado_fragmento: () => void;
+        };
+    } = {};
 
-  private callbacks: { [key: string]: {
-    aparicion_fragmento: () => void,
-    eliminado_fragmento: () => void,
-  } } = {};
-
-  registrar_callback(
-    fragmento: string, 
-    callback_aparicion_fragmento: () => void,
-    callback_eliminado_fragmento: () => void,
-  ): void {
-    this.callbacks[fragmento] = {
-      aparicion_fragmento:
-        callback_aparicion_fragmento,
-      eliminado_fragmento:
-        callback_eliminado_fragmento,
+    register_callback(
+        fragment: DeepValues<typeof this.ALLOWED_FRAGMENTS, string>,
+        callback_fragment_aparition: () => void,
+        callback_fragment_deletion: () => void
+    ): void {
+        this.callbacks[fragment] = {
+            aparicion_fragmento: callback_fragment_aparition,
+            eliminado_fragmento: callback_fragment_deletion,
+        };
     }
-  }
 
-  private fragmento_actual!: string
-  ejecutar_callback_aparicion(fragmento: string): void {
-    this.fragmento_actual = fragmento
-    if (!!this.callbacks[fragmento]) {
-      this.callbacks[fragmento]['aparicion_fragmento']()
+    private fragmento_actual!: string;
+    execute_aparition_callback(
+        fragment: DeepValues<typeof this.ALLOWED_FRAGMENTS, string>
+    ): void {
+        this.fragmento_actual = fragment;
+        if (!!this.callbacks[fragment]) {
+            this.callbacks[fragment]['aparicion_fragmento']();
+        }
     }
-  }
 
-  ejecutar_callback_eliminado(): void {
-    if (!!this.callbacks[this.fragmento_actual]) {
-      this.callbacks[this.fragmento_actual]['eliminado_fragmento']()
+    execute_deletion_callback(): void {
+        if (!!this.callbacks[this.fragmento_actual]) {
+            this.callbacks[this.fragmento_actual]['eliminado_fragmento']();
+        }
     }
-  }
 
-  limpiar_fragmento(): void {
-    this.router.navigate([], {
-      queryParamsHandling: 'preserve',
-      fragment: undefined,
-    })
-    this.ejecutar_callback_eliminado()
-  }
+    clean_fragment(): void {
+        this.router.navigate([], {
+            queryParamsHandling: 'preserve',
+            fragment: undefined,
+        });
+        this.execute_deletion_callback();
+    }
 
-  agregar_fragmento(fragmento: string) {
-    this.router.navigate([], {
-      queryParamsHandling: 'preserve',
-      fragment: undefined,
-    }).then(() => {
-      this.router.navigate([], {
-        queryParamsHandling: 'preserve',
-        fragment: fragmento
-      })
-    })
-  }
+    add_fragment(fragment: DeepValues<typeof this.ALLOWED_FRAGMENTS, string>) {
+        this.router
+            .navigate([], {
+                queryParamsHandling: 'preserve',
+                fragment: undefined,
+            })
+            .then(() => {
+                this.router.navigate([], {
+                    queryParamsHandling: 'preserve',
+                    fragment: fragment,
+                });
+            });
+    }
+
+    process_string(
+        fragment: string | undefined | null
+    ): DeepValues<typeof this.ALLOWED_FRAGMENTS, string> {
+        if (!!fragment) {
+            if (Object.keys(this.ALLOWED_FRAGMENTS).includes(fragment)) {
+                return <DeepValues<typeof this.ALLOWED_FRAGMENTS, string>>(
+                    this.ALLOWED_FRAGMENTS_PRIVATE[fragment]
+                );
+            } else {
+                return '';
+            }
+        } else {
+            return '';
+        }
+    }
+
+    ALLOWED_FRAGMENTS = {
+        global_search: 'global_search',
+        user_profile: 'user_profile',
+        user_notifications: 'user_notifications',
+
+        /**
+         * DO NOT USE
+         */
+        _: '', // necessary
+    } as const;
+
+    private ALLOWED_FRAGMENTS_PRIVATE: { [type: string]: string } = {
+        global_search: 'global_search',
+        user_profile: 'user_profile',
+        user_notifications: 'user_notifications',
+
+        /**
+         * DO NOT USE
+         */
+        _: '', // necessary
+    };
 }
