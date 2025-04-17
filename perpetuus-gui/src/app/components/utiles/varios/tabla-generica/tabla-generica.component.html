@@ -1,36 +1,35 @@
-<!--================================================================o)
-  #region ESTRUCTURA PRINCIPAL (INICIO)
-(o-----------------------------------------------------------\/------>
+<!--===============================================================-->
+<!-- #region #MARK: ESTRUCTURA PRINCIPAL -->
+<!-----------------------------------------------------------\/------>
 
 @if (!!datos_tabla() && documentos.length > 0) { 
-    @if (datos_tabla().mostrar_buscador) {
+    @if (datos_tabla().show_search_bar) {
         <div class="w-100 mb-2 p-2 bg-dark-subtle rounded">BUSCADOR</div>
     }
     <div class="row mb-2">
         <div class="col-12 col-lg-7 overflow-etiquetas flex-nowrap">
-
-            @for (titulo of ordenes_columnas() | keyvalue; track
-            titulo.key) {
+            @for (sorted_field of ordenes_columnas() | keyvalue; track
+            sorted_field.key) {
                 <span
                     class="badge me-1 mb-1 border-hover border-hover-light"
                     [ngClass]="{
-                        'text-bg-warning': titulo.value?.orden === 1,
-                        'text-bg-light': titulo.value?.orden === -1
+                        'text-bg-warning': sorted_field.value?.order === 1,
+                        'text-bg-light': sorted_field.value?.order === -1
                     }"
                     tabindex="0"
-                    (click)="no_ordenar(titulo.key)"
-                    (keydown.enter)="no_ordenar(titulo.key)"
+                    (click)="no_ordenar(sorted_field.key)"
+                    (keydown.enter)="no_ordenar(sorted_field.key)"
                     bs-tooltip="
                             <div class='p-1'>
                                 Ordenado <strong class='{{
-                        titulo.value?.orden === 1
-                            ? 'text-warning'
-                            : 'text-light'
-                    }}'>{{
-                        titulo.value?.orden === 1
-                            ? 'descendente'
-                            : 'ascendente'
-                    }}</strong>
+                                    sorted_field.value?.order === 1
+                                        ? 'text-warning'
+                                        : 'text-light'
+                                }}'>{{
+                                    sorted_field.value?.order === 1
+                                        ? 'descendente'
+                                        : 'ascendente'
+                                }}</strong>
                                 <br>
                                 <span class='text-secondary-emphasis'>
                                     Click o enter para eliminar        
@@ -39,11 +38,11 @@
                             
                         "
                     [id_elemento_a_enfocar_cuando_padre_destruido]="
-                        '_' + titulo.value.campo
+                        '_' + sorted_field.value.field
                     "
                 >
-                    {{ titulo.value.titulo }}
-                    @switch (titulo.value?.orden) { @case (-1) {
+                    {{ sorted_field.value.title }}
+                    @switch (sorted_field.value?.order) { @case (-1) {
                     <span class="">
                         <i class="bi bi-arrow-up"></i>
                     </span>
@@ -59,9 +58,9 @@
                 </span>
             }
         </div>
-        @if(datos_tabla().mostrar_boton_layout || datos_tabla().mostrar_paginador) {
+        @if(datos_tabla().show_layout_button || datos_tabla().show_pagination) {
             <div class="col-12 col-lg-5 d-flex justify-content-end">
-                @if (datos_tabla().mostrar_paginador) {
+                @if (datos_tabla().show_pagination) {
                     <div class="me-2">
                         <app-paginador-generico
                             [paginacion]="detallePaginacion()"
@@ -69,7 +68,7 @@
                         ></app-paginador-generico>
                     </div>
                 }
-                @if (modo_viewport() !== 'movil' && datos_tabla().mostrar_boton_layout) {
+                @if (modo_viewport() !== 'movil' && datos_tabla().show_layout_button) {
                     @switch (modo()) {
                         @case ('tabla') {
                             <button
@@ -109,7 +108,7 @@
             <ng-container [ngTemplateOutlet]="modoTabla"></ng-container>
         }
     }
-    @if (datos_tabla().mostrar_paginador) {
+    @if (datos_tabla().show_pagination) {
         <div class="w-100 d-flex justify-content-center">
             <div class="">
                 <app-paginador-generico
@@ -124,26 +123,26 @@
     PLACEHOLDER TABLA
 }
 
-<!-----------------------------------------------------------/\-----o)
-  #endregion ESTRUCTURA PRINCIPAL (FIN)
-(o=================================================================-->
+<!-----------------------------------------------------------/\------>
+<!-- #endregion ESTRUCTURA PRINCIPAL -->
+<!--===============================================================-->
 
-<!--================================================================o)
-  #region TEMPLATES (INICIO)
-(o-----------------------------------------------------------\/------>
+<!--===============================================================-->
+<!-- #region #MARK: TEMPLATES -->
+<!-----------------------------------------------------------\/------>
 
 <ng-template #modoTabla>
     <table class="table table-borderless table-hover caption-top">
-        @if (datos_tabla().titulo) {
+        @if (datos_tabla().table_title) {
         <caption>
             {{
-                datos_tabla().titulo
+                datos_tabla().table_title
             }}
         </caption>
         }
         <thead>
             <tr>
-                @if (datos_tabla().mostrar_indice_fila) {
+                @if (datos_tabla().show_index_column) {
                     <th scope="col" class="bg-dark-subtle">
                         <button
                             type="menu"
@@ -155,28 +154,28 @@
                         </button>
                     </th>
                 }
-                @switch (datos_tabla().mostrar_ordenadores) {
+                @switch (!!datos_tabla().show_sorters) {
                     @case (true) {
-                        @for (columna of columnas_computed(); track columna.titulo) {
+                        @for (columna of columnas_computed(); track columna.column_title) {
                             <th scope="col" class="bg-dark-subtle">
                                 <button
-                                    [id]="'_' + columna.contenido.campo"
+                                    [id]="'_' + columna.content.field"
                                     type="menu"
                                     class="btn pt-0 pb-0 ps-1 pe-1 shadow-hover-lg rounded {{
-                                        !!ordenes_columnas()[columna.contenido.campo]?.orden
+                                        !!ordenes_columnas()[columna.content.field]?.order
                                             ? 'text-hover-dark'
                                             : ''
                                     }}"
                                     [ngClass]="{
                                         'border border-light-subtle bg-hover-light':
-                                            ordenes_columnas()[columna.contenido.campo]
-                                                ?.orden === -1,
+                                            ordenes_columnas()[columna.content.field]
+                                                ?.order === -1,
                                         'border border-warning-subtle bg-hover-warning':
-                                            ordenes_columnas()[columna.contenido.campo]
-                                                ?.orden === 1,
+                                            ordenes_columnas()[columna.content.field]
+                                                ?.order === 1,
                                         'bg-hover-primary text-hover-light':
-                                            !ordenes_columnas()[columna.contenido.campo]
-                                                ?.orden
+                                            !ordenes_columnas()[columna.content.field]
+                                                ?.order
                                     }"
                                     bs-dropdown
                                     [posicion_dropdown]="'down'"
@@ -184,48 +183,48 @@
                                     [solo_ocultar_con_boton]="false"
                                     [contexto_plantilla]="{
                                         tooltip:
-                                            columna.tooltip_encabezado?.contenido
+                                            columna.header_tooltip?.content
                                             | pipe_dinamico
-                                                : columna.tooltip_encabezado?.pipe
-                                                : columna.tooltip_encabezado?.pipe_args,
-                                        campoColumna: columna.contenido.campo,
-                                        tituloColumna: columna.titulo
+                                                : columna.header_tooltip?.pipe
+                                                : columna.header_tooltip?.pipe_args,
+                                        fieldColumna: columna.content.field,
+                                        tituloColumna: columna.column_title
                                     }"
                                     [plantilla]="opcionesDropdown"
                                     [ocultar_dropdown_con_click_interno]="true"
                                     [clases_dropdown]="
-                                        ordenes_columnas()[columna.contenido.campo]
-                                            ?.orden === -1
+                                        ordenes_columnas()[columna.content.field]
+                                            ?.order === -1
                                             ? 'border-hover-light-subtle'
-                                            : ordenes_columnas()[columna.contenido.campo]
-                                                ?.orden === 1
+                                            : ordenes_columnas()[columna.content.field]
+                                                ?.order === 1
                                             ? 'border-hover-warning-subtle'
-                                            : !ordenes_columnas()[columna.contenido.campo]
-                                                ?.orden
+                                            : !ordenes_columnas()[columna.content.field]
+                                                ?.order
                                             ? 'border-hover-primary-subtle'
                                             : 'border-hover-primary-subtle'
                                     "
                                     tabindex="0"
                                 >
-                                    {{ columna.titulo }}
+                                    {{ columna.column_title }}
                                     <span
                                         class="pe-1 ps-1 {{
-                                            !!ordenes_columnas()[columna.contenido.campo]
-                                                ?.orden
+                                            !!ordenes_columnas()[columna.content.field]
+                                                ?.order
                                                 ? ' bg-dark-subtle rounded'
                                                 : ''
                                         }}"
                                         [ngClass]="{
                                             'text-warning-emphasis':
-                                                ordenes_columnas()[columna.contenido.campo]
-                                                    ?.orden === 1,
+                                                ordenes_columnas()[columna.content.field]
+                                                    ?.order === 1,
                                             'text-light-emphasis':
-                                                ordenes_columnas()[columna.contenido.campo]
-                                                    ?.orden === -1
+                                                ordenes_columnas()[columna.content.field]
+                                                    ?.order === -1
                                         }"
                                     >
                                         @switch
-                                        (ordenes_columnas()[columna.contenido.campo]?.orden)
+                                        (ordenes_columnas()[columna.content.field]?.order)
                                         { @case (-1) {
                                         <i class="bi bi-arrow-up"></i>
                                         } @case (1) {
@@ -239,9 +238,9 @@
                         }
                     }
                     @case (false) {
-                        @for (columna of columnas_computed(); track columna.titulo) {
+                        @for (columna of columnas_computed(); track columna.column_title) {
                             <th scope="col" class="bg-dark-subtle">
-                                {{ columna.titulo }}
+                                {{ columna.column_title }}
                             </th>
                         }
                         <!-- @for (titulo of ordenes_columnas() | keyvalue; track
@@ -259,19 +258,19 @@
             <tr 
                 tabindex="0" 
                 (click)="emisor_click_fila.emit({
-                    i_fila: indice,
-                    documento: doc_fila
+                    row_index: indice,
+                    row_document: doc_fila
                 })"
                 (keydown.enter)="emisor_click_fila.emit({
-                    i_fila: indice,
-                    documento: doc_fila
+                    row_index: indice,
+                    row_document: doc_fila
                 })"
             >
-                @if (datos_tabla().mostrar_indice_fila) {
+                @if (datos_tabla().show_index_column) {
                 <th scope="row" class="">{{ indice + 1 }}</th>
-                } @for (columna of datos_tabla().columnas; track columna.titulo)
+                } @for (columna of datos_tabla().columns; track columna.column_title)
                 {
-                <td class="">{{ doc_fila[columna.contenido.campo] }}</td>
+                <td class="">{{ doc_fila[columna.content.field] }}</td>
                 }
             </tr>
             }
@@ -285,7 +284,7 @@
 
 <ng-template #opcionesDropdown
     let-tooltip="tooltip"
-    let-campoColumna="campoColumna"
+    let-fieldColumna="fieldColumna"
     let-tituloColumna="tituloColumna"
 >
     @if (tooltip) {
@@ -297,10 +296,10 @@
         class="d-flex w-100 justify-content-between dropdown-item border-hover border-hover-primary rounded text-truncate"
         [ngClass]="{
             'border border-primary-subtle':
-                !ordenes_columnas()[campoColumna]?.orden
+                !ordenes_columnas()[fieldColumna]?.order
         }"
-        (click)="no_ordenar(campoColumna)"
-        (keydown.enter)="no_ordenar(campoColumna)"
+        (click)="no_ordenar(fieldColumna)"
+        (keydown.enter)="no_ordenar(fieldColumna)"
     >
         <div class="w-10 text-truncate0">No ordenar</div>
         <div>
@@ -312,10 +311,10 @@
         class="d-flex w-100 justify-content-between dropdown-item border-hover border-hover-light rounded text-truncate"
         [ngClass]="{
             'border border-light-subtle':
-                ordenes_columnas()[campoColumna]?.orden === -1
+                ordenes_columnas()[fieldColumna]?.order === -1
         }"
-        (click)="ordenar_ascendente(campoColumna, tituloColumna)"
-        (keydown.enter)="ordenar_ascendente(campoColumna, tituloColumna)"
+        (click)="ordenar_ascendente(fieldColumna, tituloColumna)"
+        (keydown.enter)="ordenar_ascendente(fieldColumna, tituloColumna)"
     >
         <div class="w-100 text-truncate">Ordenar ascendente</div>
         <div>
@@ -327,10 +326,10 @@
         class="d-flex w-100 justify-content-between dropdown-item border-hover border-hover-warning rounded text-truncate"
         [ngClass]="{
             'border border-warning-subtle':
-                ordenes_columnas()[campoColumna]?.orden === 1
+                ordenes_columnas()[fieldColumna]?.order === 1
         }"
-        (click)="ordenar_descendente(campoColumna, tituloColumna)"
-        (keydown.enter)="ordenar_descendente(campoColumna, tituloColumna)"
+        (click)="ordenar_descendente(fieldColumna, tituloColumna)"
+        (keydown.enter)="ordenar_descendente(fieldColumna, tituloColumna)"
     >
         <div class="w-100 text-truncate">Ordenar descendente</div>
         <div>
@@ -339,7 +338,7 @@
     </li>
 </ng-template>
 
-<!-----------------------------------------------------------/\-----o)
-  #endregion TEMPLATES (FIN)
-(o=================================================================-->
+<!-----------------------------------------------------------/\------>
+<!-- #endregion TEMPLATES -->
+<!--===============================================================-->
 

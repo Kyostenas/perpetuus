@@ -45,7 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
         private control_breadcrumbs: ControlBreadcrumbsService,
         private viewport: DeteccionViewportService,
         private renderer2: Renderer2,
-        private utiles: UtilidadesService,
+        private utiles: UtilidadesService
     ) {}
 
     title = 'perpetuus-gui';
@@ -81,8 +81,8 @@ export class AppComponent implements OnInit, OnDestroy {
     subscripcion_fragmentos!: Subscription;
 
     preparar_escucha_de_fragmentos() {
-        this.fragment_service.registrar_callback(
-            'perfil-usuario',
+        this.fragment_service.register_callback(
+            'user_profile',
             () => {
                 this.perfil_usuario.mostrar_modal();
             },
@@ -90,8 +90,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.perfil_usuario.ocultar_modal();
             }
         );
-        this.fragment_service.registrar_callback(
-            'notificaciones-usuario',
+        this.fragment_service.register_callback(
+            'user_notifications',
             () => {
                 this.notificaciones_usuario.mostrar_modal();
             },
@@ -99,8 +99,8 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.notificaciones_usuario.ocultar_modal();
             }
         );
-        this.fragment_service.registrar_callback(
-            'busqueda-global',
+        this.fragment_service.register_callback(
+            'global_search',
             () => {
                 this.busqueda_global.mostrar_modal();
             },
@@ -111,11 +111,11 @@ export class AppComponent implements OnInit, OnDestroy {
         this.subscripcion_fragmentos = this.route.fragment.subscribe(
             (fragmento) => {
                 if (fragmento) {
-                    this.fragment_service.ejecutar_callback_aparicion(
-                        fragmento
+                    this.fragment_service.execute_aparition_callback(
+                        this.fragment_service.process_string(fragmento)
                     );
                 } else {
-                    this.fragment_service.ejecutar_callback_eliminado();
+                    this.fragment_service.execute_deletion_callback();
                 }
             }
         );
@@ -141,17 +141,17 @@ export class AppComponent implements OnInit, OnDestroy {
 
     cerrar_perfil_usuario() {
         this.perfil_usuario.ocultar_modal();
-        this.fragment_service.limpiar_fragmento();
+        this.fragment_service.clean_fragment();
     }
 
     cerrar_notificaciones_usuario() {
         this.notificaciones_usuario.ocultar_modal();
-        this.fragment_service.limpiar_fragmento();
+        this.fragment_service.clean_fragment();
     }
 
     cerrar_busqueda_global() {
         this.busqueda_global.ocultar_modal();
-        this.fragment_service.limpiar_fragmento();
+        this.fragment_service.clean_fragment();
     }
 
     // (o-----------------------------------------------------------/\-----o)
@@ -177,46 +177,36 @@ export class AppComponent implements OnInit, OnDestroy {
 
     @HostListener('window:keydown.alt.k')
     abrir_buscador_teclado() {
-        this.fragment_service.agregar_fragmento('busqueda-global');
+        this.fragment_service.add_fragment('global_search');
     }
 
     @HostListener('window:keydown.alt.u')
     abrir_perfil_usuario_teclado() {
-        this.fragment_service.agregar_fragmento('perfil-usuario');
+        this.fragment_service.add_fragment('user_profile');
     }
 
     @HostListener('window:keydown.alt.n')
     abrir_notificaciones_usuario_teclado() {
-        this.fragment_service.agregar_fragmento('notificaciones-usuario');
+        this.fragment_service.add_fragment('user_notifications');
     }
 
     @HostListener('window:keydown', ['$event'])
     on_key_down(event: KeyboardEvent) {
         switch (event?.key) {
             case 'ArrowRight':
-                this.utiles.focus_siguiente_tab(
-                    event,
-                )
+                this.utiles.focus_siguiente_tab(event);
                 break;
             case 'ArrowDown':
-                this.utiles.focus_siguiente_tab(
-                    event,
-                )
+                this.utiles.focus_siguiente_tab(event);
                 break;
             case 'ArrowLeft':
-                this.utiles.focus_anterior_tab(
-                    event,
-                )
+                this.utiles.focus_anterior_tab(event);
                 break;
             case 'ArrowUp':
-                this.utiles.focus_anterior_tab(
-                    event,
-                )
+                this.utiles.focus_anterior_tab(event);
                 break;
         }
     }
-     
-
 
     // (o-----------------------------------------------------------/\-----o)
     //   #endregion CONTROL TECLAS (FIN)

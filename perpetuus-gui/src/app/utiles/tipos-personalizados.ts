@@ -27,11 +27,11 @@
  * La diferencia es que esto funciona dinamicamente y el tipado
  * es seguro, por lo que si permite el autocompletado.
  */
-export type ValoresAnidadosRecursivosDeObjeto<T, tipo_valor> = T extends object
+export type DeepValues<T, tipo_valor> = T extends object
     ? T[keyof T] extends infer V
         ? V extends tipo_valor
             ? V
-            : ValoresAnidadosRecursivosDeObjeto<V, tipo_valor>
+            : DeepValues<V, tipo_valor>
         : never
     : never;
 
@@ -78,17 +78,17 @@ export type DeepKeys<OBJECT> = OBJECT extends any[]
     }[keyof OBJECT]
     : never;
 
-export type Paginacion = {
-    limite: number;
-    desde: number;
-    pagina_actual: number;
-    total_de_paginas: number;
-    total_elementos: number;
-    campos_ordenamiento: {
+export type Pagination = {
+    limit: number;
+    from: number;
+    current_page: number;
+    page_count: number;
+    element_count: number;
+    sorting_fields: {
         [type: string]: {
-            campo: string;
-            titulo: string;
-            orden: 1 | -1;
+            field: string;
+            title: string;
+            order: 1 | -1;
         };
     };
 };

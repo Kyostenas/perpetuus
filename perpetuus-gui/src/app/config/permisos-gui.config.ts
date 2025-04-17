@@ -1,4 +1,4 @@
-import { ValoresAnidadosRecursivosDeObjeto } from '../utiles/tipos-personalizados';
+import { DeepValues } from '../utiles/tipos-personalizados';
 
 export const PERMISOS_DISPONIBLES = {
     SUPER_ADMIN: 'SUPER_ADMIN',
@@ -41,11 +41,11 @@ export const PERMISOS_DISPONIBLES = {
 } as const;
 
 export type PERMISOS_PERPETUUS = 
-    ValoresAnidadosRecursivosDeObjeto<
+    DeepValues<
         typeof PERMISOS_DISPONIBLES, string
     >
 
 export type PERMISOS_MENU_PERPETUUS = 
-    ValoresAnidadosRecursivosDeObjeto<
+    DeepValues<
         typeof PERMISOS_DISPONIBLES.MENU, string
     >

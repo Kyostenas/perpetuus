@@ -6,6 +6,7 @@ import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 import { DeteccionViewportService } from 'src/app/services/utiles/estructurales/deteccion-viewport/deteccion-viewport.service';
 import { FragmentCallbackService } from 'src/app/services/utiles/estructurales/fragment-callback/fragment-callback.service';
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
+import { DeepValues } from 'src/app/utiles/tipos-personalizados';
 
 @Component({
     selector: 'app-barra-lateral-menu',
@@ -32,8 +33,8 @@ export class BarraLateralMenuComponent implements OnInit {
 
   modo_viewport: WritableSignal<'movil' | 'escritorio'> = this.viewport.modo_viewport
 
-  agregar_framento(fragmento: string) {
-    this.fragmentos.agregar_fragmento(fragmento)
+  agregar_framento(fragmento: DeepValues<typeof this.fragmentos.ALLOWED_FRAGMENTS, string>) {
+    this.fragmentos.add_fragment(fragmento)
   }
 
   lista_menu!: DESCRIPCION_MENU[]

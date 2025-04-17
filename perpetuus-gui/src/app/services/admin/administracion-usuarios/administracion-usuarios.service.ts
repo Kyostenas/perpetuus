@@ -4,7 +4,7 @@ import { ControlNotificacionesService } from '../../utiles/varios/control-notifi
 import { UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
 import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { map, catchError, throwError, Observable } from 'rxjs';
-import { Paginacion } from 'src/app/utiles/tipos-personalizados';
+import { Pagination } from 'src/app/utiles/tipos-personalizados';
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +31,7 @@ export class AdministracionUsuariosService {
 
   total_usuarios: number = 0
 
-  obtener_usuarios(paginacion?: Paginacion): Observable<UsuarioRecibir[]> {
+  obtener_usuarios(paginacion?: Pagination): Observable<UsuarioRecibir[]> {
     let url = this.obtener_url();
     if (paginacion) {
       url = url.concat(`?paginacion=${JSON.stringify(paginacion)}`)

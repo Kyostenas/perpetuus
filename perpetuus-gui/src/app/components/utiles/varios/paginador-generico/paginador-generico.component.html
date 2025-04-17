@@ -21,10 +21,10 @@
                     (input)="input_numero_pagina($event)"
                     type="number"
                   /> -->
-                    {{ paginacion().pagina_actual }} /
-                    {{ paginacion().total_elementos // paginacion().limite }}
+                    {{ paginacion().current_page }} /
+                    {{ paginacion().element_count // paginacion().limite }}
                     <span class="badge pb-0 pt-0">
-                        {{ paginacion().total_elementos }} elem
+                        {{ paginacion().element_count }} elem
                     </span>
                 </a>
             </li>

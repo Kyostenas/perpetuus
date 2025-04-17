@@ -20,7 +20,7 @@ import { PipeDinamicoPipe } from 'src/app/pipes/utiles/pipe-dinamico/pipe-dinami
 import { ControlQueriesUrlService } from 'src/app/services/utiles/estructurales/control-queries-url/control-queries-url.service';
 import { DeteccionViewportService } from 'src/app/services/utiles/estructurales/deteccion-viewport/deteccion-viewport.service';
 import { UtilidadesService } from 'src/app/services/utiles/varios/utilidades/utilidades.service';
-import { DeepKeys, Paginacion } from 'src/app/utiles/tipos-personalizados';
+import { DeepKeys, Pagination } from 'src/app/utiles/tipos-personalizados';
 import { PaginadorGenericoComponent } from '../paginador-generico/paginador-generico.component';
 
 @Component({
@@ -46,37 +46,37 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
         // this.control_queries.queries.filtros<Paginacion>().accion.definir()
         effect(() => {
             const QUERY_OBTENIDA =
-                this.control_queries.query_actual().paginacion;
+                this.control_queries.query_actual().pagination;
             this.detallePaginacion.update((value) => QUERY_OBTENIDA);
             this.emisor_paginacion.emit(QUERY_OBTENIDA);
         });
     }
 
     ngOnInit(): void {
-        if (!this.control_queries.query_actual().paginacion) {
+        if (!this.control_queries.query_actual().pagination) {
             const QUERY_DEFECTO = {
-                limite: 5,
-                desde: 0,
-                pagina_actual: 1,
-                total_elementos: 0,
-                total_de_paginas: 0,
-                campos_ordenamiento: {},
+                limit: 5,
+                from: 0,
+                current_page: 1,
+                element_count: 0,
+                page_count: 0,
+                sorting_fields: {},
             };
             this.detallePaginacion.update((value) => QUERY_DEFECTO);
             this.emisor_paginacion.emit(QUERY_DEFECTO);
-            this.control_queries.queries.paginacion.accion.definir(
+            this.control_queries.queries.pagination.accion.definir(
                 QUERY_DEFECTO
             );
         } else {
             const QUERY_OBTENIDA =
-                this.control_queries.query_actual().paginacion;
+                this.control_queries.query_actual().pagination;
             this.detallePaginacion.update((value) => QUERY_OBTENIDA);
             this.emisor_paginacion.emit(QUERY_OBTENIDA);
         }
     }
 
     ngOnDestroy(): void {
-        this.control_queries.queries.paginacion.accion.ocultar();
+        this.control_queries.queries.pagination.accion.ocultar();
     }
 
     // (o==================================================================o)
@@ -86,10 +86,10 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
     // (o-----------------------------------------( INPUTS Y OUTPUTS ))
 
     datos_tabla: WritableSignal<OPCIONES_TABLA_GENERICA<any>> = signal({
-        columnas: [],
+        columns: [],
         documentos: [],
     });
-    columnas_computed = computed(() => this.datos_tabla().columnas);
+    columnas_computed = computed(() => this.datos_tabla().columns);
     @Input('datos_tabla')
     set _datos_tabla(datos: OPCIONES_TABLA_GENERICA<any>) {
         this.sobreescribir_valores_por_defecto(datos);
@@ -100,9 +100,9 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
     }
     @Input('documentos') documentos: any[] = [];
     @Output('paginacion')
-    emisor_paginacion: EventEmitter<Paginacion> = new EventEmitter();
+    emisor_paginacion: EventEmitter<Pagination> = new EventEmitter();
     @Output('click_fila')
-    emisor_click_fila: EventEmitter<OPCIONES_FILA_TABLA_GENERICA> =
+    emisor_click_fila: EventEmitter<OPCIONES_FILA_TABLA_GENERICA<any>> =
         new EventEmitter();
 
     // (o-----------------------------------------( SOLO VARIABLES ))
@@ -111,16 +111,16 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
         this.viewport.modo_tabla_generica;
     modo_viewport: WritableSignal<'movil' | 'escritorio'> =
         this.viewport.modo_viewport;
-    ordenes_columnas: WritableSignal<Paginacion['campos_ordenamiento']> =
+    ordenes_columnas: WritableSignal<Pagination['sorting_fields']> =
         signal({});
     // datos_tabla!: OPCIONES_TABLA_GENERICA
-    detallePaginacion: WritableSignal<Paginacion> = signal({
-        desde: 0,
-        limite: 5,
-        pagina_actual: 1,
-        total_elementos: 0,
-        total_de_paginas: 0,
-        campos_ordenamiento: {},
+    detallePaginacion: WritableSignal<Pagination> = signal({
+        from: 0,
+        limit: 5,
+        current_page: 1,
+        element_count: 0,
+        page_count: 0,
+        sorting_fields: {},
     });
 
     // (o-----------------------------------------------------------/\-----o)
@@ -131,55 +131,55 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
     //   #region ORDENAMIENTO DE COLUMNAS (INICIO)
     // (o-----------------------------------------------------------\/-----o)
 
-    ordenar_ascendente(campo_columna: string, nombre_real: string) {
-        this.ordenes_columnas.update((value: any) => {
-            value[campo_columna] = {
-                campo: campo_columna,
-                titulo: nombre_real,
-                orden: -1,
+    ordenar_ascendente(column_field: string, nombre_real: string) {
+        this.ordenes_columnas.update((value: Pagination['sorting_fields']) => {
+            value[column_field] = {
+                field: column_field,
+                title: nombre_real,
+                order: -1,
             };
             return value;
         });
         this.emitir_ordenamiento();
     }
 
-    ordenar_descendente(campo_columna: string, nombre_real: string) {
-        this.ordenes_columnas.update((value: any) => {
-            value[campo_columna] = {
-                campo: campo_columna,
-                titulo: nombre_real,
-                orden: 1,
+    ordenar_descendente(column_field: string, nombre_real: string) {
+        this.ordenes_columnas.update((value: Pagination['sorting_fields']) => {
+            value[column_field] = {
+                field: column_field,
+                title: nombre_real,
+                order: 1,
             };
             return value;
         });
         this.emitir_ordenamiento();
     }
 
-    no_ordenar(campo_columna: string) {
-        this.ordenes_columnas.update((value: any) => {
-            delete value[campo_columna];
+    no_ordenar(column_field: string) {
+        this.ordenes_columnas.update((value: Pagination['sorting_fields']) => {
+            delete value[column_field];
             return value;
         });
         this.emitir_ordenamiento();
     }
 
     emitir_ordenamiento() {
-        let paginacion: Paginacion = {
+        let paginacion: Pagination = {
             ...this.detallePaginacion(),
-            campos_ordenamiento: this.ordenes_columnas(),
+            sorting_fields: this.ordenes_columnas(),
         };
         this.detallePaginacion.update((value) => paginacion);
-        this.control_queries.queries.paginacion.accion.definir(paginacion);
+        this.control_queries.queries.pagination.accion.definir(paginacion);
         this.emisor_paginacion.emit(paginacion);
     }
 
-    resultado_paginacion_paginador(resultado_paginacion: Paginacion) {
-        let paginacion: Paginacion = {
+    resultado_paginacion_paginador(resultado_paginacion: Pagination) {
+        let paginacion: Pagination = {
             ...resultado_paginacion,
-            campos_ordenamiento: this.ordenes_columnas(),
+            sorting_fields: this.ordenes_columnas(),
         };
         // this.detallePaginacion.update((value) => paginacion);
-        this.control_queries.queries.paginacion.accion.definir(paginacion);
+        this.control_queries.queries.pagination.accion.definir(paginacion);
         // this.emisor_paginacion.emit(paginacion);
     }
 
@@ -229,54 +229,66 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
     // (o-----------------------------------------------------------/\-----o)
     //   #endregion VALORES POR DEFECTO (FIN)
     // (o==================================================================o)
+
+    // (o==================================================================o)
+    //   #region CLICK
+    // (o-----------------------------------------------------------\/-----o)
+    
+    emmit_click(index: number, document: any) {
+        this.emisor_click_fila.emit({row_index: index, row_document: document})
+    }
+    
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion CLICK
+    // (o==================================================================o)
 }
 
 export interface CLICK_FILA_TABLA_GENERICA {}
 
 export interface COLUMNA_TABLA_GENERICA<OBJETO> {
-    alineacion?: 'izquierda' | 'centro' | 'derecha';
-    tooltip_encabezado?: TOOLTIP_TABLA_GENERICA;
-    evitar_deteccion_de_click?: boolean;
-    contenido: CONTENIDO_TABLA_GENERICA<OBJETO>;
-    titulo: string;
+    alignment?: 'left' | 'center' | 'right';
+    header_tooltip?: TOOLTIP_TABLA_GENERICA;
+    avoid_click_detection?: boolean;
+    content: CONTENIDO_TABLA_GENERICA<OBJETO>;
+    column_title: string;
 }
 
 export interface TOOLTIP_TABLA_GENERICA {
-    contenido?: string;
-    callback_contenido?: any;
+    content?: string;
+    content_callback?: any;
     pipe?: Pipe;
     pipe_args?: any[];
     template_tooltip?: TemplateRef<any>;
 }
 
 export interface CONTENIDO_TABLA_GENERICA<OBJETO> {
-    callback_clase?: any;
+    class_callback?: any;
     template?: TemplateRef<any>;
     callback?: any;
     pipe?: Pipe;
     pipe_args?: any[];
-    campo: DeepKeys<OBJETO>;
+    field: DeepKeys<OBJETO>;
     tooltip?: TOOLTIP_TABLA_GENERICA;
 }
 
-export interface OPCIONES_FILA_TABLA_GENERICA {
-    i_fila: number;
-    documento: any;
+export interface OPCIONES_FILA_TABLA_GENERICA<T> {
+    row_index: number;
+    row_document: T;
 }
 
 export interface OPCIONES_TABLA_GENERICA<OBJETO> {
-    opciones_fila?: OPCIONES_FILA_TABLA_GENERICA;
-    titulo?: string;
-    sub_titulo?: string;
-    posicion_sub_titulo?: 'inicio' | 'fin';
-    mostrar_paginador?: boolean;
-    mostrar_buscador?: boolean;
-    mostrar_boton_seleccion?: boolean;
-    mostrar_boton_copia_portapapeles?: boolean;
-    mostrar_boton_descarga_excel?: boolean;
-    mostrar_boton_descarga_pdf?: boolean;
-    mostrar_boton_layout?: boolean;
-    mostrar_indice_fila?: boolean;
-    mostrar_ordenadores?: boolean;
-    columnas: COLUMNA_TABLA_GENERICA<OBJETO>[];
+    row_options?: OPCIONES_FILA_TABLA_GENERICA<OBJETO>;
+    table_title?: string;
+    table_sub_title?: string;
+    sub_title_position?: 'inicio' | 'fin';
+    show_pagination?: boolean;
+    show_search_bar?: boolean;
+    show_selection_button?: boolean;
+    show_copy_button?: boolean;
+    show_excel_button?: boolean;
+    show_pdf_button?: boolean;
+    show_layout_button?: boolean;
+    show_index_column?: boolean;
+    show_sorters?: boolean;
+    columns: COLUMNA_TABLA_GENERICA<OBJETO>[];
 }

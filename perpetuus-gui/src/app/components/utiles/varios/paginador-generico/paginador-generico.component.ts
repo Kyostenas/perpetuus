@@ -9,7 +9,7 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Paginacion } from 'src/app/utiles/tipos-personalizados';
+import { Pagination } from 'src/app/utiles/tipos-personalizados';
 
 @Component({
     selector: 'app-paginador-generico',
@@ -18,9 +18,9 @@ import { Paginacion } from 'src/app/utiles/tipos-personalizados';
     styleUrl: './paginador-generico.component.scss',
 })
 export class PaginadorGenericoComponent {
-    paginacion!: WritableSignal<Paginacion>
+    paginacion!: WritableSignal<Pagination>
     @Input({ required: true, alias: 'paginacion' }) set _paginacion(
-        valor_pag: Paginacion
+        valor_pag: Pagination
     ) {
         if (this.paginacion) {
             this.paginacion.update((value) => {
@@ -30,7 +30,7 @@ export class PaginadorGenericoComponent {
             this.paginacion = signal(valor_pag)
         }
     }
-    @Output() paginacion_modificada = new EventEmitter<Paginacion>();
+    @Output() paginacion_modificada = new EventEmitter<Pagination>();
 
     input_numero_pagina(event: Event) {
         const TARGET = event.target as HTMLInputElement
@@ -38,7 +38,7 @@ export class PaginadorGenericoComponent {
         this.paginacion.update(value => {
             return {
                 ...value,
-                pagina_actual: VALOR
+                current_page: VALOR
             }
         })
         this.paginacion_modificada.emit(this.paginacion())
@@ -48,7 +48,7 @@ export class PaginadorGenericoComponent {
         this.paginacion.update(value => {
             return {
                 ...value,
-                pagina_actual: this.paginacion().pagina_actual + 1
+                current_page: this.paginacion().current_page + 1
             }
         })
         this.paginacion_modificada.emit(this.paginacion())
@@ -58,7 +58,7 @@ export class PaginadorGenericoComponent {
         this.paginacion.update(value => {
             return {
                 ...value,
-                pagina_actual: this.paginacion().pagina_actual - 1
+                current_page: this.paginacion().current_page - 1
             }
         })
         this.paginacion_modificada.emit(this.paginacion())

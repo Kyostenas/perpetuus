@@ -12,8 +12,13 @@ export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
         },
         {
             path: 'usuarios',
-            loadComponent: () => import('./usuarios/user-administration-list/user-administration-list.component')
+            loadComponent: () => import('./user/user-administration-list/user-administration-list.component')
                 .then(x => x.UserAdministrationListComponent),
+        },
+        {
+            path: 'usuarios/form',
+            loadComponent: () => import('./user/user-administration-form/user-administration-form.component')
+                .then(x => x.UserAdministrationFormComponent),
         },
         {
             path: 'parametros',
