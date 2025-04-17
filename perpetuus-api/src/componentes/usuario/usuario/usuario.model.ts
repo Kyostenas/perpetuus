@@ -49,7 +49,7 @@ const TEXT_SEARCH_FIELDS = [
         timestamps: true,
     },
 })
-class User implements DocumentoGenerico {
+class User implements GenericDocument {
     _id?: string | Schema.Types.ObjectId | undefined;
 
     @prop({ unique: true })

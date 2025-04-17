@@ -40,7 +40,7 @@ const TEXT_SEARCH_FIELDS = ['sequence', 'description', 'nombre'];
         timestamps: true,
     },
 })
-class Rol implements DocumentoGenerico {
+class Rol implements GenericDocument {
     _id?: string | Schema.Types.ObjectId | undefined;
 
     @prop({ unique: true })

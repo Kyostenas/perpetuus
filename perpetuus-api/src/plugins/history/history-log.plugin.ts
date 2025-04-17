@@ -129,7 +129,7 @@ async function generate_history_log<T>(
     query: mongoose.Query<any, any> | undefined,
     schema: Schema<T>,
     options: HistoryLogOptions = {},
-    operation_type: ValoresAnidadosRecursivosDeObjeto<
+    operation_type: DeepKeys<
         typeof ACCIONES_MONGOOSE,
         string
     >,

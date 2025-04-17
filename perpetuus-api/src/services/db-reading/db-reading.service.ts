@@ -6,7 +6,7 @@ import {
 import { Request } from 'express';
 
 export default class DBReadingService<T> {
-    private pagination: Paginacion;
+    private pagination: Pagination;
     private model: ModelType<T>;
     private term?: string;
     private filters?: any;
@@ -23,7 +23,7 @@ export default class DBReadingService<T> {
         projection,
         paths_to_populate,
     }: {
-        pagination: Paginacion;
+        pagination: Pagination;
         model: ModelType<T>;
         term?: string;
         filters?: any;
@@ -78,17 +78,17 @@ export default class DBReadingService<T> {
         const PROEJECTION = IS_TEXT_SEARCH
             ? { ...SORT_AND_SEARCH_CRITERIA.PROJECTION, ...this.projection }
             : (this.projection ?? {});
-        this.pagination.pagina_actual =
-            Math.floor(this.pagination.desde / this.pagination.limite) + 1;
+        this.pagination.current_page =
+            Math.floor(this.pagination.from / this.pagination.limit) + 1;
         // this.pagination.pagina_actual = this.pagination.desde / this.pagination.limite
-        this.pagination.total_de_paginas = Math.ceil(
-            total / this.pagination.limite,
+        this.pagination.page_count = Math.ceil(
+            total / this.pagination.limit,
         );
-        this.pagination.total_elementos = total;
+        this.pagination.element_count = total;
         const RESULT = await this.model
             .find(query, PROEJECTION)
-            .skip(this.pagination.desde)
-            .limit(this.pagination.limite)
+            .skip(this.pagination.from)
+            .limit(this.pagination.limit)
             .sort(SORT_AND_SEARCH_CRITERIA.CRITERIOS_SORT)
             .populate(this.paths_to_populate ?? [])
             .lean();

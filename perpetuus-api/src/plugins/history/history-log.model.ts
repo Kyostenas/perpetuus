@@ -61,7 +61,7 @@ import { User } from '../../componentes/usuario/usuario/usuario.model';
         timestamps: true,
     },
 })
-class HistoryLog implements DocumentoGenerico {
+class HistoryLog implements GenericDocument {
     _id?: string | Schema.Types.ObjectId;
 
     @prop({unique: true})

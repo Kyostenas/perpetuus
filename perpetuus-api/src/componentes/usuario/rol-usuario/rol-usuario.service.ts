@@ -35,12 +35,12 @@ export class RolService extends CRUD_Service<typeof ROL_MODEL, Rol> {
         pagination,
         term,
     }: {
-        pagination: Paginacion;
+        pagination: Pagination;
         term: string,
     }): Promise<{
         result: DocumentType<Rol, BeAnObject>[] | Rol[];
         total: number;
-        pagination: Paginacion;
+        pagination: Pagination;
     }> => {
         const DB_READING_SERVICE = new DBReadingService(
             {

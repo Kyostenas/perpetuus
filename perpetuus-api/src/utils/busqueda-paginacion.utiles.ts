@@ -1,32 +1,32 @@
 import { Request } from 'express';
 
-export function obtener_paginacion(request: Request): Paginacion {
+export function obtener_paginacion(request: Request): Pagination {
     if (!!request.query['paginacion']) {
-        return JSON.parse(<string>request.query['paginacion']) as Paginacion;
+        return JSON.parse(<string>request.query['paginacion']) as Pagination;
     } else {
-        const PAGINACION: Paginacion = {
-            campos_ordenamiento: {},
-            desde: 0,
-            limite: 5,
-            pagina_actual: 0,
-            total_de_paginas: 0,
-            total_elementos: 0,
+        const PAGINACION: Pagination = {
+            sorting_fields: {},
+            from: 0,
+            limit: 5,
+            current_page: 0,
+            page_count: 0,
+            element_count: 0,
         };
         return PAGINACION;
     }
 }
 
 export function generar_criterios_sort(
-    paginacion: Paginacion,
+    paginacion: Pagination,
     es_busqueda_texto: boolean,
 ) {
     const CRITERIOS_SORT: { [type: string]: any } = {};
     const PROJECTION: { [type: string]: any } = {};
 
     for (let [nombre_campo, especificacion] of Object.entries(
-        paginacion.campos_ordenamiento,
+        paginacion.sorting_fields,
     )) {
-        CRITERIOS_SORT[nombre_campo] = especificacion.orden;
+        CRITERIOS_SORT[nombre_campo] = especificacion.order;
     }
     if (es_busqueda_texto) {
         CRITERIOS_SORT.score = { $meta: 'textScore' };

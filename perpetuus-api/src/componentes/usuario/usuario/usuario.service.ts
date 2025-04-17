@@ -63,12 +63,12 @@ export class UserService extends CRUD_Service<typeof USER_MODEL, User> {
         pagination,
         term,
     }: {
-        pagination: Paginacion;
+        pagination: Pagination;
         term: string;
     }): Promise<{
         result: DocumentType<User, BeAnObject>[] | User[];
         total: number;
-        pagination: Paginacion;
+        pagination: Pagination;
     }> => {
         const DB_READING_SERVICE = new DBReadingService({
             pagination,
