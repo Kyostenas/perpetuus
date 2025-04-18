@@ -46,6 +46,7 @@ export class FragmentCallbackService {
         this.router.navigate([], {
             queryParamsHandling: 'preserve',
             fragment: undefined,
+            replaceUrl: true
         });
         this.execute_deletion_callback();
     }
@@ -55,11 +56,13 @@ export class FragmentCallbackService {
             .navigate([], {
                 queryParamsHandling: 'preserve',
                 fragment: undefined,
+                replaceUrl: true
             })
             .then(() => {
                 this.router.navigate([], {
                     queryParamsHandling: 'preserve',
                     fragment: fragment,
+                    replaceUrl: true
                 });
             });
     }
