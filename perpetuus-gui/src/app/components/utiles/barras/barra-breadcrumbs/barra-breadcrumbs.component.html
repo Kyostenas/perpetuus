@@ -7,9 +7,18 @@
                     'active text-hover-secondary': menu.link === menu_actual.link,
                     'active text-hover-warning': !(menu.link === menu_actual.link)
                 }"
-                [routerLink]="[
-                    '/', breadcrumb_service.url_layout
-                ].concat(menu.ruta_completa.split('/'))" 
+                [routerLink]="
+                    menu.es_dinamico
+                        ? menu.ruta_completa
+                        : [
+                            '/', breadcrumb_service.url_layout
+                        ].concat(menu.ruta_completa.split('/'))
+                " 
+                [queryParams]="
+                    menu.es_dinamico
+                        ? menu.query_dinamico
+                        : null
+                "
                 [routerLinkActive]="
                     menu.link === menu_actual.link
                         ? 'router-link-active'

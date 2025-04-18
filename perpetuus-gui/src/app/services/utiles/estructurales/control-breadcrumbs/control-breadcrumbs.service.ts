@@ -1,8 +1,9 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Injectable, OnDestroy, OnInit, Signal } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, ParamMap, Router } from '@angular/router';
 import { BehaviorSubject, filter, Subscription, takeUntil } from 'rxjs';
 import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 import { UtilidadesService } from '../../varios/utilidades/utilidades.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,18 @@ export class ControlBreadcrumbsService {
     private activateRoute: ActivatedRoute,
     private router: Router,
     private utiles: UtilidadesService
-  ) { }
+  ) {
+    this._query_actual = toSignal(this.activateRoute.queryParamMap)
+    this._fragmento_actual = toSignal(this.activateRoute.fragment)
+  }
 
   url_layout!: string
 
   private _menu_actual!: DESCRIPCION_MENU
   private _ruta_menus_actual: DESCRIPCION_MENU[] = []
   private _url_actual!: string[]
+  private _query_actual!: Signal<ParamMap | undefined>
+  private _fragmento_actual!: Signal<string | null | undefined>
   // private _conjunto_links_sub_menus_disponibles!: string[]
   private _conjunto_sub_menus_disponibles!: DESCRIPCION_MENU[]
   private subscripcion_router!: Subscription
@@ -93,12 +99,25 @@ export class ControlBreadcrumbsService {
     let conjuntoMenusActual = this.menus_en_revision
     for (let iPasoRuta = 0; iPasoRuta < URL_ACTUAL_SIN_LAYOUT.length; iPasoRuta++) {
       const UN_ELEM_URL = URL_ACTUAL_SIN_LAYOUT[iPasoRuta];
-      const MENU_CORR = <DESCRIPCION_MENU>conjuntoMenusActual
+      let menu_correspondiente: DESCRIPCION_MENU = <DESCRIPCION_MENU>conjuntoMenusActual
         .find(menu => menu.link === UN_ELEM_URL)
-      rutaDeMenus.push(MENU_CORR)
-      if (!!MENU_CORR?.sub_menus) {
-        if (MENU_CORR.sub_menus.length > 0) {
-          conjuntoMenusActual = MENU_CORR.sub_menus
+      menu_correspondiente = menu_correspondiente ?? {
+        descripcion: '',
+        es_sub_menu: true,
+        link: UN_ELEM_URL,
+        nivel: iPasoRuta,
+        nombre: UN_ELEM_URL,
+        permiso: 'LIBRE',
+        ruta_completa: this.url_actual.join('/'),
+        simbolo: 'bi bi-link-45deg',
+        es_dinamico: true,
+        query_dinamico: JSON.parse(JSON.stringify(this._query_actual())).params,
+        fragmento_dinamico: this._fragmento_actual()
+      }
+      rutaDeMenus.push(menu_correspondiente)
+      if (!!menu_correspondiente?.sub_menus) {
+        if (menu_correspondiente.sub_menus.length > 0) {
+          conjuntoMenusActual = menu_correspondiente.sub_menus
         }
       }
     }
