@@ -1,5 +1,6 @@
 import { PERMISOS_MENU_PERPETUUS } from "src/app/config/permisos-gui.config";
 import { RolUsuarioRecibir } from "./rol-usuario.model";
+import { Params } from "@angular/router";
 
 export class UsuarioEnviar {
     constructor(
@@ -71,6 +72,9 @@ export interface DESCRIPCION_MENU {
     nivel: number
     descripcion?: string
     sub_menus?: DESCRIPCION_MENU[]
+    es_dinamico?: boolean
+    query_dinamico?: any
+    fragmento_dinamico?: string,
 }
 
 interface DATOS_USUARIO_RECIBIR {
