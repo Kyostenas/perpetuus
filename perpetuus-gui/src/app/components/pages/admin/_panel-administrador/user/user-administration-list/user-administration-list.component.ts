@@ -116,8 +116,9 @@ export class UserAdministrationListComponent {
     }
 
     accion_click_fila(datos: OPCIONES_FILA_TABLA_GENERICA<UsuarioRecibir>) {
-        datos.row_document
-        this.routing_service.open_form()
+        if (datos.row_document.sequence !== undefined) {
+            this.routing_service.open_form(datos.row_document.sequence)
+        }
     }
 
     // (o-----------------------------------------------------------/\-----o)
