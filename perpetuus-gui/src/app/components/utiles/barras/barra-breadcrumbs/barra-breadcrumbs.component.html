@@ -3,45 +3,53 @@
         @for (menu of lista_menu_actuales; track menu.nivel)  {
             <li 
                 class="breadcrumb-item"
-                [ngClass]="{
-                    'active text-hover-secondary': menu.link === menu_actual.link,
-                    'active text-hover-warning': !(menu.link === menu_actual.link)
-                }"
-                [routerLink]="
-                    menu.es_dinamico
-                        ? menu.ruta_completa
-                        : [
-                            '/', breadcrumb_service.url_layout
-                        ].concat(menu.ruta_completa.split('/'))
-                " 
-                [queryParams]="
-                    menu.es_dinamico
-                        ? menu.query_dinamico
-                        : null
-                "
-                [routerLinkActive]="
-                    menu.link === menu_actual.link
-                        ? 'router-link-active'
-                        : ''
-                " 
             >
-                <div class="d-flex">
-                    <span class="me-2">
-                        <i [class]="menu.simbolo"></i>
-                        {{ menu.nombre }}
-                        <br>
-                    </span>
-                    <!-- @if (menu.sub_menus) {                     
-                        <div
-                            [bs-dropdown]="
-                                menu | sub_menus_breadcrumb_dropdown: menu_actual
-                            "
-                        >
-                            <i class="bi bi-arrow-down-short me-2" ></i>
-                        </div>
-                    } -->
+                <a
+                    [ngClass]="{
+                        'active text-hover-secondary': menu.link === menu_actual.link,
+                        'active text-hover-warning': !(menu.link === menu_actual.link)
+                    }"
+                    [routerLink]="
+                        menu.es_dinamico
+                            ? menu.ruta_completa
+                            : [
+                                '/', breadcrumb_service.url_layout
+                            ].concat(menu.ruta_completa.split('/'))
+                    " 
+                    [queryParams]="
+                        menu.query_dinamico
+                            ? menu.query_dinamico
+                            : undefined
+                    "
+                    [fragment]="
+                        menu.fragmento_dinamico
+                            ? menu.fragmento_dinamico
+                            : undefined
+                    "
+                    [routerLinkActive]="
+                        menu.link === menu_actual.link
+                            ? 'router-link-active'
+                            : ''
+                    " 
+                >
+                    <div class="d-flex">
+                        <span class="me-2">
+                            <i [class]="menu.simbolo"></i>
+                            {{ menu.nombre }}
+                            <br>
+                        </span>
+                        <!-- @if (menu.sub_menus) {                     
+                            <div
+                                [bs-dropdown]="
+                                    menu | sub_menus_breadcrumb_dropdown: menu_actual
+                                "
+                            >
+                                <i class="bi bi-arrow-down-short me-2" ></i>
+                            </div>
+                        } -->
 
-                </div>
+                    </div>
+                </a>
             </li>
         }
     </ol>
