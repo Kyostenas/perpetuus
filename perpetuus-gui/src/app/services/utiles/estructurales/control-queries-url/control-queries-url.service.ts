@@ -18,7 +18,6 @@ export class ControlQueriesUrlService {
   ) {
     this.query_string = toSignal(this.route.queryParams, {initialValue: {}}) as Signal<QUERY_PARAMS_GENERAL | undefined>
     effect(() => {
-      // console.log(this.query_string())
       this.query_actual = this.get_computed_value()
     })
   }
@@ -50,13 +49,15 @@ export class ControlQueriesUrlService {
     global_search: this.preparar_query<{valor: string}>('global_search'),
     term_search: this.preparar_query<{valor: string}>('term_search'),
     filters: <T>() => this.preparar_query<T>('filters'),
-    editing_form: this.preparar_query<boolean>('editing_form')
+    form_object_squence: this.preparar_query<number>('form_object_squence'),
+    editing_form: this.preparar_query<boolean>('editing_form'),
   }
 
   private accion<T>(nombre: string) {
     return {
       ocultar: () => this.ocultar(nombre),
       definir: (objeto: T) => this.definir<T>(nombre, objeto),
+      define_multipe: (objeto: T) => this.definir<T>(nombre, objeto),
     }
   }
 
@@ -71,32 +72,44 @@ export class ControlQueriesUrlService {
     delete PARAMS_ACTUALES[nombre]
     this.router.navigate([], {
       queryParams: PARAMS_ACTUALES,
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
+      replaceUrl: true
     })
   }
 
   private definir<T>(nombre: string, objeto: T) {
     this.router.navigate([], {
       queryParams: { [nombre]: JSON.stringify(objeto) },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    })
+  }
+   
+  define_multipe(query: QUERY_PARAMS_GENERAL) {
+    this.router.navigate([], {
+      queryParams: query,
+      queryParamsHandling: 'merge',
+      replaceUrl: true
     })
   }
 
   limpiar_todo() {
     this.router.navigate([], { 
       queryParams: {}, 
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'replace',
+      replaceUrl: true
     })
   }
   
 }
 
 export interface QUERY_PARAMS_GENERAL {
-  pagination: Pagination,
-  filters: any
-  global_search: string,
-  term_search: string,
-  editing_form: boolean,
+  pagination?: Pagination,
+  filters?: any
+  global_search?: string,
+  term_search?: string,
+  form_object_squence?: number,
+  editing_form?: boolean
 }
 
 
