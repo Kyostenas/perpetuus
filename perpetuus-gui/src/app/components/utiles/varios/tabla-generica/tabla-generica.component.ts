@@ -48,6 +48,7 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
             const QUERY_OBTENIDA =
                 this.control_queries.query_actual().pagination;
             if (QUERY_OBTENIDA) {
+                this.ordenes_columnas.update(() => QUERY_OBTENIDA.sorting_fields)
                 this.detallePaginacion.update((value) => QUERY_OBTENIDA);
             }
             this.emisor_paginacion.emit(QUERY_OBTENIDA);
