@@ -1,12 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { computed, effect, Injectable, Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DeepValues } from 'src/app/utiles/tipos-personalizados';
 
 @Injectable({
     providedIn: 'root',
 })
 export class FragmentCallbackService {
-    constructor(private router: Router) {}
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+    ) {
+        this.current_fragment = toSignal(this.route.fragment, {initialValue: undefined})
+    }
 
     private callbacks: {
         [key: string]: {
@@ -14,6 +20,8 @@ export class FragmentCallbackService {
             eliminado_fragmento: () => void;
         };
     } = {};
+     
+    current_fragment!: Signal<string | null | undefined>
 
     register_callback(
         fragment: DeepValues<typeof this.ALLOWED_FRAGMENTS, string>,
