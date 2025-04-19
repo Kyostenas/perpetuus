@@ -1,0 +1,43 @@
+@if (paginacion()) {
+    <nav aria-label="Paginador generico">
+        <ul class="pagination m-0 p-0">
+            <li class="page-item">
+                <a class="btn btn-sm btn-dark" (click)="disminuir_uno_pagina()"
+                    ><i class="bi bi-chevron-double-left"></i
+                ></a>
+            </li>
+            <li class="page-item">
+                <a class="btn btn-sm btn-dark" (click)="disminuir_uno_pagina()"
+                    ><i class="bi bi-chevron-left"></i
+                ></a>
+            </li>
+            <li class="page-item">
+                <a class="btn btn-sm">
+                    <!-- <input 
+                    class="form-control"
+                    width="10px"
+                    height="10px"
+                    [value]="paginacion().pagina_actual"
+                    (input)="input_numero_pagina($event)"
+                    type="number"
+                  /> -->
+                    {{ paginacion().current_page }} /
+                    {{ paginacion().element_count // paginacion().limite }}
+                    <span class="badge pb-0 pt-0">
+                        {{ paginacion().element_count }} elem
+                    </span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="btn btn-sm btn-dark" (click)="aumentar_uno_pagina()"
+                    ><i class="bi bi-chevron-right"></i
+                ></a>
+            </li>
+            <li class="page-item">
+                <a class="btn btn-sm btn-dark" (click)="aumentar_uno_pagina()"
+                    ><i class="bi bi-chevron-double-right"></i
+                ></a>
+            </li>
+        </ul>
+    </nav>
+}

@@ -1,8 +1,5 @@
-import { ValoresAnidadosRecursivosDeObjeto } from "../../tipos-personalizados"
-
 export const PERMISOS_DISPONIBLES = {
     SUPER_ADMIN: 'SUPER_ADMIN',
-    _ADMIN: 'MENU.ADMIN',
     MENU: {
         _ADMIN: 'MENU.ADMIN',
         ADMIN: {
@@ -22,7 +19,7 @@ export const PERMISOS_DISPONIBLES = {
         CREAR: 'ROL.CREAR',
         OBTENER: 'ROL.OBTENER',
         MODIFICAR: 'ROL.MODIFICAR',
-        ELIMINAR: 'ROL.ELIMINAR',
+        ACTIVAR_DESACTIVAR: 'ROL.ACTIVAR_DESACTIVAR',
         PERMISO: {
             AGREGAR: 'ROL.PERMISO.AGREGAR',
             OBTENER: 'ROL.PERMISO.OBTENER',
@@ -33,7 +30,7 @@ export const PERMISOS_DISPONIBLES = {
         CREAR: 'USUARIO.CREAR',
         OBTENER: 'USUARIO.OBTENER',
         MODIFICAR: 'USUARIO.MODIFICAR',
-        ELIMINAR: 'USUARIO.ELIMINAR',
+        ACTIVAR_DESACTIVAR: 'USUARIO.ACTIVAR_DESACTIVAR',
         ROL: {
             AGREGAR: 'USUARIO.ROL.AGREGAR',
             ELIMINAR: 'USUARIO.ROL.ELIMINAR',
@@ -42,11 +39,11 @@ export const PERMISOS_DISPONIBLES = {
 } as const;
 
 export type PERMISOS_PERPETUUS = 
-    ValoresAnidadosRecursivosDeObjeto<
+    DeepKeys<
         typeof PERMISOS_DISPONIBLES, string
     >
 
 export type PERMISOS_MENU_PERPETUUS = 
-    ValoresAnidadosRecursivosDeObjeto<
+    DeepKeys<
         typeof PERMISOS_DISPONIBLES.MENU, string
     >

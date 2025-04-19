@@ -1,21 +1,27 @@
-import { ValoresAnidadosRecursivosDeObjeto } from '../utiles/tipos-personalizados';
+import { DeepValues } from '../utiles/tipos-personalizados';
 
 export const PERMISOS_DISPONIBLES = {
     SUPER_ADMIN: 'SUPER_ADMIN',
-    _ADMIN: 'MENU.ADMIN',
     MENU: {
         _ADMIN: 'MENU.ADMIN',
         ADMIN: {
             ROL: 'MENU.ADMIN.ROLES',
             USUARIO: 'MENU.ADMIN.USUARIO',
-            PARAMETROS: 'MENU.ADMIN.PARAMETROS'
+            PARAMETROS: 'MENU.ADMIN.PARAMETROS',
+            AREAS: 'MENU.ADMIN.AREAS',
+            FLUJOS: 'MENU.ADMIN.FLUJOS',
+            _ALMACENES: 'MENU.ADMIN.ALMACENES',
+            ALMACENES: {
+                ADMINISTRAR: 'MENU.ADMIN.ALMACENES.ADMINSITRAR',
+                ARTICULOS: 'MENU.ADMIN.ALMACENES.ARTICULOS',
+            },
         },
     },
     ROL: {
         CREAR: 'ROL.CREAR',
         OBTENER: 'ROL.OBTENER',
         MODIFICAR: 'ROL.MODIFICAR',
-        ELIMINAR: 'ROL.ELIMINAR',
+        ACTIVAR_DESACTIVAR: 'ROL.ACTIVAR_DESACTIVAR',
         PERMISO: {
             AGREGAR: 'ROL.PERMISO.AGREGAR',
             OBTENER: 'ROL.PERMISO.OBTENER',
@@ -26,7 +32,7 @@ export const PERMISOS_DISPONIBLES = {
         CREAR: 'USUARIO.CREAR',
         OBTENER: 'USUARIO.OBTENER',
         MODIFICAR: 'USUARIO.MODIFICAR',
-        ELIMINAR: 'USUARIO.ELIMINAR',
+        ACTIVAR_DESACTIVAR: 'USUARIO.ACTIVAR_DESACTIVAR',
         ROL: {
             AGREGAR: 'USUARIO.ROL.AGREGAR',
             ELIMINAR: 'USUARIO.ROL.ELIMINAR',
@@ -35,11 +41,11 @@ export const PERMISOS_DISPONIBLES = {
 } as const;
 
 export type PERMISOS_PERPETUUS = 
-    ValoresAnidadosRecursivosDeObjeto<
+    DeepValues<
         typeof PERMISOS_DISPONIBLES, string
     >
 
 export type PERMISOS_MENU_PERPETUUS = 
-    ValoresAnidadosRecursivosDeObjeto<
+    DeepValues<
         typeof PERMISOS_DISPONIBLES.MENU, string
     >

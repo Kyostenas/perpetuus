@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { ControlNotificacionesService } from '../../utiles/varios/control-notificaciones/control-notificaciones.service';
 import { UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
 import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
-import { map, catchError, throwError } from 'rxjs';
+import { map, catchError, throwError, Observable } from 'rxjs';
+import { Pagination } from 'src/app/utiles/tipos-personalizados';
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,13 @@ export class AdministracionUsuariosService {
     return url;
   }
 
-  obtener_usuarios() {
-    const url = this.obtener_url();
+  total_usuarios: number = 0
+
+  obtener_usuarios(paginacion?: Pagination): Observable<UsuarioRecibir[]> {
+    let url = this.obtener_url();
+    if (paginacion) {
+      url = url.concat(`?paginacion=${JSON.stringify(paginacion)}`)
+    }
     return this.http.get(url, this.opciones).pipe(
       map((resp: any) => {
         this.notificaciones.crear_notificacion({

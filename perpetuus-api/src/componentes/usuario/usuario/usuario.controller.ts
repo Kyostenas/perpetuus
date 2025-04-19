@@ -1,422 +1,231 @@
 import { Request, Response } from 'express';
 
-import { Usuario } from './usuario.model';
+import { User, USER_MODEL } from './usuario.model';
 
-import { servicio_usuario } from './usuario.service';
+import { UserService } from './usuario.service';
 import { Resp } from '../../../utils/response.utils';
-import { validar_existencia_de_campos } from '../../../utils/validaciones.utils';
-import { NOMBRE_ROL_SUPER_ADMIN, NOMBRE_USUARIO_SUPER_ADMIN } from '../../../utils/constantes.utils';
+import { NOMBRE_USUARIO_SUPER_ADMIN } from '../../../utils/constantes.utils';
 import { Rol } from '../rol-usuario/rol-usuario.model';
-import { _Request } from '../../../tipos-personalizados';
+import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
+import { CRUD_Controller } from '../../../abstract-classes/crud/crud-controller.abstract';
+import { BeAnObject } from '@typegoose/typegoose/lib/types';
 
+export class UserController extends CRUD_Controller<typeof USER_MODEL> {
+    getmodel(): ReturnModelType<typeof User, BeAnObject> {
+        return USER_MODEL;
+    }
 
+    // (o==================================================================o)
+    //   #region CRUD
+    // (o-----------------------------------------------------------\/-----o)
 
-// (o==================================================================o)
-//   CRUD BASICO (INICIO)
-//   para los usuarios
-// (o-----------------------------------------------------------\/-----o)
-
-async function crear_usuario(req: _Request, res: Response) {
-    try {
-        const { 
-            nombres, 
-            apellidos, 
-            nombre_usuario,
-            contrasena,
-            correo, 
-            numero_celular 
-        } = req.body;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            [
-                'nombres', 
-                'apellidos', 
+    create = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = { ...req.body, user_id: req.usuario?._id };
+        return this.try_operation({
+            res,
+            req,
+            body: BODY,
+            operation: new UserService().create,
+            res_message: 'Usuario creado',
+            err_message: 'Error al crear usuario',
+            is_creation: true,
+            filename: __filename,
+            fields_to_validate: [
+                'nombres',
+                'apellidos',
                 'nombre_usuario',
                 'contrasena',
             ],
-            req.body
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }
-        const nuevo_usuario = await servicio_usuario
-            .crear_usuario(
-                nombres, 
-                apellidos, 
-                nombre_usuario,
-                contrasena, 
-                correo, 
-                numero_celular
-            );
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Usuario creado', 
-                datos: nuevo_usuario 
-            }
-        )._201_created();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al crear usuario', 
-                error: err 
-            }
-        )._422_unprocessable();
+        });
     }
-}
-
-async function obtener_usuarios_todo(req: _Request, res: Response) {
-    try {
-        const usuarios = await servicio_usuario
-            .obtener_usuarios_todo()
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Se obtuvieron todos los usuarios',
-                datos: usuarios,
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al obtener todos los usuarios', 
-                error: err 
-            }
-        )._422_unprocessable();
+    read = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        return this.try_operation({
+            res,
+            req,
+            operation: new UserService().read,
+            res_message: 'Se obtuvieron todos los usuarios',
+            err_message: 'Error al crear usuario',
+            is_creation: false,
+            filename: __filename,
+        });
     }
-}
-
-async function obtener_usuario_id(req: _Request, res: Response) {
-    try {
-        const { id } = req.params;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['id'],
-            req.params
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }        
-        const usuario = await servicio_usuario.obtener_usuario_id(id)
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No existe un usuario con ese id', 
-                }
-            )._404_not_found();
-        }
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Usuario obtenido usando un id',
-                datos: usuario,
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al obtener un usuario por id', 
-                error: err 
-            }
-        )._422_unprocessable();        
+    read_by_sequence = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        return this.try_operation({
+            res,
+            req,
+            body: req.params,
+            operation: new UserService().read_by_sequence,
+            res_message: 'Usuario obtenido usando un consecutivo',
+            err_message: 'Error al obtener un usuario con su consecutivo',
+            not_found_message: 'No existe un usuario con ese consecutivo',
+            is_creation: false,
+            filename: __filename,
+            fields_to_validate: ['sequence'],
+        });
     }
-}
-
-async function obtener_usuario_termino(req: _Request, res: Response) {
-    try {
-        const { termino } = req.params;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['termino'],
-            req.params
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }              
-        const usuario = await servicio_usuario.obtener_usuario_termino(termino)
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No se encontró un usuario relacionado a ese término', 
-                }
-            )._404_not_found();
+    update = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = { ...req.body, ...req.params, user_id: req.usuario?._id };
+        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        if (!!SUPER_ADMIN) {
+            return new Resp(res, __filename, {
+                mensaje: `No se puede modificar el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
+            })._403_forbidden();
         }
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Usuario obtenido usando un término',
-                datos: usuario,
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al obtener un usuario por término', 
-                error: err 
-            }
-        )._422_unprocessable();        
+        return this.try_operation({
+            res,
+            req,
+            body: BODY,
+            operation: new UserService().update,
+            res_message: 'Usuario modificado',
+            err_message: 'Error al modificar un usuario',
+            not_found_message: 'No existe un usuario con ese consecutivo',
+            is_creation: false,
+            filename: __filename,
+            fields_to_validate: ['sequence', 'user_id'],
+        });
     }
-}
-
-async function modificar_usuario(req: _Request, res: Response) {
-    try {
-        const { nombres, apellidos, correo, numero_celular, _id } = req.body
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['nombres', 'apellidos', 'correo', '_id'],
-            req.body
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }            
-        const usuario = await Usuario.findById(_id);
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No existe un usuario con ese id', 
-                }
-            )._404_not_found();
+    activate = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = { ...req.body, ...req.params, user_id: req.usuario?._id };
+        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        if (!!SUPER_ADMIN) {
+            return new Resp(res, __filename, {
+                mensaje: `No se puede modificar el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
+            })._403_forbidden();
         }
-        if (usuario.rol?.super_admin) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: `No se puede modificar a ${NOMBRE_USUARIO_SUPER_ADMIN}`, 
-                }
-            )._403_forbidden();
-        }  
-        servicio_usuario.modificar_usuario(
-            _id, 
-            nombres, 
-            apellidos, 
-            correo, 
-            numero_celular
-        );
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Usuario modificado',
-            },
-        )._200_ok();        
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al modificar un usuario por id', 
-                error: err 
-            }
-        )._422_unprocessable();          
+        return this.try_operation({
+            res,
+            req,
+            body: BODY,
+            operation: new UserService().activate,
+            res_message: 'Usuario activado',
+            err_message: 'Error al activar un usuario',
+            not_found_message: 'No existe un usuario con ese consecutivo',
+            is_creation: false,
+            filename: __filename,
+            fields_to_validate: ['sequence', 'user_id'],
+        });
     }
-}
-
-async function eliminar_usuario_id(req: _Request, res: Response) {
-    try {
-        const { id } = req.params;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['id'],
-            req.params
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
-        }            
-        const usuario = await Usuario.findById(id);
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No existe un usuario con ese id', 
-                }
-            )._404_not_found();
+    deactivate = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = { ...req.body, ...req.params, user_id: req.usuario?._id };
+        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        if (!!SUPER_ADMIN) {
+            return new Resp(res, __filename, {
+                mensaje: `No se puede modificar el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
+            })._403_forbidden();
         }
-        if (usuario.rol?.super_admin) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: `No se puede eliminar a ${NOMBRE_USUARIO_SUPER_ADMIN}`, 
-                }
-            )._403_forbidden();
-        }          
-        await servicio_usuario.eliminar_usuario_id(id, usuario)
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Usuario eliminado usando un id',
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al eliminar un usuario por id', 
-                error: err 
-            }
-        )._422_unprocessable();        
+        return this.try_operation({
+            res,
+            req,
+            body: BODY,
+            operation: new UserService().deactivate,
+            res_message: 'Usuario desactivado',
+            err_message: 'Error al desactivar un usuario',
+            not_found_message: 'No existe un usuario con ese consecutivo',
+            is_creation: false,
+            filename: __filename,
+            fields_to_validate: ['sequence', 'user_id'],
+        });
     }
-}
 
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion CRUD
+    // (o==================================================================o)
 
-// (o-----------------------------------------------------------/\-----o)
-//   CRUD BASICO (FIN)
-// (o==================================================================o)
+    // (o==================================================================o)
+    //   #region EXTRA-ACTIONS
+    // (o-----------------------------------------------------------\/-----o)
 
-
-// (o==================================================================o)
-//   ACCIONES EXTRA (INICIO)
-//   cualquier otra cosa que no caiga en el CRUD convencional
-// (o-----------------------------------------------------------\/-----o)
-
-async function cambiar_rol_a_usuario(req: _Request, res: Response) {
-    try {
-        const { rol, _id } = req.body;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            ['rol', '_id'],
-            req.body
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
+    assign_rol_to_user = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = { ...req.body, ...req.params, user_id: req.usuario?._id };
+        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        if (!!SUPER_ADMIN) {
+            return new Resp(res, __filename, {
+                mensaje: `No se puede modificar el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
+            })._403_forbidden();
         }
-        const usuario = await Usuario.findById(_id);
-        const rol_usuario = await Rol.findById(rol)
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No existe un usuario con ese id', 
-                }
-            )._404_not_found();
-        }
-        if (usuario.rol?.super_admin) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: `Nadie puede cambiar el rol del ${NOMBRE_USUARIO_SUPER_ADMIN}`, 
-                }
-            )._403_forbidden();
-        }
-        if (rol_usuario?.super_admin) {
-            return new Resp(
-                res, __filename,
-                {
-                    mensaje: `Nadie puede asignar el rol de ${NOMBRE_ROL_SUPER_ADMIN}`
-                }
-            )._403_forbidden();
-        }        
-        await servicio_usuario
-            .cambiar_rol_a_usuario(_id, rol);
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Rol de usuario modificado',
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al cambiar de rol al usuario', 
-                error: err 
-            }
-        )._422_unprocessable();          
+        return this.try_operation({
+            res,
+            req,
+            body: BODY,
+            operation: new UserService().assign_rol_to_user,
+            res_message: 'Nuevo rol asignado a usuario',
+            err_message: 'Error al asignar rol a usuario',
+            not_found_message: 'No existe un usuario con ese consecutivo',
+            is_creation: false,
+            filename: __filename,
+            fields_to_validate: ['sequence', 'rol', 'user_id'],
+        });
     }
-}
-
-async function quitar_rol_a_usuario(req: _Request, res: Response) {
-    try {
-        const { _id } = req.body;
-        const { valido, mensaje } = validar_existencia_de_campos(
-            [ '_id' ],
-            req.body
-        );
-        if (!valido) {
-            return new Resp(res, __filename, { mensaje })
-                ._422_unprocessable();
+    remove_rol_from_user = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        const BODY = { ...req.body, ...req.params, user_id: req.usuario?._id };
+        const SUPER_ADMIN = this.test_if_super_admin(BODY.sequence);
+        if (!!SUPER_ADMIN) {
+            return new Resp(res, __filename, {
+                mensaje: `No se puede modificar el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
+            })._403_forbidden();
         }
-        const usuario = await Usuario.findById(_id);
-        if (!usuario) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: 'No existe un usuario con ese id', 
-                }
-            )._404_not_found();
-        }
-        if (usuario.rol?.super_admin) {
-            return new Resp(
-                res, __filename, 
-                { 
-                    mensaje: `Nadie puede eliminar el rol del ${NOMBRE_USUARIO_SUPER_ADMIN}`, 
-                }
-            )._403_forbidden();
-        }
-        await servicio_usuario
-            .quitar_rol_a_usuario(_id);
-        return new Resp(
-            res, __filename,
-            {
-                mensaje: 'Rol de usuario eliminado',
-            },
-        )._200_ok();
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: 'Error al cambiar de rol al usuario', 
-                error: err 
-            }
-        )._422_unprocessable();          
+        return this.try_operation({
+            res,
+            req,
+            body: BODY,
+            operation: new UserService().remove_rol_from_user,
+            res_message: 'Rol removido de usuario',
+            err_message: 'Error al remover rol de usuario',
+            not_found_message: 'No existe un usuario con ese consecutivo',
+            is_creation: false,
+            filename: __filename,
+            fields_to_validate: ['sequence', 'rol', 'user_id'],
+        });
     }
-}
-
-async function crear_usuario_super_admin(req: _Request, res: Response) {
-    try {
-        await servicio_usuario
-            .crear_usuario_super_admin();
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: `Usuario ${NOMBRE_USUARIO_SUPER_ADMIN} creado`, 
-            }
-        )._201_created();        
-    } catch (err) {
-        return new Resp(
-            res, __filename, 
-            { 
-                mensaje: `Error al crear el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`, 
-                error: err 
-            }
-        )._422_unprocessable();          
+    create_super_admin = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response<any, Record<string, any>>> => {
+        return this.try_operation({
+            res,
+            req,
+            body: req.body,
+            operation: new UserService().create_super_admin,
+            res_message: `Usuario ${NOMBRE_USUARIO_SUPER_ADMIN} creado`,
+            err_message: `Error al crear el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
+            is_creation: false,
+            filename: __filename,
+        });
     }
+
+    private test_if_super_admin = async (sequence: number) => {
+        const ROL = await this.getmodel()
+            .findOne({ sequence })
+            .populate<{ rol: DocumentType<Rol> }>('rol')
+            .lean();
+        return ROL?.rol?.super_admin;
+    }
+
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion EXTRA-ACTIONS
+    // (o==================================================================o)
 }
-
-
-// (o-----------------------------------------------------------/\-----o)
-//   ACCIONES EXTRA (FIN)
-// (o==================================================================o)
-
-
-
-
-const controlador_usuario = { 
-    crear_usuario, 
-    obtener_usuarios_todo,
-    obtener_usuario_id,
-    obtener_usuario_termino,
-    modificar_usuario,
-    eliminar_usuario_id,
-
-    cambiar_rol_a_usuario,
-    quitar_rol_a_usuario,
-    crear_usuario_super_admin,
-};
-
-
-export { controlador_usuario }

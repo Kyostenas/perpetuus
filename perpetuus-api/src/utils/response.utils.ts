@@ -139,7 +139,7 @@ export class Resp {
      * El servidor no puede o no va a procesar la solicitud por algo que se percibe
      * como un **error de cliente**.
      */        
-    _400_bad_request() {
+    _400_badRequest() {
         return this.respuesta_general(400, `BAD REQUEST`, true)
     }
     
@@ -278,4 +278,11 @@ export interface DatosResponse {
      * Objeto cualesquiera del error.
      */  
     error?: any;
+    /**
+     * ## total
+     * Si los datos son un arreglo, poner aqui la cantidad de
+     * elementos de la consulta total sin paginarse.
+     */
+    total?: number;
+    pagination?: Pagination;
 };

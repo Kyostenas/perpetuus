@@ -1,6 +1,4 @@
 import { Routes } from "@angular/router";
-import { PaginaNoEncontrada404Component } from "../../general/pagina-no-encontrada-404/pagina-no-encontrada-404.component";
-
 
 export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
     path: '',
@@ -14,8 +12,13 @@ export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
         },
         {
             path: 'usuarios',
-            loadComponent: () => import('./administracion-usuarios/administracion-usuarios.component')
-                .then(x => x.AdministracionUsuariosComponent),
+            loadComponent: () => import('./user/user-administration-list/user-administration-list.component')
+                .then(x => x.UserAdministrationListComponent),
+        },
+        {
+            path: 'usuarios/form',
+            loadComponent: () => import('./user/user-administration-form/user-administration-form.component')
+                .then(x => x.UserAdministrationFormComponent),
         },
         {
             path: 'parametros',
@@ -37,6 +40,6 @@ export const PANEL_ADMINISTRACION_ROUTES: Routes = [{
             loadChildren: () => import('./_almacenes/administracion-almacenes.routes')
                 .then(rutas => rutas.ADMINSITRACION_ALMACENES_ROUTES)
         },
-        { path: '**', component: PaginaNoEncontrada404Component }
+        { path: '**', redirectTo: '../' }
     ],
 }];

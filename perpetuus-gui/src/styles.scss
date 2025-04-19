@@ -1,4 +1,8 @@
 
+:root {
+    --backdrop-filter-blur-global: 20px
+}
+
 .saltos-lineas-tabs {
     white-space: pre-wrap !important;
 }
@@ -73,6 +77,14 @@
 .tooltip-white {
     --bs-tooltip-bg: var(--bs-white);
     --bs-tooltip-color: var(--bs-black)
+}
+
+.backdrop-filter-blur {
+    backdrop-filter: blur(var(--backdrop-filter-blur-global));
+}
+
+.bg-dark-transparent {
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
 $utilities: (

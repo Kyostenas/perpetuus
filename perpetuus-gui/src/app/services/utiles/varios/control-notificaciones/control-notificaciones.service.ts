@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { UtilidadesService } from '../utilidades/utilidades.service';
 import { BehaviorSubject } from 'rxjs';
 import { EspecificacionServicioNotificacion, EspecificacionNotificacion } from 'src/app/models/utiles/varios/control-notificaciones/control-notificaciones.model';
@@ -16,14 +16,13 @@ export class ControlNotificacionesService {
   //   ancho: '18vw'
   // }
 
-  private _notificaciones_subject = 
-    new BehaviorSubject<EspecificacionServicioNotificacion>({
+  estado_notifiaciones: WritableSignal<EspecificacionServicioNotificacion> = signal({
       toast: [],
       alert: [],
       modal: [],
-    })
+  })
 
-  estado_notificaciones$ = this._notificaciones_subject.asObservable()
+  // estado_notificaciones$ = this._notificaciones_subject.asObservable()
   
   constructor(
     private utiles: UtilidadesService
@@ -33,40 +32,44 @@ export class ControlNotificacionesService {
     nueva_notif: EspecificacionNotificacion,
     tipo: 'alert' | 'toast' | 'modal',
   ) {
-    const ESTADO_ACTUAL = this._notificaciones_subject.value
-    const ESTADO_ACDTUALIZADO = {
-      ...ESTADO_ACTUAL,
-      [tipo]: [...ESTADO_ACTUAL[tipo], nueva_notif]
-    }
-    this._notificaciones_subject.next(ESTADO_ACDTUALIZADO)
+    this.estado_notifiaciones.update((value) => {
+      const ESTADO_ACDTUALIZADO = {
+        ...value,
+        [tipo]: [...value[tipo], nueva_notif]
+      }
+      return ESTADO_ACDTUALIZADO
+    })
   }
 
   private eliminar_notif_de_arreglo(
     id_notificacion: string, 
     tipo: 'alert' | 'toast' | 'modal',
   ) {
-    const ESTADO_ACTUAL = this._notificaciones_subject.value
-    const ARREGLO_ACTUALIZADO = ESTADO_ACTUAL[tipo]
-      .filter(notif => notif.id !== id_notificacion)
-    const ESTADO_ACTUALIZADO = {
-      ...ESTADO_ACTUAL,
-      [tipo]: ARREGLO_ACTUALIZADO
-    }
-    this._notificaciones_subject.next(ESTADO_ACTUALIZADO)
+    // const ESTADO_ACTUAL = this.estado_notifiaciones.value
+    this.estado_notifiaciones.update((value) => {
+      const ARREGLO_ACTUALIZADO = value[tipo]
+        .filter(notif => notif.id !== id_notificacion)
+      const ESTADO_ACTUALIZADO = {
+        ...value,
+        [tipo]: ARREGLO_ACTUALIZADO
+      }
+      return ESTADO_ACTUALIZADO
+    })
   }
 
   private modificar_notif_de_arreglo(
     tipo: 'alert' | 'toast' | 'modal',
     datos: EspecificacionNotificacion,
   ) {
-    const ESTADO_ACTUAL = this._notificaciones_subject.value
-    const ARREGLO_ACTUALIZADO = ESTADO_ACTUAL[tipo]
-      .map(notif => notif.id !== datos.id? datos : notif)
-    const ESTADO_ACTUALIZADO = {
-      ...ESTADO_ACTUAL,
-      [tipo]: ARREGLO_ACTUALIZADO
-    }
-    this._notificaciones_subject.next(ESTADO_ACTUALIZADO)
+    this.estado_notifiaciones.update((value) => {
+      const ARREGLO_ACTUALIZADO = value[tipo]
+        .map(notif => notif.id !== datos.id? datos : notif)
+      const ESTADO_ACTUALIZADO = {
+        ...value,
+        [tipo]: ARREGLO_ACTUALIZADO
+      }
+      return ESTADO_ACTUALIZADO
+    })
   }
 
   private preparar_toast(
@@ -144,6 +147,11 @@ export class ControlNotificacionesService {
       case 'toast':
         this.preparar_toast(datos)
         this.agregar_notif_a_arreglo(datos, 'toast')
+        setTimeout(() => {
+          this.eliminar_notif_de_arreglo(
+            <string>datos.id, datos.tipo
+          )
+        }, (datos.duracion_en_ms ?? 0) + 200)
         break;
       case 'alert':
         this.preparar_alert(datos)

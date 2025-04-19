@@ -10,3 +10,26 @@ tr th:last-child {
     border-bottom-right-radius: 10px;
     border-collapse: separate !important;
 }
+
+.overflow-etiquetas {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    white-space: nowrap;
+    flex-wrap: nowrap;
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        white 10px,
+        white calc(100% - 10px),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        white 10px,
+        white calc(100% - 10px),
+        transparent
+    );
+}

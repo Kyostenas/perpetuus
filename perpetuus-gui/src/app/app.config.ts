@@ -36,6 +36,6 @@ export const APP_CONFIG: ApplicationConfig = {
             withFetch(), 
             withInterceptorsFromDi(),
         ),
-        // provideExperimentalZonelessChangeDetection(),
+        provideExperimentalZonelessChangeDetection(),
     ],
 };

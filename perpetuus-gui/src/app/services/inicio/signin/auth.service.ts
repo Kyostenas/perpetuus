@@ -3,7 +3,7 @@ import { NOMBRE_CAMPO_ROL_LOCAL_STORAGE, NOMBRE_CAMPO_USUARIO_LOCAL_STORAGE, Uti
 import { DESCRIPCION_MENU, UsuarioEnviar, UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, throwError } from 'rxjs';
-import { RolUsuario } from 'src/app/models/usuario/rol-usuario.model';
+import { RolUsuarioRecibir } from 'src/app/models/usuario/rol-usuario.model';
 import { ControlNotificacionesService } from '../../utiles/varios/control-notificaciones/control-notificaciones.service';
 
 
@@ -150,8 +150,8 @@ export class AuthService {
     )
   }
 
-  obtener_rol_usuario_local_storage(): RolUsuario {
-    return <RolUsuario>this.utilidades.consultar_local_storage(
+  obtener_rol_usuario_local_storage(): RolUsuarioRecibir {
+    return <RolUsuarioRecibir>this.utilidades.consultar_local_storage(
       NOMBRE_CAMPO_ROL_LOCAL_STORAGE
     )
   }
