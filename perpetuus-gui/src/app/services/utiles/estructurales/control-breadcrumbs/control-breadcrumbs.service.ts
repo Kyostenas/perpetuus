@@ -4,6 +4,8 @@ import { BehaviorSubject, filter, Subscription, takeUntil } from 'rxjs';
 import { DESCRIPCION_MENU } from 'src/app/models/usuario/usuario.model';
 import { UtilidadesService } from '../../varios/utilidades/utilidades.service';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ControlQueriesUrlService } from '../control-queries-url/control-queries-url.service';
+import { FragmentCallbackService } from '../fragment-callback/fragment-callback.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,12 @@ export class ControlBreadcrumbsService {
   constructor(
     private activateRoute: ActivatedRoute,
     private router: Router,
-    private utiles: UtilidadesService
+    private utiles: UtilidadesService,
+    private query_service: ControlQueriesUrlService,
+    private fragment_service: FragmentCallbackService
   ) {
-    this._query_actual = toSignal(this.activateRoute.queryParamMap)
-    this._fragmento_actual = toSignal(this.activateRoute.fragment)
+    // this._query_actual = toSignal(this.activateRoute.queryParamMap)
+    // this._fragmento_actual = toSignal(this.activateRoute.fragment)
   }
 
   url_layout!: string
@@ -24,8 +28,8 @@ export class ControlBreadcrumbsService {
   private _menu_actual!: DESCRIPCION_MENU
   private _ruta_menus_actual: DESCRIPCION_MENU[] = []
   private _url_actual!: string[]
-  private _query_actual!: Signal<ParamMap | undefined>
-  private _fragmento_actual!: Signal<string | null | undefined>
+  // private _query_actual!: Signal<ParamMap | undefined>
+  // private _fragmento_actual!: Signal<string | null | undefined>
   // private _conjunto_links_sub_menus_disponibles!: string[]
   private _conjunto_sub_menus_disponibles!: DESCRIPCION_MENU[]
   private subscripcion_router!: Subscription
@@ -111,8 +115,8 @@ export class ControlBreadcrumbsService {
         ruta_completa: this.url_actual.join('/'),
         simbolo: 'bi bi-link-45deg',
         es_dinamico: true,
-        query_dinamico: JSON.parse(JSON.stringify(this._query_actual())).params,
-        fragmento_dinamico: this._fragmento_actual()
+        query_dinamico: this.query_service.query_actual(),
+        fragmento_dinamico: this.fragment_service.current_fragment(),
       }
       rutaDeMenus.push(menu_correspondiente)
       if (!!menu_correspondiente?.sub_menus) {
