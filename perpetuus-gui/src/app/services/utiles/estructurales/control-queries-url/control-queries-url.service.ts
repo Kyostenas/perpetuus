@@ -73,7 +73,7 @@ export class ControlQueriesUrlService {
     this.router.navigate([], {
       queryParams: PARAMS_ACTUALES,
       queryParamsHandling: 'merge',
-      replaceUrl: true
+      // replaceUrl: true
     })
   }
 
@@ -81,15 +81,15 @@ export class ControlQueriesUrlService {
     this.router.navigate([], {
       queryParams: { [nombre]: JSON.stringify(objeto) },
       queryParamsHandling: 'merge',
-      replaceUrl: true
+      // replaceUrl: true
     })
   }
    
-  define_multipe(query: QUERY_PARAMS_GENERAL) {
+  define_multipe(query: QUERY_PARAMS_GENERAL, replaceUrl: boolean = false) {
     this.router.navigate([], {
       queryParams: query,
       queryParamsHandling: 'merge',
-      replaceUrl: true
+      replaceUrl
     })
   }
 
@@ -97,7 +97,7 @@ export class ControlQueriesUrlService {
     this.router.navigate([], { 
       queryParams: {}, 
       queryParamsHandling: 'replace',
-      replaceUrl: true
+      // replaceUrl: true
     })
   }
   

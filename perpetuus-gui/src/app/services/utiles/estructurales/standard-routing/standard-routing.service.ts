@@ -61,7 +61,7 @@ export class StandardRoutingService {
                 this.query_service.define_multipe({
                     form_object_squence: object_sequence,
                     editing_form: false,
-                })
+                }, true)
             }, 0);
         })
     }
