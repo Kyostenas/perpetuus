@@ -47,7 +47,9 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
         effect(() => {
             const QUERY_OBTENIDA =
                 this.control_queries.query_actual().pagination;
-            this.detallePaginacion.update((value) => QUERY_OBTENIDA);
+            if (QUERY_OBTENIDA) {
+                this.detallePaginacion.update((value) => QUERY_OBTENIDA);
+            }
             this.emisor_paginacion.emit(QUERY_OBTENIDA);
         });
     }
@@ -70,7 +72,9 @@ export class TablaGenericaComponent implements OnInit, OnDestroy {
         } else {
             const QUERY_OBTENIDA =
                 this.control_queries.query_actual().pagination;
-            this.detallePaginacion.update((value) => QUERY_OBTENIDA);
+            if (QUERY_OBTENIDA) {
+                this.detallePaginacion.update((value) => QUERY_OBTENIDA);
+            }
             this.emisor_paginacion.emit(QUERY_OBTENIDA);
         }
     }
