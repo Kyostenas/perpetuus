@@ -33,7 +33,8 @@ export class StandardRoutingService {
             this.fragment_service.clean_fragment();
         }
         this.router.navigate(path_fragments, {
-            preserveFragment: true,
+            // preserveFragment: true,
+            // skipLocationChange: false,
         });
         if (hash_fragment) {
             this.fragment_service.add_fragment(hash_fragment);
@@ -42,17 +43,26 @@ export class StandardRoutingService {
 
     go_back() {
         this.query_service.limpiar_todo();
+        setTimeout(() => {
+            this.fragment_service.clean_fragment();
+            setTimeout(() => {
+                window.history.back();
+            }, 0);
+        }, 0);
+    }
+
+    open_form(object_sequence: number) {
+        this.query_service.limpiar_todo();
         this.fragment_service.clean_fragment();
-        this.router.navigate(['../']);
-    }
-
-    open_form() {
-        this.navigate(['./form']);
-        this.query_service.queries.editing_form.accion.definir(false);
-    }
-
-    edit_form() {
-        this.navigate(['./'], undefined, false);
-        this.query_service.queries.editing_form.accion.definir(false);
+        setTimeout(() => {
+            const CURRENT_URL = this.router.url.split('?')[0]
+            this.navigate([CURRENT_URL ?? '', 'form']);
+            setTimeout(() => {
+                this.query_service.define_multipe({
+                    form_object_squence: object_sequence,
+                    editing_form: false,
+                })
+            }, 0);
+        })
     }
 }
