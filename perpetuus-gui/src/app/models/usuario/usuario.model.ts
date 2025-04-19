@@ -74,7 +74,7 @@ export interface DESCRIPCION_MENU {
     sub_menus?: DESCRIPCION_MENU[]
     es_dinamico?: boolean
     query_dinamico?: any
-    fragmento_dinamico?: string,
+    fragmento_dinamico?: string | null,
 }
 
 interface DATOS_USUARIO_RECIBIR {
