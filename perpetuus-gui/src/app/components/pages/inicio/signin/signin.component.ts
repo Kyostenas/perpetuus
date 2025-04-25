@@ -43,12 +43,14 @@ export class SigninComponent implements OnInit{
       llave: 'nombre_usuario',
       etiqueta: 'Usuario',
       tipo: 'text',
-      clase_columna: 'col-12'
+      clase_columna: 'col-12',
+      clase_input: 'tw-bg-gray-800/40'
     }),
     new CampoFormulario({
       llave: 'contrasena',
       etiqueta: 'Contraseña',
-      tipo: 'password'
+      tipo: 'password',
+      clase_input: 'tw-bg-gray-800/40'
     }),
   ]
 

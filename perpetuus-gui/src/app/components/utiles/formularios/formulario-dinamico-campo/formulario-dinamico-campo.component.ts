@@ -72,8 +72,10 @@ export class FormularioDinamicoCampoComponent implements OnInit {
         let clases_agregar = [
             this.campo.clase_bootstrap,
             this.clase_campo_invalido,
-            this.clase_campo_valido
+            this.clase_campo_valido,
+            this.campo.clase_input,
         ];
+        console.log(clases_agregar)
         return clases_agregar.join(' ');
     }
 

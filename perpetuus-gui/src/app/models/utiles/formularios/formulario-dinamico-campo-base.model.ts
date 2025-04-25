@@ -88,7 +88,10 @@ export class CampoBaseFormularioDinamico<T> {
          * de row).
          */
         clase_columna?: string;
+        clase_input?: string;
     } = {}) {
+
+        console.log(opciones)
 
         this.valor = opciones.valor;
         this.llave = opciones.llave ?? '';
@@ -100,7 +103,7 @@ export class CampoBaseFormularioDinamico<T> {
         this.validaciones_campo = opciones.validaciones_campo ?? [];
         this.clase_bootstrap = encontrar_clase_bootstrap(this.tipo);
         this.clase_columna = opciones.clase_columna ?? 'col-12';
-
+        this.clase_input = opciones.clase_input ?? '';
     }
 
     valor?: T;
@@ -113,6 +116,7 @@ export class CampoBaseFormularioDinamico<T> {
     validaciones_campo!: ValidatorFn[];
     clase_bootstrap!: string;
     clase_columna!: string;
+    clase_input!: string;
 
 }
 

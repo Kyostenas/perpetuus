@@ -73,12 +73,27 @@
     #paginaPrincipal
 >
     <div 
-        
-        class=" container-fluid vstack gap-3"
+        class="vstack"
+        [ngClass]="{'container-fluid gap-2': valid_session()}"
     >
-        <div class="sticky-top backdrop-filter-blur rounded-bottom-3 bg-dark-transparent border-2 border-bottom border-secondary">
-            <ng-content select="[barra-breadcrumbs]"></ng-content>
-        </div>
+        @if (valid_session()) {
+            <div class="
+                sticky-top 
+                rounded-bottom-3 
+                border-bottom
+                border-secondary
+                tw-backdrop-blur
+            ">
+                <div class="
+                    !tw-opacity-60
+                    bg-body
+                    rounded-bottom-3
+                ">
+                    <ng-content select="[barra-breadcrumbs]"></ng-content>                    
+                </div>
+            </div>
+        }
+        
         <ng-content select="[_router_outlet]"></ng-content>
     </div>
 </ng-template>
