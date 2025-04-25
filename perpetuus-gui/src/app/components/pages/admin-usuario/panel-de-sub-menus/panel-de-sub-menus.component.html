@@ -15,7 +15,7 @@
                 @case (true) {
                     <div class="row g-3">
                         @for (menu of sub_menus; track menu.link) {
-                            <div class="col-12 col-md-12 col-lg-8 col-xl-4 col-xxl-4">
+                            <div class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2">
                                 <div 
                                     class="card shadow-hover-md border-hover-primary text-hover-primary scale-hover-sm h-100"
                                     [routerLink]="['/', breadcrumb_service.url_layout].concat(menu.ruta_completa.split('/'))" 
@@ -25,9 +25,9 @@
                                     <div class="card-body">
                                         <div class="vstack gap-0">
                                             <div class="w-100 text-center">
-                                                <h1>
+                                                <span class="h1">
                                                     <i [class]="menu.simbolo"></i>
-                                                </h1>
+                                                </span>
                                             </div>
                                             <div class="w-100 text-center">
                                                 <h3>{{menu.nombre}}</h3>
