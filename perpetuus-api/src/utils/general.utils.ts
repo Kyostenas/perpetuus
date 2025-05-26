@@ -414,11 +414,44 @@ export function seleccionarCampoCualquierNivelProfundo(
     objeto: any,
     campo: string,
     separador: string,
-    opciones?: {
-        reemplazoValorIndefinido?: any;
-        valorError?: any;
-        aplanarSubArreglos?: boolean;
-    },
+        opciones?: {
+            /**
+             * Es el valor que retorna cuando el campo no existe.
+             * 
+             * Por defecto `''`.
+             */
+            reemplazoValorIndefinido?: any;
+            /**
+             * El valor que retorna cuando hay algun error.
+             * 
+             * Por defecto `undefined`.
+             */
+            valorError?: any;
+            /**
+             * Si la funcion retorna un arreglo con sub-arreglos,
+             * aplanarlos.
+             * 
+             * Por defecto `true`.
+             */
+            aplanarSubArreglos?: boolean;
+            /**
+             * Si en la direccion especificada en `campo` hay
+             * arreglos de objetos y se hace referencia a campos en
+             * esos objetos, se traera el resultado de ese campo por
+             * cada objeto en el arreglo.
+             * 
+             * En cambio, si esta opcion se marca como `true`,
+             * se debera referenciar el indice del objeto especifico
+             * en el arreglo en el que se debera buscar el campo.
+             * 
+             * Si la ruta del campo era `objeto.arreglo_objetos.campo_objeto`,
+             * ahora debera ser `objeto.arreglo_objetos.1.campo_objeto`
+             * (el `1` solo es de ejemplo).
+             * 
+             * Por defecto `false`.
+             */
+            noRecorrerArreglos?: boolean,
+        }
 ): any {
     if (!opciones) opciones = {};
     opciones.reemplazoValorIndefinido = opciones.reemplazoValorIndefinido ?? '';
@@ -430,7 +463,7 @@ export function seleccionarCampoCualquierNivelProfundo(
         for (let iRuta = 0; iRuta < ruta.length; iRuta++) {
             const pasoRuta = ruta[iRuta];
             const esArreglo = revisarTipo(objetoActual, 'Array');
-            if (esArreglo) {
+            if (esArreglo && opciones.noRecorrerArreglos) {
                 let objetoActualTemporal = objetoActual.map(
                     (unSubObjeto: any) => {
                         return seleccionarCampoCualquierNivelProfundo(
