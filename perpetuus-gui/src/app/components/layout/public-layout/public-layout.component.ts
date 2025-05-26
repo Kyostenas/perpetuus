@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { BarraSuperiorComponent, LinkSimboloBarraSuperior, LinkTextoBarraSuperior } from '../../utiles/barras/barra-superior/barra-superior.component';
 import { CommonModule } from '@angular/common';
 import { BarraInferiorComponent } from '../../utiles/barras/barra-inferior/barra-inferior.component';
-import { AjustadorLayoutComponent } from '../-general/ajustador-layout/ajustador-layout.component';
 
 @Component({
     selector: 'app-public-layout',
@@ -12,7 +11,6 @@ import { AjustadorLayoutComponent } from '../-general/ajustador-layout/ajustador
         RouterModule,
         BarraSuperiorComponent,
         BarraInferiorComponent,
-        AjustadorLayoutComponent,
     ],
     templateUrl: './public-layout.component.html',
     styleUrl: './public-layout.component.scss'

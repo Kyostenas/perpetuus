@@ -1,8 +1,11 @@
-<!-- [ngbCollapse]="!expandido" (ngbCollapseChange)="expandido = $event" -->
 <div 
-    (hidden)="emitir_ocultado()"
-    (shown)="emitir_mostrado()"
-    (change)="emitir_cambio()"
+    [ngbCollapse]="!expandido"
+    [animation]="animated"
+    [horizontal]="horizonal"
+    (ngbCollapseChange)="expandido = $event"
+    (hidden)="emmit_hidden()"
+    (shown)="emmit_shown()"
+    (change)="emmit_changed()"
 >
     <ng-content></ng-content>
 </div>

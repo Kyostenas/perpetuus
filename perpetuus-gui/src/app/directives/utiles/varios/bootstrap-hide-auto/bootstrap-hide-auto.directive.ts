@@ -43,15 +43,15 @@ export class BootstrapHideAutoDirective implements OnInit {
             this.renderer2.removeClass(ELEMENTO, 'showing')
             this.renderer2.removeClass(ELEMENTO, 'show')
 
-            setTimeout(() => {
-              if (!this.no_eliminar) {
-                const BODY = this.elementRef.nativeElement.querySelector('body')
-                this.renderer2.removeChild(BODY, ELEMENTO)
-              } else {
-                this.renderer2.setStyle(ELEMENTO, 'display', 'none')
-              }
-            }, 100)
           }, 50)
+          setTimeout(() => {
+            if (!this.no_eliminar) {
+              const BODY = this.elementRef.nativeElement.querySelector('body')
+              this.renderer2.removeChild(BODY, ELEMENTO)
+            } else {
+              this.renderer2.setStyle(ELEMENTO, 'display', 'none')
+            }
+          }, 100)
         }, 50)
       }, this.ms_para_ocultar)
     }

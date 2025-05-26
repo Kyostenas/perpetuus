@@ -29,10 +29,14 @@ export class ControlQueriesUrlService {
         for (let [nombre, valor_string] of Object.entries(
           this.query_string() as QUERY_PARAMS_GENERAL
         )) {
-          objeto_final[nombre] = JSON.parse(valor_string)
+          try {
+            objeto_final[nombre] = JSON.parse(valor_string)
+          } catch {
+            objeto_final[nombre] = valor_string
+          }
         }
         return objeto_final as QUERY_PARAMS_GENERAL
-      } catch {
+      } catch (err) {
         return {} as QUERY_PARAMS_GENERAL;
       }
     })
@@ -45,19 +49,19 @@ export class ControlQueriesUrlService {
    * The collection of all the avialable queries
    */
   queries = {
-    pagination: this.preparar_query<Pagination>('pagination'),
-    global_search: this.preparar_query<{valor: string}>('global_search'),
-    term_search: this.preparar_query<{valor: string}>('term_search'),
+    pagination: this.preparar_query<QUERY_PARAMS_GENERAL['pagination']>('pagination'),
+    global_search: this.preparar_query<QUERY_PARAMS_GENERAL['global_search']>('global_search'),
+    term_search: this.preparar_query<QUERY_PARAMS_GENERAL['term_search']>('term_search'),
     filters: <T>() => this.preparar_query<T>('filters'),
-    form_object_squence: this.preparar_query<number>('form_object_squence'),
-    editing_form: this.preparar_query<boolean>('editing_form'),
+    form_object_sequence: this.preparar_query<QUERY_PARAMS_GENERAL['form_object_sequence']>('form_object_sequence'),
+    form_mode: this.preparar_query<QUERY_PARAMS_GENERAL['form_mode']>('form_mode'),
+    use_side_panel: this.preparar_query<QUERY_PARAMS_GENERAL['use_side_panel']>('use_side_panel')
   }
 
   private accion<T>(nombre: string) {
     return {
       ocultar: () => this.ocultar(nombre),
       definir: (objeto: T) => this.definir<T>(nombre, objeto),
-      define_multipe: (objeto: T) => this.definir<T>(nombre, objeto),
     }
   }
 
@@ -108,8 +112,9 @@ export interface QUERY_PARAMS_GENERAL {
   filters?: any
   global_search?: string,
   term_search?: string,
-  form_object_squence?: number,
-  editing_form?: boolean
+  form_object_sequence?: number,
+  form_mode?: 'detail' | 'edit' | 'create'
+  use_side_panel?: boolean
 }
 
 

@@ -106,7 +106,7 @@ export class FragmentCallbackService {
         global_search: 'global_search',
         user_profile: 'user_profile',
         user_notifications: 'user_notifications',
-
+        
         /**
          * DO NOT USE
          */

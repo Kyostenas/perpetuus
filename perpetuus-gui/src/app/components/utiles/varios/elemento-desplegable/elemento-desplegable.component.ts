@@ -1,9 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-elemento-desplegable',
     imports: [
-        // NgbCollapseModule
+        NgbCollapseModule,
+        CommonModule,
     ],
     templateUrl: './elemento-desplegable.component.html',
     styleUrl: './elemento-desplegable.component.scss'
@@ -14,35 +17,37 @@ export class ElementoDesplegableComponent {
    * Si es `true`, se va a expandir.
    * Si es `false`, se va a colapsar.
    */
-  @Input('expandir') expandido: boolean = false;
+  @Input({required: true, alias: 'expandir'}) expandido: boolean = false;
+  @Input('horizontal') horizonal: boolean = false;
+  @Input('animated') animated: boolean = false;
+
   /**
    * Para cuando termina de ocultarse 
    * (despues de animacion).
    */
-  @Output('ocultado') ocultado: EventEmitter<null> = new EventEmitter();
+  @Output('hidden') hidden: EventEmitter<null> = new EventEmitter();
   /**
    * Para cuando termina de revelarse 
    * (despues de animacion).
    */
-  @Output('mostrado') mostrado: EventEmitter<null> = new EventEmitter();
+  @Output('shown') shown: EventEmitter<null> = new EventEmitter();
   /**
    * Para cuando cambia el estado del
    * desplegable.
    */
-  @Output('cambio') cambio: EventEmitter<null> = new EventEmitter();
+  @Output('changed') changed: EventEmitter<null> = new EventEmitter();
 
-  // @Input('horizontal') horizonal: boolean = false;
 
-  emitir_ocultado() {
-    this.ocultado.emit();
+  emmit_hidden() {
+    this.hidden.emit();
   }
 
-  emitir_mostrado() {
-    this.mostrado.emit();
+  emmit_shown() {
+    this.shown.emit();
   }
 
-  emitir_cambio() {
-    this.cambio.emit();
+  emmit_changed() {
+    this.changed.emit();
   }
 
 

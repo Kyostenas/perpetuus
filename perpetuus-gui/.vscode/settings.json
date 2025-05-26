@@ -1,0 +1,9 @@
+{
+    "tailwindCSS.includeLanguages": {
+      "html": "html",
+      "typescript": "html"
+    },
+    "files.associations": {
+      "*.scss": "tailwindcss"
+    }
+  }

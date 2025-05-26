@@ -1,5 +1,5 @@
 import { DocumentType } from '@typegoose/typegoose';
-import { Schema, Types } from 'mongoose';
+import { Schema } from 'mongoose';
 import mongoose, { CallbackError } from 'mongoose';
 import { HISTORY_LOG_MODEL } from './history-log.model';
 import { ACCIONES_MONGOOSE } from '../../utils/constantes.utils';
@@ -15,28 +15,11 @@ const JSONDIFFPATCH_INSTANCE = jsondiffpatch.create({
 });
 
 // (o==================================================================o)
-//   #region VARIABLES (INICIO)
-// (o-----------------------------------------------------------\/-----o)
-interface HistoryLogOptions {
-    // collection_name?: string;
-    // excluded_fields?: string[];
-    // forced_included_files?: string[];
-}
-
-let field_name_no_number: string[] | string = [];
-let camposAExcluir: string[] = [];
-
-// (o-----------------------------------------------------------/\-----o)
-//   #endregion VARIABLES (FIN)
-// (o==================================================================o)
-
-// (o==================================================================o)
 //   #region PLUGIN (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
 function hystory_log_plugin<T>(
     schema: Schema<T>,
-    options: HistoryLogOptions = {},
 ) {
     /* Store the state of the document before it's modified */
     schema.pre(
@@ -63,7 +46,6 @@ function hystory_log_plugin<T>(
                 doc,
                 undefined,
                 schema,
-                options,
                 ACCIONES_MONGOOSE.SAVE,
                 metadata,
                 next,
@@ -104,7 +86,6 @@ function hystory_log_plugin<T>(
                 doc,
                 this,
                 schema,
-                options,
                 ACCIONES_MONGOOSE.FIND_ONE_AND_UPDATE,
                 metadata,
                 next,
@@ -128,7 +109,6 @@ async function generate_history_log<T>(
     document: DocumentType<T>,
     query: mongoose.Query<any, any> | undefined,
     schema: Schema<T>,
-    options: HistoryLogOptions = {},
     operation_type: DeepKeys<
         typeof ACCIONES_MONGOOSE,
         string
@@ -162,7 +142,7 @@ async function generate_history_log<T>(
             operation_type,
             description: metadata.description,
             large_description: metadata.large_description,
-            user: new mongoose.Types.ObjectId(metadata.user_id),
+            user: new Schema.Types.ObjectId(metadata.user_id),
         });
         await registroHistorial.save();
         try {

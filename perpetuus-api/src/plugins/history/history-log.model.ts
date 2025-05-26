@@ -15,9 +15,6 @@ import {
 
 /* UTILIDADES */
 import { auto_increment } from '../auto-increment/auto-increment.plugin';
-import text_search_index, {
-    TextSearchIndexOptions,
-} from '../text-search-index/text-search-index.plugin';
 import { ACCIONES_MONGOOSE } from '../../utils/constantes.utils';
 
 /* OTROS MODELOS */
@@ -31,27 +28,7 @@ import { User } from '../../componentes/usuario/usuario/usuario.model';
 //   #region ESQUEMA (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-// const TEXT_SEARCH_FIELDS = [
-//     'sequence',
-//     'description',
-//     'user.nombres',
-//     'user.apellidos',
-//     'user.nombre_usuario',
-//     'collection',
-//     'operation_type',
-// ];
-
-// const PATHS_TO_POPULATE: TextSearchIndexOptions['paths_to_populate'] = [
-//     {
-//         path: 'user',
-//     },
-// ];
-
 @plugin(auto_increment<typeof HISTORY_LOG_MODEL>, { field: 'sequence' })
-// @plugin(text_search_index<typeof HISTORY_LOG_MODEL>, {
-//     fields: TEXT_SEARCH_FIELDS,
-//     paths_to_populate: PATHS_TO_POPULATE,
-// })
 @Index({user: 1}, {name: 'user'})
 @Index({collection_name: 1}, {name: 'collection_name'})
 @Index({modified_document_id: 1}, {name: 'modified_document_id'})

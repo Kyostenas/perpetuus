@@ -59,8 +59,8 @@ export class StandardRoutingService {
             this.navigate([CURRENT_URL ?? '', 'form']);
             setTimeout(() => {
                 this.query_service.define_multipe({
-                    form_object_squence: object_sequence,
-                    editing_form: false,
+                    form_object_sequence: object_sequence,
+                    form_mode: 'detail',
                 }, true)
             }, 0);
         })

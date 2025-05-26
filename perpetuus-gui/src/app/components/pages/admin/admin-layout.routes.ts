@@ -1,4 +1,4 @@
-import { Routes } from "@angular/router";
+   import { Routes } from "@angular/router";
 
 export const ADMIN_ROUTES: Routes = [{
     path: '',
@@ -8,7 +8,7 @@ export const ADMIN_ROUTES: Routes = [{
         { 
             path: '', 
             pathMatch: 'full',
-            redirectTo: 'dashboard'
+            redirectTo: 'dashboard',
         },
         {
             path: 'dashboard',
@@ -20,5 +20,5 @@ export const ADMIN_ROUTES: Routes = [{
             loadChildren: () => import('./_panel-administrador/panel-administrador.routes')
                 .then(rutas => rutas.PANEL_ADMINISTRACION_ROUTES)
         },
-    ],
+    ], 
 }];

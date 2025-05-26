@@ -114,8 +114,6 @@ class User implements GenericDocument {
 //   #region EXPORTACIONES (INICIO)
 // (o-----------------------------------------------------------\/-----o)
 
-console.log('USER MODEL: ', User)
-
 const USER_MODEL = getModelForClass(User);
 export { USER_MODEL, User };
 

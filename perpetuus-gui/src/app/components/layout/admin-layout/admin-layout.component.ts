@@ -1,86 +1,118 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+    Component,
+    computed,
+    OnInit,
+    Signal,
+    WritableSignal,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { AjustadorLayoutComponent } from '../-general/ajustador-layout/ajustador-layout.component';
-import { BarraInferiorComponent } from '../../utiles/barras/barra-inferior/barra-inferior.component';
-import { LinkTextoBarraSuperior, LinkSimboloBarraSuperior } from '../../utiles/barras/barra-superior/barra-superior.component';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 import { BarraLateralMenuComponent } from '../../utiles/barras/barra-lateral-menu/barra-lateral-menu.component';
 import { BarraBreadcrumbsComponent } from '../../utiles/barras/barra-breadcrumbs/barra-breadcrumbs.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { DeteccionViewportService } from 'src/app/services/utiles/estructurales/deteccion-viewport/deteccion-viewport.service';
+import {
+    ControlQueriesUrlService,
+    QUERY_PARAMS_GENERAL,
+} from 'src/app/services/utiles/estructurales/control-queries-url/control-queries-url.service';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
+import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-hide-auto/bootstrap-hide-auto.directive';
+import { CollapsibleElementDirective } from 'src/app/directives/utiles/varios/collapse/collapsible-element.directive';
 
 @Component({
     selector: 'app-admin-layout',
     imports: [
         CommonModule,
         RouterModule,
-        // BarraSuperiorComponent,
-        BarraInferiorComponent,
-        AjustadorLayoutComponent,
-        // ModalNormalComponent,
         BarraLateralMenuComponent,
         BarraBreadcrumbsComponent,
+        NgbCollapseModule,
+        CollapsibleElementDirective,
     ],
     templateUrl: './admin-layout.component.html',
-    styleUrl: './admin-layout.component.scss'
+    styleUrl: './admin-layout.component.scss',
 })
 export class AdminLayoutComponent implements OnInit {
+    // (o==================================================================o)
+    //   #region INITIALIZATION
+    // (o-----------------------------------------------------------\/-----o)
 
-  constructor(
-    private auth_service: AuthService,
-    private router: Router,
-  ) { }
+    constructor(
+        private auth_service: AuthService,
+        private router: Router,
+        private viewport_service: DeteccionViewportService,
+        private url_query_service: ControlQueriesUrlService
+    ) {
+        this.valid_session = toSignal(this.auth_service.validar_sesion());
+    }
 
-  ngOnInit(): void {
-    this.auth_service.validar_sesion()
-    .subscribe({
-      next: (sesion_es_valida) => {
-        if (!sesion_es_valida) {
-          this.router.navigate(['inicio/signin'])
+    ngOnInit(): void {
+        this.auth_service.validar_sesion().subscribe({
+            next: (sesion_es_valida) => {
+                if (!sesion_es_valida) {
+                    this.router.navigate(['inicio/signin']);
+                }
+            },
+            error: (error) => this.router.navigate(['inicio/signin']),
+        });
+    }
+
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion INITIALIZATION
+    // (o==================================================================o)
+
+    // (o==================================================================o)
+    //   #region VARIABLES
+    // (o-----------------------------------------------------------\/-----o)
+
+    modo_viewport: WritableSignal<'movil' | 'escritorio'> =
+        this.viewport_service.modo_viewport;
+    valid_session!: Signal<boolean | undefined>;
+    mostrar_boton_top: boolean = false;
+    elemento_scroll!: HTMLElement;
+    using_side_panel: Signal<QUERY_PARAMS_GENERAL['use_side_panel']> =
+        computed(() => {
+            return !!this.url_query_service.query_actual().use_side_panel
+        });
+
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion VARIABLES
+    // (o==================================================================o)
+
+    // (o==================================================================o)
+    //   #region BUTTON SCROLL UP
+    // (o-----------------------------------------------------------\/-----o)
+
+    scroll_ventana(event: Event) {
+        if (!this.elemento_scroll)
+            this.elemento_scroll = event.target as HTMLElement;
+        if (this.elemento_scroll.scrollTop > 100) {
+            this.mostrar_boton_top = true;
+        } else {
+            this.mostrar_boton_top = false;
         }
-      },
-      error: (error) => this.router.navigate(['inicio/signin'])
-    })
-  }
+    }
 
-  // @ViewChild('modal_perfil', { static: false }) modal_perfil!: ModalNormalComponent;
+    scroll_hasta_arriba() {
+        this.elemento_scroll.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0 });
+    }
 
-  // private _id_modal!: string;
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion BUTTON SCROLL UP
+    // (o==================================================================o)
 
-  // get id_modal(): string {
-  //   return this._id_modal;
-  // }
+    // (o==================================================================o)
+    //   #region QUERY READING
+    // (o-----------------------------------------------------------\/-----o)
 
-  // set id_modal(value: string) {
-  //   this._id_modal = value;
-  //   this.crear_links();
-  // }
+    subscribe_to_panel_query() {
+        this.url_query_service.query_actual();
+    }
 
-  links_texto!: LinkTextoBarraSuperior[];
-  links_simbolo!: LinkSimboloBarraSuperior[];
-
-  crear_links() {
-    this.links_texto = [
-      {
-        texto: 'Ingresar',
-        href: 'inicio/signin'
-      },
-      {
-        texto: 'Registrarse',
-        href: 'inicio/signup'
-      }
-    ];
-    // this.links_simbolo = [
-    //   {
-    //     texto: 'Perfil',
-    //     data_bs_target: '#'.concat(this.id_modal),
-    //     data_bs_toggle: 'modal',
-    //     simbolo: 'bi-person-fill'
-    //   },
-    // ];
-  }
-
-
-  // abrir_modal() {
-  //   this.modal_perfil.mostrar_modal()
-  // }
+    // (o-----------------------------------------------------------/\-----o)
+    //   #endregion QUERY READING
+    // (o==================================================================o)
 }
