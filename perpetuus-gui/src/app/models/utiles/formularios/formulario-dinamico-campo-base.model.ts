@@ -90,9 +90,6 @@ export class CampoBaseFormularioDinamico<T> {
         clase_columna?: string;
         clase_input?: string;
     } = {}) {
-
-        console.log(opciones)
-
         this.valor = opciones.valor;
         this.llave = opciones.llave ?? '';
         this.etiqueta = opciones.etiqueta ?? '';

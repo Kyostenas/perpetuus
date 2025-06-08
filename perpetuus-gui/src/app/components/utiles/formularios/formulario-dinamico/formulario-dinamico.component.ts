@@ -4,7 +4,7 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormularioDinamicoCampoComponent } from '../formulario-dinamico-campo/formulario-dinamico-campo.component';
 import { FormularioDinamicoService } from 'src/app/services/utiles/formularios/formulario-dinamico/formulario-dinamico.service';
 import { CampoBaseFormularioDinamico } from 'src/app/models/utiles/formularios/formulario-dinamico-campo-base.model';
-import { ElementoDesplegableComponent } from '../../varios/elemento-desplegable/elemento-desplegable.component';
+import { CollapsibleElementDirective } from 'src/app/directives/utiles/varios/collapse/collapsible-element.directive';
 
 @Component({
     selector: 'app-formulario-dinamico',
@@ -12,7 +12,7 @@ import { ElementoDesplegableComponent } from '../../varios/elemento-desplegable/
         CommonModule,
         ReactiveFormsModule,
         FormularioDinamicoCampoComponent,
-        ElementoDesplegableComponent,
+        CollapsibleElementDirective,
     ],
     providers: [
         FormularioDinamicoService

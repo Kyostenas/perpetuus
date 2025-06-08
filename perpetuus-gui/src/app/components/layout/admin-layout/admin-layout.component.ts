@@ -16,9 +16,6 @@ import {
     ControlQueriesUrlService,
     QUERY_PARAMS_GENERAL,
 } from 'src/app/services/utiles/estructurales/control-queries-url/control-queries-url.service';
-import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
-import { BootstrapShowAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-show-auto/bootstrap-show-auto.directive';
-import { BootstrapHideAutoDirective } from 'src/app/directives/utiles/varios/bootstrap-hide-auto/bootstrap-hide-auto.directive';
 import { CollapsibleElementDirective } from 'src/app/directives/utiles/varios/collapse/collapsible-element.directive';
 
 @Component({
@@ -28,7 +25,6 @@ import { CollapsibleElementDirective } from 'src/app/directives/utiles/varios/co
         RouterModule,
         BarraLateralMenuComponent,
         BarraBreadcrumbsComponent,
-        NgbCollapseModule,
         CollapsibleElementDirective,
     ],
     templateUrl: './admin-layout.component.html',

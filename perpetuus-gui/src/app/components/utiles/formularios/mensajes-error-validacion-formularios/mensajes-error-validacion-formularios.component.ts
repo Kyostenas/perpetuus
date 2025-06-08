@@ -1,9 +1,11 @@
+import { DecimalPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'app-mensajes-error-validacion-formularios',
     imports: [],
+    providers: [DecimalPipe],
     templateUrl: './mensajes-error-validacion-formularios.component.html',
     styleUrl: './mensajes-error-validacion-formularios.component.scss'
 })
@@ -82,26 +84,30 @@ export class MensajesErrorValidacionFormulariosComponent {
   @Input() debug: boolean = false
 
 
-  constructor() {}
+  constructor(
+    private decimal_pipe: DecimalPipe,
+  ) {
+
+  }
 
   ngOnInit() {}
 
   min(): string {
-    return `El valor mínimo permitido es ${this.cge('min').min}`
+    return `El valor mínimo permitido es ${this.decimal_pipe.transform(this.campoGetError('min').min)}`
   }
 
   max(): string {
-    return `El máximo permitido es ${this.cge('max').max}`
+    return `El máximo permitido es ${this.decimal_pipe.transform(this.campoGetError('max').max)}`
   }
 
   tamanoMinimo(): string {
-    let cantidad = this.cge('tamanoMinimo').minimo > 1 ? '' : 'un '
-    let campo = this.cge('tamanoMinimo').minimo > 1 ? 'campos' : 'campo'
+    let cantidad = this.campoGetError('tamanoMinimo').minimo > 1 ? '' : 'un '
+    let campo = this.campoGetError('tamanoMinimo').minimo > 1 ? 'campos' : 'campo'
     return `Debes seleccionar por lo menos ${cantidad} ${campo}`
   }
 
   minlength(): string {
-    let campo = this.cge('minlength')
+    let campo = this.campoGetError('minlength')
     let cantidadCar = campo.requiredLength
     let faltan = cantidadCar - campo.actualLength
     let conjuncion = cantidadCar > 1 ? cantidadCar : 'un '
@@ -109,16 +115,16 @@ export class MensajesErrorValidacionFormulariosComponent {
     return `Debes escribir por lo menos ${conjuncion} ${caracteres}. (Faltan ${faltan})`
   }
   maxlength(): string {
-    let campo = this.cge('maxlength')
+    let campo = this.campoGetError('maxlength')
     let cantidadCar = campo.requiredLength
     let sobran = campo.actualLength - cantidadCar
     let conjuncion = cantidadCar > 1 ? cantidadCar : 'un '
     let caracteres = cantidadCar > 1 ? 'caracteres' : 'caracter'
-    return `El maximo es  ${conjuncion} ${caracteres}. (Sobran ${sobran})`
+    return `El máximo es  ${conjuncion} ${caracteres}. (Sobran ${sobran})`
   }
 
   general() {
-    return this.cge('general').mensaje
+    return this.campoGetError('general').mensaje
   }
   
   pattern () {
@@ -126,11 +132,11 @@ export class MensajesErrorValidacionFormulariosComponent {
     else return `Patrón no cumplido`
   }
 
-  cge(a: string) {
+  campoGetError(a: string) {
     return this.campo.getError(a)
   }
 
-  che(a: string) {
+  campoHasError(a: string) {
     if (!this.campo) return false
     return this.campo.hasError(a)
   }

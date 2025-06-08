@@ -5,18 +5,18 @@ import ObjectID from 'bson-objectid';
 
 import { CampoBaseFormularioDinamico, TipoCampoBase } from 'src/app/models/utiles/formularios/formulario-dinamico-campo-base.model';
 import { ValidacionFormularioService } from 'src/app/services/utiles/formularios/validacion-formulario/validacion-formulario.service';
-import { ElementoDesplegableComponent } from '../../varios/elemento-desplegable/elemento-desplegable.component';
 import { ElementoOcultableDirective } from 'src/app/directives/utiles/varios/elemento-ocultable/elemento-ocultable.directive';
 import { MensajesErrorValidacionFormulariosComponent } from '../mensajes-error-validacion-formularios/mensajes-error-validacion-formularios.component';
+import { CollapsibleElementDirective } from 'src/app/directives/utiles/varios/collapse/collapsible-element.directive';
 
 @Component({
     selector: 'app-formulario-dinamico-campo',
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        ElementoDesplegableComponent,
         ElementoOcultableDirective,
         MensajesErrorValidacionFormulariosComponent,
+        CollapsibleElementDirective,
     ],
     templateUrl: './formulario-dinamico-campo.component.html',
     styleUrl: './formulario-dinamico-campo.component.scss'
@@ -75,7 +75,6 @@ export class FormularioDinamicoCampoComponent implements OnInit {
             this.clase_campo_valido,
             this.campo.clase_input,
         ];
-        console.log(clases_agregar)
         return clases_agregar.join(' ');
     }
 

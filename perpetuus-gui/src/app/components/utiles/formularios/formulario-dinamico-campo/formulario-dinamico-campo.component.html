@@ -40,18 +40,18 @@
 			</div>
 		}
 	}
-	<app-elemento-desplegable
-		[expandir]="campo_invalido"
-		(ocultado)="marcar_feedback_oculto()"
-		(mostrado)="marcar_feedback_mostrado()"
+	<div
+		[collapse]="!campo_invalido"
+		[orientation]="'vertical'"
+		(hidden)="marcar_feedback_oculto()"
+		(starting_to_show)="marcar_feedback_mostrado()"
 	>
 		<div
-			class="invalid-feedback" 
-			[ocultar]="feedback_completamente_oculto"
+			class="invalid-feedback mostrar"
 		>
 			<app-mensajes-error-validacion-formularios
 				[campo]="campo_de_formulario"
 			></app-mensajes-error-validacion-formularios>
 		</div>
-	</app-elemento-desplegable>
+	</div>
 </div>
