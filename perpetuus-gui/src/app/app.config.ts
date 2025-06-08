@@ -1,11 +1,8 @@
-import { ApplicationConfig, importProvidersFrom, isDevMode, provideExperimentalCheckNoChangesForDebug, provideExperimentalZonelessChangeDetection } from "@angular/core";
-import { PreloadAllModules, provideRouter, withDebugTracing, withPreloading } from '@angular/router';
+import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from "@angular/core";
+import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
 import { APP_ROUTES } from "./app.routes";
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from "@angular/common/http";
-import { ServiceWorkerModule } from "@angular/service-worker";
-import { environment } from "src/environments/environment";
 import { BrowserModule } from "@angular/platform-browser";
-import { JsonAStringPipe } from "./pipes/utiles/json-a-string/json-a-string.pipe";
 
 
 
@@ -36,6 +33,6 @@ export const APP_CONFIG: ApplicationConfig = {
             withFetch(), 
             withInterceptorsFromDi(),
         ),
-        provideExperimentalZonelessChangeDetection(),
+        provideZonelessChangeDetection(),
     ],
 };
