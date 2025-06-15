@@ -7,7 +7,7 @@ export abstract class CRUD_Controller<UsedModel> {
     async try_operation({
         res,
         req,
-        body,
+        extra_body,
         operation,
         res_message,
         err_message,
@@ -18,26 +18,96 @@ export abstract class CRUD_Controller<UsedModel> {
     }: {
         res: Response;
         req: Request;
-        body?: {[type: string]: any};
+        extra_body?: {[type: string]: any};
         operation: Function;
         res_message: string;
         err_message: string;
         not_found_message?: string;
         is_creation: boolean;
         filename: string;
-        fields_to_validate?: string[];
+        fields_to_validate?: {
+             req_body?: string[],
+             extra_body?: string[],
+             req_query?: string[],
+             req_query_filters?: string[],
+             req_params?: string[],
+        };
     }) {
+        let body = {}
         try {
-            if (fields_to_validate) {
+            if (req.query) {
+                if (req.query.filters) {
+                    try {
+                        req.query['filters'] = JSON.parse(<string>req.query.filters)
+                    } catch {
+                        return new Resp(res, filename, {
+                            mensaje: 'Los filtros deben ser un objeto en forma de cadena de texto',
+                        })._422_unprocessable();
+                    }
+                    delete req.query.filters
+                }
+            }
+            if (fields_to_validate?.req_body) {
                 const { valido, mensaje } = validar_existencia_de_campos(
-                    fields_to_validate,
+                    fields_to_validate.req_body,
+                    req.body,
+                );
+                if (!valido) {
+                    return new Resp(res, filename, {
+                        mensaje: 'En req.body: ' + mensaje,
+                    })._422_unprocessable();
+                }
+            }
+            if (fields_to_validate?.extra_body) {
+                const { valido, mensaje } = validar_existencia_de_campos(
+                    fields_to_validate.extra_body,
+                    extra_body,
+                );
+                if (!valido) {
+                    return new Resp(res, filename, {
+                        mensaje: 'En extra_body: ' + mensaje,
+                    })._422_unprocessable();
+                }
+            }
+            if (fields_to_validate?.req_query) {
+                const { valido, mensaje } = validar_existencia_de_campos(
+                    fields_to_validate.req_query,
+                    req.query,
+                );
+                if (!valido) {
+                    return new Resp(res, filename, {
+                        mensaje: 'En req.query: ' + mensaje,
+                    })._422_unprocessable();
+                }
+            }
+            if (fields_to_validate?.req_query_filters) {
+                const { valido, mensaje } = validar_existencia_de_campos(
+                    fields_to_validate.req_query_filters,
+                    req.query['filters'],
+                );
+                if (!valido) {
+                    return new Resp(res, filename, {
+                        mensaje: 'En req.query.filters: ' + mensaje,
+                    })._422_unprocessable();
+                }
+            }
+            if (fields_to_validate?.req_params) {
+                const { valido, mensaje } = validar_existencia_de_campos(
+                    fields_to_validate.req_params,
                     body,
                 );
                 if (!valido) {
                     return new Resp(res, filename, {
-                        mensaje,
+                        mensaje: 'En req.params: ' + mensaje,
                     })._422_unprocessable();
                 }
+            }
+            body = {
+                ...extra_body,
+                ...req.body,
+                ...req.query,
+                ...req.params,
+                user_id: req.usuario?._id,
             }
             const pagination = obtener_paginacion(req)
             body = {...body, pagination}

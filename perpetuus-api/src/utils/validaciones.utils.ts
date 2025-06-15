@@ -1,6 +1,10 @@
-import { REGEX_VALIDACION_CORREO } from "./constantes.utils";
+import { REGEX_VALIDACION_CORREO } from './constantes.utils';
+import { seleccionarCampoCualquierNivelProfundo } from './general.utils';
 
-export function validar_existencia_de_campos(campos: string[], objeto: any): {
+export function validar_existencia_de_campos(
+    campos: string[],
+    objeto: any,
+): {
     valido: boolean;
     mensaje: string;
 } {
@@ -9,20 +13,29 @@ export function validar_existencia_de_campos(campos: string[], objeto: any): {
     for (let i_campo = 0; i_campo < campos.length; i_campo++) {
         const un_campo = campos[i_campo];
         try {
-            let encontrado = objeto[un_campo];
+            let encontrado = seleccionarCampoCualquierNivelProfundo(
+                objeto,
+                un_campo,
+                '.',
+                {
+                    reemplazoValorIndefinido: undefined,
+                    valorError: undefined,
+                },
+            );
             if (!encontrado) {
-                campos_no_encontrados.push(un_campo)
-                todos_correctos = false
+                campos_no_encontrados.push(un_campo);
+                todos_correctos = false;
             }
         } catch (err) {
-            campos_no_encontrados.push(un_campo)
-            todos_correctos = false
+            campos_no_encontrados.push(un_campo);
+            todos_correctos = false;
         }
     }
-    if (todos_correctos) return {
-        valido: true,
-        mensaje: 'correcto',
-    };
+    if (todos_correctos)
+        return {
+            valido: true,
+            mensaje: 'correcto',
+        };
     let campos_error = campos_no_encontrados.join(', ');
     let mensaje_error = `Se requiere el o los campos: ${campos_error}`;
     return {

@@ -27,20 +27,23 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: BODY,
+            extra_body: BODY,
             operation: new UserService().create,
             res_message: 'Usuario creado',
             err_message: 'Error al crear usuario',
             is_creation: true,
             filename: __filename,
-            fields_to_validate: [
-                'nombres',
-                'apellidos',
-                'nombre_usuario',
-                'contrasena',
-            ],
+            fields_to_validate: {
+                extra_body: [
+                    'nombres',
+                    'apellidos',
+                    'nombre_usuario',
+                    'contrasena',
+                    'user_id',
+                ],
+            },
         });
-    }
+    };
     read = async (
         req: Request,
         res: Response,
@@ -54,7 +57,7 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
             is_creation: false,
             filename: __filename,
         });
-    }
+    };
     read_by_sequence = async (
         req: Request,
         res: Response,
@@ -62,16 +65,16 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: req.params,
+            extra_body: req.params,
             operation: new UserService().read_by_sequence,
             res_message: 'Usuario obtenido usando un consecutivo',
             err_message: 'Error al obtener un usuario con su consecutivo',
             not_found_message: 'No existe un usuario con ese consecutivo',
             is_creation: false,
             filename: __filename,
-            fields_to_validate: ['sequence'],
+            fields_to_validate: { extra_body: ['sequence'] },
         });
-    }
+    };
     update = async (
         req: Request,
         res: Response,
@@ -86,16 +89,16 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: BODY,
+            extra_body: BODY,
             operation: new UserService().update,
             res_message: 'Usuario modificado',
             err_message: 'Error al modificar un usuario',
             not_found_message: 'No existe un usuario con ese consecutivo',
             is_creation: false,
             filename: __filename,
-            fields_to_validate: ['sequence', 'user_id'],
+            fields_to_validate: { extra_body: ['sequence', 'user_id'] },
         });
-    }
+    };
     activate = async (
         req: Request,
         res: Response,
@@ -110,16 +113,16 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: BODY,
+            extra_body: BODY,
             operation: new UserService().activate,
             res_message: 'Usuario activado',
             err_message: 'Error al activar un usuario',
             not_found_message: 'No existe un usuario con ese consecutivo',
             is_creation: false,
             filename: __filename,
-            fields_to_validate: ['sequence', 'user_id'],
+            fields_to_validate: { extra_body: ['sequence', 'user_id'] },
         });
-    }
+    };
     deactivate = async (
         req: Request,
         res: Response,
@@ -134,16 +137,16 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: BODY,
+            extra_body: BODY,
             operation: new UserService().deactivate,
             res_message: 'Usuario desactivado',
             err_message: 'Error al desactivar un usuario',
             not_found_message: 'No existe un usuario con ese consecutivo',
             is_creation: false,
             filename: __filename,
-            fields_to_validate: ['sequence', 'user_id'],
+            fields_to_validate: { extra_body: ['sequence', 'user_id'] },
         });
-    }
+    };
 
     // (o-----------------------------------------------------------/\-----o)
     //   #endregion CRUD
@@ -167,16 +170,16 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: BODY,
+            extra_body: BODY,
             operation: new UserService().assign_rol_to_user,
             res_message: 'Nuevo rol asignado a usuario',
             err_message: 'Error al asignar rol a usuario',
             not_found_message: 'No existe un usuario con ese consecutivo',
             is_creation: false,
             filename: __filename,
-            fields_to_validate: ['sequence', 'rol', 'user_id'],
+            fields_to_validate: { extra_body: ['sequence', 'rol', 'user_id'] },
         });
-    }
+    };
     remove_rol_from_user = async (
         req: Request,
         res: Response,
@@ -191,16 +194,16 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: BODY,
+            extra_body: BODY,
             operation: new UserService().remove_rol_from_user,
             res_message: 'Rol removido de usuario',
             err_message: 'Error al remover rol de usuario',
             not_found_message: 'No existe un usuario con ese consecutivo',
             is_creation: false,
             filename: __filename,
-            fields_to_validate: ['sequence', 'rol', 'user_id'],
+            fields_to_validate: { extra_body: ['sequence', 'rol', 'user_id'] },
         });
-    }
+    };
     create_super_admin = async (
         req: Request,
         res: Response,
@@ -208,14 +211,14 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
         return this.try_operation({
             res,
             req,
-            body: req.body,
+            extra_body: req.body,
             operation: new UserService().create_super_admin,
             res_message: `Usuario ${NOMBRE_USUARIO_SUPER_ADMIN} creado`,
             err_message: `Error al crear el usuario ${NOMBRE_USUARIO_SUPER_ADMIN}`,
             is_creation: false,
             filename: __filename,
         });
-    }
+    };
 
     private test_if_super_admin = async (sequence: number) => {
         const ROL = await this.getmodel()
@@ -223,7 +226,7 @@ export class UserController extends CRUD_Controller<typeof USER_MODEL> {
             .populate<{ rol: DocumentType<Rol> }>('rol')
             .lean();
         return ROL?.rol?.super_admin;
-    }
+    };
 
     // (o-----------------------------------------------------------/\-----o)
     //   #endregion EXTRA-ACTIONS
