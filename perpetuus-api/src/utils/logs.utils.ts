@@ -63,71 +63,80 @@ const back = {
 };
 
 import path from 'path';
-import { limpiar_codigos_ansi, partcion_arbitraria_arreglo } from './general.utils';
+import {
+    limpiar_codigos_ansi,
+    partcion_arbitraria_arreglo,
+} from './general.utils';
 import Module from 'module';
-import { DEBUG_LOGS, SHOW_LOGS, SHOW_REQ_LOGS, SHOW_SYS_REGS } from '../config/env/env.config';
+import {
+    DEBUG_LOGS,
+    SHOW_LOGS,
+    SHOW_REQ_LOGS,
+    SHOW_SYS_REGS,
+} from '../config/env/env.config';
+import fs from 'fs';
+import os from 'os';
 
-
-const TAM_PRED_CONSOLA = 90
+const TAM_PRED_CONSOLA = 90;
 // const TAM_CONSOLA: number = (process.stdout.columns ?? TAM_PRED_CONSOLA)
-const TAM_MINIMO_CONTENIDO = 40
+const TAM_MINIMO_CONTENIDO = 40;
 const TIPOS_LOG: tipos_log = {
     error: {
-        texto: 'E',
+        texto: 'ERROR  ',
         color_texto: fore.bold_white,
         color_atras: back._red,
         color_extra: fore.strong_red,
     },
     peligro: {
-        texto: 'X',
+        texto: 'DANGER ',
         color_texto: fore._yellow + fore.sub_yellow,
         color_atras: back._red,
         color_extra: fore._red,
     },
     advertencia: {
-        texto: '!',
+        texto: 'WARN   ',
         color_texto: fore._black,
         color_atras: back._yellow,
         color_extra: fore.strong_yellow,
     },
     info: {
-        texto: 'i',
+        texto: 'INFO   ',
         color_texto: fore._white,
         color_atras: back._blue,
         color_extra: fore.strong_blue,
     },
     notice: {
-        texto: 'N',
+        texto: 'NOTICE ',
         color_texto: fore._white + fore.sub_white,
         color_atras: back._purple,
         color_extra: fore.strong_purple,
     },
     success: {
-        texto: 'S',
+        texto: 'SUCCESS',
         color_texto: fore._black,
         color_atras: back._green,
         color_extra: fore._green,
     },
     ok: {
-        texto: 'K',
+        texto: 'OK     ',
         color_texto: fore._green,
         color_atras: back._black,
         color_extra: fore._green,
     },
     log: {
-        texto: 'L',
+        texto: 'LOG    ',
         color_texto: fore._black,
         color_atras: back._white,
         color_extra: fore._white,
     },
     debug: {
-        texto: 'D',
+        texto: 'DEBUG  ',
         color_texto: fore._red,
         color_atras: back._white,
         color_extra: fore._white,
     },
     request: {
-        texto: 'R',
+        texto: 'REQUEST',
         color_texto: fore._black,
         color_atras: back._cyan,
         color_extra: fore.strong_cyan,
@@ -147,7 +156,6 @@ interface tipos_log {
     request: tipo_log;
 }
 
-
 interface tipo_log {
     texto: string;
     color_texto: string;
@@ -164,17 +172,14 @@ interface linea_log {
 }
 
 interface seccion_log {
-    texto_interior: string,
-    inicio_contenedor?: string,
-    final_contenedor?: string,
-    tam_sin_color?: number,
-    partes_seccion?: string[],
-    color_bordes?: string,
-    color_contenido?: string,
+    texto_interior: string;
+    inicio_contenedor?: string;
+    final_contenedor?: string;
+    tam_sin_color?: number;
+    partes_seccion?: string[];
+    color_bordes?: string;
+    color_contenido?: string;
 }
-
-
-
 
 // (o==================================================================o)
 //   UTILES PARA LOGS (INICIO)
@@ -209,84 +214,83 @@ function obtener_nombre_archivo_origen(origen: string) {
 }
 
 function ajustar_contenido_a_consola(
-    request: string, 
-    tipo: tipo_log, 
-    contenido: string, 
+    request: string,
+    tipo: tipo_log,
+    contenido: string,
     ubicacion: string,
     fecha: string,
 ) {
-    let tam_partes = 0
-    let tam_traza_sin_color = 0
-    let tam_linea_total_sin_color = 0
-    let traza = ''
-    let solo_contenido = ''
-    let linea_total = ''
+    let tam_partes = 0;
+    let tam_traza_sin_color = 0;
+    let tam_linea_total_sin_color = 0;
+    let traza = '';
+    let solo_contenido = '';
+    let linea_total = '';
     if (request !== '') {
-        traza = `${fecha} [${tipo.texto}] (${request}) (${ubicacion})`
+        traza = `${fecha} [${tipo.texto}] (${request}) (${ubicacion})`;
     } else {
-        traza = `${fecha} [${tipo.texto}] (${ubicacion}) `
+        traza = `${fecha} [${tipo.texto}] (${ubicacion}) `;
     }
-    solo_contenido = contenido
-    tam_traza_sin_color = traza.length
-    linea_total = traza + solo_contenido
-    tam_linea_total_sin_color = linea_total.length
-    let tam_consola = (process.stdout.columns ?? TAM_PRED_CONSOLA)
-    tam_partes = tam_consola - tam_traza_sin_color
+    solo_contenido = contenido;
+    tam_traza_sin_color = traza.length;
+    linea_total = traza + solo_contenido;
+    tam_linea_total_sin_color = linea_total.length;
+    let tam_consola = process.stdout.columns ?? TAM_PRED_CONSOLA;
+    tam_partes = tam_consola - tam_traza_sin_color;
 
-    let partes_contenido: string[] = []
-    if (tam_linea_total_sin_color > tam_consola && tam_partes > TAM_MINIMO_CONTENIDO) {
+    let partes_contenido: string[] = [];
+    if (
+        tam_linea_total_sin_color > tam_consola &&
+        tam_partes > TAM_MINIMO_CONTENIDO
+    ) {
         let partes_particion = [];
         let a_reducir = tam_linea_total_sin_color - tam_consola;
-        let contador_tam_restante_contenido = solo_contenido.length
-        while (a_reducir > 0 &&
-            (contador_tam_restante_contenido > TAM_MINIMO_CONTENIDO)
+        let contador_tam_restante_contenido = solo_contenido.length;
+        while (
+            a_reducir > 0 &&
+            contador_tam_restante_contenido > TAM_MINIMO_CONTENIDO
         ) {
-            partes_particion.push(tam_partes)
+            partes_particion.push(tam_partes);
             a_reducir -= tam_partes;
-            contador_tam_restante_contenido -= tam_partes
+            contador_tam_restante_contenido -= tam_partes;
         }
-        partes_particion.push(contador_tam_restante_contenido)
+        partes_particion.push(contador_tam_restante_contenido);
         let partes_obtenidas = partcion_arbitraria_arreglo(
             solo_contenido.split(''),
-            partes_particion
-        )
-        partes_contenido = partes_obtenidas
-            .map(una_parte => una_parte.join(''))
+            partes_particion,
+        );
+        partes_contenido = partes_obtenidas.map((una_parte) =>
+            una_parte.join(''),
+        );
     } else {
-        partes_contenido = [solo_contenido]
+        partes_contenido = [solo_contenido];
     }
-    return partes_contenido   
+    return partes_contenido;
 }
-
 
 // (o-----------------------------------------------------------/\-----o)
 //   UTILES PARA LOGS (FIN)
 // (o==================================================================o)
 
-
-
-
-
 function estructurar_log(
-    tipo: tipo_log, 
-    ubicacion: string, 
-    contenido: string, 
+    tipo: tipo_log,
+    ubicacion: string,
+    contenido: string,
     request: string = '',
 ) {
-
-    let fecha = formatear_fecha_log()
-    let partes = contenido.split('\n')
-    let partes_contenido: string[] = []
-    partes.map(una_parte_multilinea => {
-        let sub_partes =  ajustar_contenido_a_consola(
+    let fecha = formatear_fecha_log();
+    let partes = contenido.split('\n');
+    let partes_contenido: string[] = [];
+    partes.map((una_parte_multilinea) => {
+        let sub_partes = ajustar_contenido_a_consola(
             request,
             tipo,
             una_parte_multilinea,
             ubicacion,
             fecha,
-        )
-        partes_contenido = [...partes_contenido, ...sub_partes]
-    })
+        );
+        partes_contenido = [...partes_contenido, ...sub_partes];
+    });
 
     let log: linea_log = {
         fecha: {
@@ -304,36 +308,34 @@ function estructurar_log(
             texto_interior: ubicacion,
             color_contenido: tipo.color_extra,
             inicio_contenedor: '(',
-            final_contenedor: ')',            
+            final_contenedor: ')',
         },
         contenido: {
             texto_interior: contenido,
             partes_seccion: partes_contenido,
             color_contenido: tipo.color_extra,
         },
-    }
+    };
     if (request) {
         log.tipo_req = {
             texto_interior: request,
             color_contenido: tipo.color_extra,
             inicio_contenedor: '(',
-            final_contenedor: ')',             
-        }
+            final_contenedor: ')',
+        };
     }
-    return log
+    return log;
 }
 
-function imprimir(estructura:linea_log) {
+function imprimir(estructura: linea_log) {
     let partes_posteriores = [];
-    
+
     let fecha = `${estructura.fecha.texto_interior} `;
     partes_posteriores.push(fecha);
 
     let tipo_log = estructura.tipo_log;
-    let borde_izquierda_tipo = 
-        `${tipo_log.color_bordes}${tipo_log.inicio_contenedor}${reset}`;
-    let borde_derecha_tipo = 
-        `${tipo_log.color_bordes}${tipo_log.final_contenedor}${reset}`;
+    let borde_izquierda_tipo = `${tipo_log.color_bordes}${tipo_log.inicio_contenedor}${reset}`;
+    let borde_derecha_tipo = `${tipo_log.color_bordes}${tipo_log.final_contenedor}${reset}`;
     let tipo = `${tipo_log.color_contenido}${tipo_log.texto_interior}${reset}`;
     let tipo_formado = `${borde_izquierda_tipo}${tipo}${borde_derecha_tipo} `;
     partes_posteriores.push(tipo_formado);
@@ -355,10 +357,11 @@ function imprimir(estructura:linea_log) {
     partes_posteriores.push(ubic_formada);
 
     let partes_posteriores_formadas = partes_posteriores.join('');
-    estructura.contenido.partes_seccion?.map(una_parte => {
-        let parte_color = `${estructura.contenido.color_contenido}${una_parte}${reset}`
-        console.log(partes_posteriores_formadas + parte_color)
-    });    
+    estructura.contenido.partes_seccion?.map((una_parte) => {
+        let parte_color = `${estructura.contenido.color_contenido}${una_parte}${reset}`;
+        console.log(partes_posteriores_formadas + parte_color);
+        save_log_on_file(partes_posteriores_formadas + parte_color)
+    });
 }
 
 async function print_log(estructura: linea_log) {
@@ -377,45 +380,51 @@ async function print_debug_log(estructura: linea_log) {
     if (DEBUG_LOGS) imprimir(estructura);
 }
 
-async function save_log_on_file() {
-
+const LOG_PATH = path.join(os.tmpdir(), 'perpetuus', 'logs', 'request_logs.txt');
+fs.mkdirSync(path.dirname(LOG_PATH), { recursive: true });
+const LOG_STREAM = fs.createWriteStream(LOG_PATH, { flags: 'a' });
+async function save_log_on_file(texto: string) {
+    const CLEANSED_TEXT = limpiar_codigos_ansi(texto)
+    LOG_STREAM.write(CLEANSED_TEXT.nueva_cadena + '\n')
 }
-
-
-
 
 function formatear_contenido(...contenido: any) {
-    return contenido.map(function (un_objeto: any) {
-        return String(un_objeto)
-    }).join(' ')
+    return contenido
+        .map(function (un_objeto: any) {
+            return String(un_objeto);
+        })
+        .join(' ');
 }
 
-
-
 export const syslog = (modulo: Module) => {
-
     let ubicacion!: string;
-    let ubicacion_manual: boolean = false
+    let ubicacion_manual: boolean = false;
     function crear_log(
-        funcion: Function, 
-        tipo: tipo_log, 
-        request: string | undefined, 
+        funcion: Function,
+        tipo: tipo_log,
+        request: string | undefined,
         ...contenido: any
     ) {
         contenido = formatear_contenido(...contenido);
-        if (!ubicacion_manual) ubicacion = obtener_nombre_archivo_origen(modulo.filename);
+        if (!ubicacion_manual)
+            ubicacion = obtener_nombre_archivo_origen(modulo.filename);
         else ubicacion = obtener_nombre_archivo_origen(ubicacion);
         let estructura = estructurar_log(tipo, ubicacion, contenido, request);
-        funcion(estructura)
-        ubicacion_manual = false
+        funcion(estructura);
+        ubicacion_manual = false;
     }
     let funciones = {
-        definir_ubicacion: function (ubicacion_nueva: string) { 
-            ubicacion = ubicacion_nueva
-            ubicacion_manual = true
+        definir_ubicacion: function (ubicacion_nueva: string) {
+            ubicacion = ubicacion_nueva;
+            ubicacion_manual = true;
         },
         debug: async (...contenido: any) => {
-            crear_log(print_debug_log, TIPOS_LOG.debug, undefined, ...contenido);
+            crear_log(
+                print_debug_log,
+                TIPOS_LOG.debug,
+                undefined,
+                ...contenido,
+            );
         },
         log: async (...contenido: any) => {
             crear_log(print_log, TIPOS_LOG.log, undefined, ...contenido);
@@ -427,23 +436,43 @@ export const syslog = (modulo: Module) => {
             crear_log(print_sys_reg, TIPOS_LOG.notice, undefined, ...contenido);
         },
         warning: async (...contenido: any) => {
-            crear_log(print_sys_reg, TIPOS_LOG.advertencia, undefined, ...contenido);
+            crear_log(
+                print_sys_reg,
+                TIPOS_LOG.advertencia,
+                undefined,
+                ...contenido,
+            );
         },
         danger: async (...contenido: any) => {
-            crear_log(print_sys_reg, TIPOS_LOG.peligro, undefined, ...contenido);
+            crear_log(
+                print_sys_reg,
+                TIPOS_LOG.peligro,
+                undefined,
+                ...contenido,
+            );
         },
         error: async (...contenido: any) => {
             crear_log(print_sys_reg, TIPOS_LOG.error, undefined, ...contenido);
         },
         success: async (...contenido: any) => {
-            crear_log(print_sys_reg, TIPOS_LOG.success, undefined, ...contenido);
+            crear_log(
+                print_sys_reg,
+                TIPOS_LOG.success,
+                undefined,
+                ...contenido,
+            );
         },
         ok: async (...contenido: any) => {
             crear_log(print_sys_reg, TIPOS_LOG.ok, undefined, ...contenido);
         },
         _Request: async (request: string, ...contenido: any) => {
-            crear_log(print_req_log, TIPOS_LOG.request, request, ...contenido);            
+            crear_log(print_req_log, TIPOS_LOG.request, request, ...contenido);
         },
-    }
-    return funciones
+    };
+    return funciones;
 };
+
+process.on('SIGINT', () => {
+    LOG_STREAM.end()
+    process.exit()
+})

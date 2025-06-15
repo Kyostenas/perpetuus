@@ -7,9 +7,9 @@ import { Request, Response } from 'express';
 import { desencriptar_jwt } from '../../utils/jwt.utils';
 
 const URLS_EXCENTAS = [
-    '/api/auth/signin',    
-    '/api/roles/super-admin',
-    '/api/usuarios/super-admin',
+    '/api/v1/auth/signin',    
+    '/api/v1/roles/super-admin',
+    '/api/v1/usuarios/super-admin',
 ];
 
 export function verificar_jwt(req: Request, res: Response, next: any) {
@@ -35,6 +35,7 @@ export function verificar_jwt(req: Request, res: Response, next: any) {
                 }
             } else {
                 req.usuario = decoded.usuario;
+                res.usuario = decoded.usuario;
                 next();
             }
         })

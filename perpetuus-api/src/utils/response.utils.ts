@@ -33,7 +33,6 @@ export class Resp {
         public datos: DatosResponse,
     ) {}
 
-
     // (o==================================================================o)
     //   UTILIDADES (INICIO)
     // (o-----------------------------------------------------------\/-----o)
@@ -42,6 +41,18 @@ export class Resp {
 
     get codigo_formateado(): string {
         return `<${this.codigo_actual}>`
+    }
+
+    private formatear_mensaje(mensaje: string) {
+        return `------------------------------------------------------------------\n` +
+            `<RESPUESTA >----\n` +
+            `[USUARIO   ] ${this.res.usuario?.nombre}\n` +
+            `[URL       ] ${this.res.req.originalUrl}\n` +
+            `[USER_AGENT] ${this.res.req.get('User-Agent')}\n` +
+            `[STATUS    ] ${this.codigo_actual}\n` +
+            `[MENSAJE   ] ${mensaje}\n` +
+        `------------------------------------------------------------------`
+
     }
 
     private error_general() {
@@ -59,16 +70,15 @@ export class Resp {
         } else {
             this.datos.error = new Error(this.datos.mensaje? this.datos.mensaje : '')
         }
-
         syslog.definir_ubicacion(this.filename)
-        syslog.error(`${this.codigo_formateado} ${this.datos.error}`);
+        syslog.error(this.formatear_mensaje(this.datos.error));
         return this.datos;
     }
 
     private estatus_ok_general() {
         this.datos.ok = true;
         syslog.definir_ubicacion(this.filename)
-        syslog.success(`${this.codigo_formateado} ${this.datos.mensaje}`);
+        syslog.success(this.formatear_mensaje(this.datos.mensaje));
         return this.datos;
     }
 
