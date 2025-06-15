@@ -39,11 +39,11 @@ export const PERMISOS_DISPONIBLES = {
 } as const;
 
 export type PERMISOS_PERPETUUS = 
-    DeepKeys<
+    DeepValues<
         typeof PERMISOS_DISPONIBLES, string
     >
 
 export type PERMISOS_MENU_PERPETUUS = 
-    DeepKeys<
+    DeepValues<
         typeof PERMISOS_DISPONIBLES.MENU, string
     >
