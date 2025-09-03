@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormularioDinamicoComponent } from 'src/app/components/utiles/formularios/formulario-dinamico/formulario-dinamico.component';
 import { CardComponent } from 'src/app/components/utiles/card/card/card.component';
-import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { CampoBaseFormularioDinamico, CampoFormulario } from 'src/app/models/utiles/formularios/formulario-dinamico-campo-base.model';
 import { AuthService } from 'src/app/services/inicio/signin/auth.service';
 

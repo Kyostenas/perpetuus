@@ -44,7 +44,17 @@ export abstract class CRUD_Controller<UsedModel> {
                             mensaje: 'Los filtros deben ser un objeto en forma de cadena de texto',
                         })._422_unprocessable();
                     }
-                    delete req.query.filters
+                }
+            }
+            if (req.query) {
+                if (req.query.filters) {
+                    try {
+                        req.query['pagination'] = JSON.parse(<string>req.query.pagination)
+                    } catch {
+                        return new Resp(res, filename, {
+                            mensaje: 'La paginación debe ser un objeto en forma de cadena de texto',
+                        })._422_unprocessable();
+                    }
                 }
             }
             if (fields_to_validate?.req_body) {

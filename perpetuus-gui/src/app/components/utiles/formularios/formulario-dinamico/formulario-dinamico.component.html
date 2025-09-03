@@ -12,7 +12,7 @@
     @if (boton_submit) {
         <div class="col-12 text-center">
                 <div
-                    [collapse]="!formulario_valido || !validar"
+                    [collapse]="!formulario_valido && validar"
                     [orientation]="'vertical'"
                 >
                     <button 

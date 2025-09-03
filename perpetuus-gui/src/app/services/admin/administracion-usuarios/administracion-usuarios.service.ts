@@ -1,10 +1,10 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ControlNotificacionesService } from '../../utiles/varios/control-notificaciones/control-notificaciones.service';
 import { UtilidadesService } from '../../utiles/varios/utilidades/utilidades.service';
 import { UsuarioRecibir } from 'src/app/models/usuario/usuario.model';
 import { map, catchError, throwError, Observable } from 'rxjs';
-import { Pagination } from 'src/app/utiles/tipos-personalizados';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class AdministracionUsuariosService {
     private notificaciones: ControlNotificacionesService,
   ) { }
 
-  private ruta_base = 'usuarios';
+  private ruta_base = 'users';
   private opciones = {withCredentials: true};
   
 
@@ -34,7 +34,7 @@ export class AdministracionUsuariosService {
   obtener_usuarios(paginacion?: Pagination): Observable<UsuarioRecibir[]> {
     let url = this.obtener_url();
     if (paginacion) {
-      url = url.concat(`?paginacion=${JSON.stringify(paginacion)}`)
+      url = url.concat(`?pagination=${JSON.stringify(paginacion)}`)
     }
     return this.http.get(url, this.opciones).pipe(
       map((resp: any) => {

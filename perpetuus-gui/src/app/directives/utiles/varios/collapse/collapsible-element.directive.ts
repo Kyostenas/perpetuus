@@ -265,7 +265,6 @@ export class CollapsibleElementDirective implements OnInit {
     }
 
     emit_starting_to_show() {
-        console.log('SHOW');
         this.starting_to_show.emit();
     }
 
